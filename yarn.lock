@@ -110,13 +110,6 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/common@^6.x.x":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-6.1.10.tgz#96e01564031b23cf54e4264e4c9defd6e10a0e11"
-  integrity sha512-73xxTSYJNKfiJ7C1Ajg+sz5l8y+blb/vNgHYg7O3yem5zLBnfPpidJ1UGg4W4d2Y+jwUVJbZKh8SKJarqAJVUQ==
-  dependencies:
-    tslib "^1.9.0"
-
 "@angular/compiler-cli@^4.0.0":
   version "4.4.7"
   resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-4.4.7.tgz#18e698f6da6166e75df7f782bd26f1f0f34e39f9"
@@ -140,26 +133,12 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/core@^6.x.x":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-6.1.10.tgz#9f3d8b7e44ec0a68c88745d25a920f98bfb2bc43"
-  integrity sha512-61l3rIQTVdT45eOf6/fBJIeVmV10mcrxqS4N/1OWkuDT29YSJTZSxGcv8QjAyyutuhcqWWpO6gVRkN07rWmkPg==
-  dependencies:
-    tslib "^1.9.0"
-
 "@angular/forms@^4.0.0":
   version "4.4.7"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-4.4.7.tgz#f9503ad8f4bd77a7ba93714afea46c4944887758"
   integrity sha512-EXGutI4GNBptpwkCQdCTxWAlJll8aCV7m3cA1FHZgFP7VNSgYF0pD+PscM5jSeajG30cRjaKxgL4cqj6yMMtww==
   dependencies:
     tslib "^1.7.1"
-
-"@angular/forms@^6.x.x":
-  version "6.1.10"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-6.1.10.tgz#c9cd0f716cf91272e8e09e17a51fc20313df31b0"
-  integrity sha512-zAPx2kMV1/FbP5DrY472Sd/ze1m+GS6T5ullZCtP392r62p2RkwzDCXieR51YiRJjZj3M6c3AcRND7PWBdXT7A==
-  dependencies:
-    tslib "^1.9.0"
 
 "@angular/http@^4.0.0":
   version "4.4.7"
@@ -196,41 +175,12 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@fullcalendar/core@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.4.tgz#bfc67bf4ad0c8d99a7e1258b24b5b241c6f48ed1"
-  integrity sha512-ZDD0Owv0LezAk14nsRNaOc9nbowItGmT0mnjOhEw+L6B8P5eads8yYaNA9itn70MWoOjiAG8xqD7Yk1iJGxqgQ==
+"@ng-bootstrap/ng-bootstrap@^14.0.1":
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-14.0.1.tgz#09f93058d3c4a2f4e751c8b546e01f6d2524bd05"
+  integrity sha512-JF4U4IIix+g6VBFfG8stf0Un5K//ypoN+pTuRs6kjUhsHBsa2m7yKE6bCe3fMhatFZFr2fcSswDzRUnAUiHhWg==
   dependencies:
-    preact "^10.0.5"
-
-"@fullcalendar/daygrid@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.4.tgz#fe1335eaa7a4e60ee4b0e6b3896b32398fac6c2c"
-  integrity sha512-X0QWEiA/hT8GYiQzmXt9DlZTWaQbNtBHBXGtaMNcVXbGHDCzLoWTHrde/jABGfr/i2+d9sLUO4oTtwz2HVpNtQ==
-
-"@fullcalendar/interaction@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.4.tgz#4816f29a4af824937be4639800cbafbca63e1af8"
-  integrity sha512-69G2B61bPiHy7VyTDiwU9l8yRHPUK9XxNxjIdm3N0nvWR6BaUIBDQe8dIWht+IZUf9qirFhnfcLWkRI0fOTWtw==
-
-"@fullcalendar/list@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.4.tgz#3d63fd6b0542d6dbf8426294cabe643f0a944d4f"
-  integrity sha512-RY2fE9J7ckzhKtvHOWhlI2FnVEBC4Z9ZlgRBE2nQekX2+THt+3KnZtOQxuYGnGi30NBKx794YsXeIc6/Lnl0Ww==
-
-"@fullcalendar/multimonth@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/multimonth/-/multimonth-6.1.4.tgz#2a32809cb8d0a3dd19bdfc8c92ee220e38d9aac4"
-  integrity sha512-bljwyIER4APKTpKF/M8u0BkMDbYDKVkSszCSg1VIX9uVTPpAbzlStqiMAwT+zoOPvoQ8Hsn+yuCFFKKbfUwAFw==
-  dependencies:
-    "@fullcalendar/daygrid" "~6.1.4"
-
-"@fullcalendar/timegrid@~6.1.4":
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.4.tgz#b3370b80726d52445ec6f988744220a93c884f94"
-  integrity sha512-B2/levLKW0CyDQru75JeuASpCZml5W8sINCwVTstxxhjKmNBG3F5qvSX12DDrTdga/ySYObNNP1pKDwavKk/JQ==
-  dependencies:
-    "@fullcalendar/daygrid" "~6.1.4"
+    tslib "^2.3.0"
 
 "@ngtools/json-schema@1.2.0":
   version "1.2.0"
@@ -271,13 +221,6 @@
     rxjs "^5.5.6"
     semver "^5.3.0"
     semver-intersect "^1.1.2"
-
-"@types/fullcalendar@3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@types/fullcalendar/-/fullcalendar-3.8.0.tgz#9d523b78d1f96efea27a81578763eadabfabdf0d"
-  integrity sha512-uxYNAnvH7s3asQjkH8p0K1V4ENMLQDGNmFHWA7/iRZwU13A7RCOvnNoRapEIIRx8hI/+wHWkd4Q9KmpVCQfIEg==
-  dependencies:
-    fullcalendar "*"
 
 "@types/jasmine@2.5.38":
   version "2.5.38"
@@ -450,6 +393,27 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==
 
+angular-calendar@0.22.3:
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/angular-calendar/-/angular-calendar-0.22.3.tgz#878dc7d82085444754fbc76f8728dac3d53f4a78"
+  integrity sha512-+5/rUaUoggQ2iNIAcwazl5xc1d9BDxR6QA8nmJsp+JWRaMPaoWoxA6njz8Mns1U6XSqrkcQYyhLSmTWHOpyNAQ==
+  dependencies:
+    angular-draggable-droppable "^1.1.1"
+    angular-resizable-element "^1.2.4"
+    calendar-utils "0.0.59"
+    date-fns "^1.28.5"
+    positioning "^1.3.1"
+
+angular-draggable-droppable@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/angular-draggable-droppable/-/angular-draggable-droppable-1.1.1.tgz#70b3b601daaf65a1b3f73d8a4de8683e7fa22356"
+  integrity sha512-peha7H6EtuigMcdsbRinTOqUbQf+TDQ/Sgxme0xs0/Rk6dpFDZdEw0G/O89BG0q1mNQyOnYMdgf+wX0OfJDp7g==
+
+angular-resizable-element@^1.2.4:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/angular-resizable-element/-/angular-resizable-element-1.2.5.tgz#b8627f31e87eea1abe10fd0eb5bd8efc81d0d47f"
+  integrity sha512-0xJDm1kQJHORDdfWswZ4Ht92+lTuf9/lS2BtYJLdjf6wnq6YqNrQZyX58+oway4vWFWentQuu+M/KjCd8vsTbA==
+
 angular2-notifications@^0.7.4:
   version "0.7.8"
   resolved "https://registry.yarnpkg.com/angular2-notifications/-/angular2-notifications-0.7.8.tgz#ecbcb95a8d2d402af94a9a080d6664c70d33a029"
@@ -527,17 +491,6 @@ anymatch@~3.1.2:
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
-
-ap-angular2-fullcalendar@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/ap-angular2-fullcalendar/-/ap-angular2-fullcalendar-1.6.4.tgz#e178763aa3eedc8374cd3e9caf5c9f9b8cb15da5"
-  integrity sha512-jFWIWdwNW19j119elRzSro+UpgxmJp743JtxPgplc+k4IUVMpMEnFwSlP0JPiNChdwDpGVHBAwd58LgiBgBmcQ==
-  dependencies:
-    "@angular/common" "^6.x.x"
-    "@angular/core" "^6.x.x"
-    "@angular/forms" "^6.x.x"
-    "@types/fullcalendar" "3.8.0"
-    fullcalendar "3.9.0"
 
 app-root-path@^2.0.1:
   version "2.2.1"
@@ -1269,6 +1222,11 @@ cache-loader@^1.2.0:
     mkdirp "^0.5.1"
     neo-async "^2.5.0"
     schema-utils "^0.4.2"
+
+calendar-utils@0.0.59:
+  version "0.0.59"
+  resolved "https://registry.yarnpkg.com/calendar-utils/-/calendar-utils-0.0.59.tgz#ab809c215e7811eb0f8d961985cacce6af3d3db3"
+  integrity sha512-rj9knfXAIgGJFKAGmrYw8TNfy1FyTCzhd3utZPBC7fZS9HNeQsHGa9xwNtes/LDjdHYCnw4TM0BW/PxTB6hghQ==
 
 call-bind@^1.0.0, call-bind@^1.0.2:
   version "1.0.2"
@@ -2081,6 +2039,11 @@ dashdash@^1.12.0:
   integrity sha512-jRFi8UDGo6j+odZiEpjazZaWqEal3w/basFjQHQEwVtZJGDpxbH1MeYluwCS8Xq5wmLJooDlMgvVarmWfGM44g==
   dependencies:
     assert-plus "^1.0.0"
+
+date-fns@^1.28.5:
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
+  integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
 debug@2, debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8:
   version "2.6.9"
@@ -3259,26 +3222,6 @@ fstream@^1.0.0, fstream@^1.0.12:
     inherits "~2.0.0"
     mkdirp ">=0.5 0"
     rimraf "2"
-
-fullcalendar@*:
-  version "6.1.4"
-  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-6.1.4.tgz#f5280cde6103eeed619e3ba709a72625f998ef8e"
-  integrity sha512-XAgWTauifC8HKkbN8574wEWwWCgzcgMfjkxyvK1V5D0Q/HKldZlYuvOSrI0JKkzIXtufurx9IN+QljVQkAvg+A==
-  dependencies:
-    "@fullcalendar/core" "~6.1.4"
-    "@fullcalendar/daygrid" "~6.1.4"
-    "@fullcalendar/interaction" "~6.1.4"
-    "@fullcalendar/list" "~6.1.4"
-    "@fullcalendar/multimonth" "~6.1.4"
-    "@fullcalendar/timegrid" "~6.1.4"
-
-fullcalendar@3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/fullcalendar/-/fullcalendar-3.9.0.tgz#b608a9989f3416f0b1d526c6bdfeeaf2ac79eda5"
-  integrity sha512-bbALDK8+SBqluv8SKPDeVNtaSr87NYblte/pRgV5NnDJWCEARpRlQ1qQ/XEakcAXbMZov6rWYIvLOrtKwQo2Bg==
-  dependencies:
-    jquery "2 - 3"
-    moment "^2.20.1"
 
 function-bind@^1.1.1:
   version "1.1.1"
@@ -4558,11 +4501,6 @@ jasminewd2@^2.1.0:
   resolved "https://registry.yarnpkg.com/jasminewd2/-/jasminewd2-2.2.0.tgz#e37cf0b17f199cce23bea71b2039395246b4ec4e"
   integrity sha512-Rn0nZe4rfDhzA63Al3ZGh0E+JTmM6ESZYXJGKuqKGZObsAB9fwXPD03GjtIEvJBDOhN94T5MzbwZSqzFHSQPzg==
 
-"jquery@2 - 3":
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.6.4.tgz#ba065c188142100be4833699852bf7c24dc0252f"
-  integrity sha512-v28EW9DWDFpzcD9O5iyJXg3R3+q+mET5JhnjJzQUZMHOv67bpSIHq81GEYpPNZHG+XXHsfSme3nxp/hndKEcsQ==
-
 js-base64@^2.1.8:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
@@ -5260,7 +5198,7 @@ mkdirp@~1.0.4:
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-moment@^2.10.2, moment@^2.20.1:
+moment@^2.10.2:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -6047,6 +5985,11 @@ portfinder@^1.0.9, portfinder@~1.0.12:
     debug "^3.2.7"
     mkdirp "^0.5.6"
 
+positioning@^1.3.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/positioning/-/positioning-1.5.1.tgz#73b90b621cd0a7e17b39fdcbc7f4567a95fcc8ce"
+  integrity sha512-Al3inO/WAlq7Q986pghpdWC9fsSCCKxOAwRt8ZGpcQn58SP8RJX7bjC53I7xeq9ngN+odcyF4B+wMdpyyiF5wQ==
+
 posix-character-classes@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/posix-character-classes/-/posix-character-classes-0.1.1.tgz#01eac0fe3b5af71a2a6c02feabb8c1fef7e00eab"
@@ -6104,11 +6047,6 @@ postcss@^6.0.0, postcss@^6.0.1, postcss@^6.0.16, postcss@^6.0.17:
     chalk "^2.4.1"
     source-map "^0.6.1"
     supports-color "^5.4.0"
-
-preact@^10.0.5:
-  version "10.13.1"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-10.13.1.tgz#d220bd8771b8fa197680d4917f3cefc5eed88720"
-  integrity sha512-KyoXVDU5OqTpG9LXlB3+y639JAGzl8JSBXLn1J9HTSB3gbKcuInga7bZnXLlxmK94ntTs1EFeZp0lrja2AuBYQ==
 
 prelude-ls@~1.1.2:
   version "1.1.2"
@@ -7757,10 +7695,15 @@ tsickle@^0.21.0:
     source-map "^0.5.6"
     source-map-support "^0.4.2"
 
-tslib@^1.7.1, tslib@^1.9.0:
+tslib@^1.7.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
+tslib@^2.3.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.5.0.tgz#42bfed86f5787aeb41d031866c8f402429e0fddf"
+  integrity sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==
 
 tslint@~4.5.0:
   version "4.5.1"
@@ -7838,10 +7781,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript@~2.2.0:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.2.2.tgz#606022508479b55ffa368b58fee963a03dfd7b0c"
-  integrity sha512-ZQXTJ7IcU5Yg8Mz8VzVFDrguzIDpRxNlD8yjowh1F0cbruhWnd92YJ/c6gHjopRINwhgpe5bDx7fOD6nAagwmQ==
+typescript@2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
+  integrity sha512-p5TCYZDAO0m4G344hD+wx/LATebLWZNkkh2asWUFqSsD2OrDNhbAHuSjobrmsUmdzjJjEeZVU9g1h3O6vpstnw==
 
 typescript@~2.6.2:
   version "2.6.2"

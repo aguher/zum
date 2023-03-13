@@ -79,9 +79,13 @@ import { RedNegDirective } from './directives/red-neg.directive';
 import { StorageComponent } from './pages/storage/storage.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { DemoComponent } from './pages/demo/demo.component';
+import { CalendarModule } from 'angular-calendar';
+import { CalendarioComponent } from './pages/calendario/calendario.component';
+
 
 @NgModule({
   declarations: [
+    CalendarioComponent,
     AppComponent,
     LoginComponent,
     RememberComponent,
@@ -132,6 +136,7 @@ import { DemoComponent } from './pages/demo/demo.component';
   ], 
   imports: [
     BrowserAnimationsModule,
+    CalendarModule.forRoot(),
     DropdownModule,
     AutoCompleteModule,
     BrowserModule,

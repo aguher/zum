@@ -154,8 +154,10 @@ export class AuthGuard implements CanActivate {
             case 'presupuestos':
             case 'presupuesto':
                 return true;
-            case 'demo':
-                return true;
+                case 'demo':
+                    return true;
+                    case 'calendario':
+                        return true;
             case '':
                 if (roleUser > 3 && localStorage.getItem('token')) {
                     this.router.navigate(['/proyectos']);

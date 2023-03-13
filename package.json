@@ -24,8 +24,8 @@
     "@types/jspdf": "^1.1.31",
     "@types/node": "^6.0.77",
     "ajv": "^6.1.1",
+    "angular-calendar": "0.22.3",
     "angular2-notifications": "^0.7.4",
-    "ap-angular2-fullcalendar": "^1.6.4",
     "base64-img": "^1.0.4",
     "bootstrap": "^3.3.7",
     "chart.js": "^2.6.0",
@@ -62,6 +62,6 @@
     "protractor": "~5.1.0",
     "ts-node": "~2.0.0",
     "tslint": "~4.5.0",
-    "typescript": "~2.2.0"
+    "typescript": "2.7.2"
   }
 }

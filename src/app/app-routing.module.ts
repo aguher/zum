@@ -39,6 +39,7 @@ import { CustomersNewComponent } from './pages/customers-new/customers-new.compo
 import { ExpensesComponent } from './pages/expenses/expenses.component';
 import { StorageComponent } from './pages/storage/storage.component';
 import { DemoComponent } from './pages/demo/demo.component';
+import { CalendarioComponent } from './pages/calendario/calendario.component';
 
 
 const appRoutes: Routes = [
@@ -75,6 +76,8 @@ const appRoutes: Routes = [
   { path: 'subconceptos-standard', component: SubconceptStandardComponent, canActivate: [AuthGuard] },
   { path: 'almacen', component: StorageComponent, canActivate: [AuthGuard] },  
   { path: 'demo', component: DemoComponent, canActivate: [AuthGuard] },  
+  { path: 'calendario', component: CalendarioComponent, canActivate: [AuthGuard] },  
+
   { path: '**', component: PageNotFoundComponent }
 ];
 
