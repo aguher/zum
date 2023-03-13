@@ -1,0 +1,45 @@
+<div class="container">
+  <div  *ngIf="!demanda">
+    <div class="table-responsive">  
+    <table class="table table-sm table-bordered">
+      <tr>
+        <th>Anexo</th>
+        <th style="background-color:rgb(201, 231, 241)">Anexo AP</th>
+        <th>Fecha Entrada</th>
+        <th>Cliente</th>
+        <th>DNI</th>
+        <th>SAT1</th>
+        <th>SAT2</th>
+        <th>Num Auto</th>
+        <th>Juzgado</th>
+        <th>Objeto Demanda</th>
+        <th>Cuantía</th>
+      </tr>
+      <tr *ngFor="let dato of datos;let i = index;" (click)="demanda=dato">
+        <td>{{dato.ANEXO}}  </td>
+        <td style="background-color:rgb(201, 231, 241)">{{dato.ANEXOAP}}</td>
+        <td>{{dato.FECHAENTRADA}}</td> 
+        <td>{{dato.CLIENTE}}</td>
+        <td>{{dato.DNI}}</td>
+        <td>{{dato.SAT1}}</td>
+        <td>{{dato.SAT2}}</td>
+        <td>{{dato.NUMAUTO}}</td>
+        <td>{{dato.JUZGADO}}</td>
+        <td>{{dato.OBJETODEMANDA}}</td>
+        <td>{{dato.CUANTIA}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div (click)="demanda=null" *ngIf="demanda !== null" >
+  <div class="card">
+    <div class="card-header" style="background-color:rgb(201, 231, 241)">
+      General
+    </div>
+    <div class="card-body">
+      Anexo: {{demanda.ANEXO}} Anexo AP: {{demanda.ANEXOAP}}
+    </div>
+  </div>
+</div>
+
+</div>

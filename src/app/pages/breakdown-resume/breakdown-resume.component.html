@@ -1,0 +1,74 @@
+<div class="inner-container" *ngIf="info.campaign_code; else loading">
+  <div class="title">
+    <div class="label">
+      Resumen del Proyecto
+      <span class="campaign-code">{{info.campaign_code}}</span>
+      <span class="campaign-name">{{info.campaign_name}}</span>
+    </div>
+    <div class="update-project">
+      <a class="big-button" (click)="updateProject()">
+        <i class="material-icons">border_color</i>
+        Modificar Proyecto
+      </a>
+
+    </div>
+  </div>
+
+  <div class="info">
+    <span class="block">
+      <i class="material-icons">card_travel</i> Cliente
+      <em>{{info.customer}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">face</i> Responsable
+      <em>{{info.user}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">supervisor_account</i>Equipo
+      <em>{{info.team}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">copyright</i>Grupo
+      <em>{{info.group}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">list</i>Subgrupo
+      <em>{{info.subgroup}}</em>
+    </span>
+    <span class="block">
+      <div class="status-date">
+        <span class="date">
+          <em>{{info.creation_date}}</em>
+          <em>{{info.end_date}}</em>
+        </span>
+        <div class="status">
+          <span>Estado: </span>
+          <span class="value" [ngClass]="{
+          'ended': info.status === 'Finalizado',
+          'budget': info.status === 'Presupuestado',
+          'passed': info.status === 'Aprobado'
+          }">{{info.status}}</span>
+        </div>
+      </div>
+    </span>
+  </div>
+
+
+</div>
+
+<div class="panels"  *ngIf="info.campaign_code">
+  <row-differences symbol="€" labelTitle="ingreso" [real]="incomesReal" [estimated]="incomesEstimated" [differences]="incomesDifferences"></row-differences>
+
+  <row-differences symbol="€" labelTitle="coste" [header]="true" [real]="totalExpensesReal" [estimated]="totalExpensesEstimated" [differences]="totalExpensesDifferences"></row-differences>
+
+  <row-differences symbol="€" labelTitle="beneficio" [header]="true" [real]="benefitsReal" [estimated]="benefitsEstimated" [differences]="benefitsDifferences"></row-differences>
+
+  <row-differences symbol="%" labelTitle="margen" [header]="true" [real]="marginReal" [estimated]="marginEstimated" [differences]="marginDifferences"></row-differences>
+</div>
+
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el resumen...
+  </h2>
+</ng-template>

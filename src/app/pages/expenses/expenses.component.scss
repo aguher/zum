@@ -1,0 +1,248 @@
+@import "~assets/variables.scss";
+@import "~assets/mixins.scss";
+
+#tablagastos{
+        font-size:12px;
+}
+
+#tablaexport{
+    font-size:12px;
+}
+input{
+    width:100%;
+}
+
+.container-expenses {
+    background: $bgWhite;
+    border: 1px solid $borderColor;    
+    border-radius:2px;
+    margin-bottom: 30px;
+    &.no-expenses {
+        width: 500px;
+        height: 80px;
+        vertical-align: middle;
+        /*top: calc(50% - 40px);*/
+        position: absolute;
+        left: calc(50% - 250px);
+    }
+    .list {
+        .header {
+            float: left;
+            width: 100%;
+            background: #F7F8F9;
+            font-size: 13px;
+            padding: 15px;
+            border-top: 1px solid #efefef;
+            border-bottom: 1px solid #efefef;
+            legend {
+                float: left;
+                label {
+                    padding:2px 5px;
+                    border-radius: 2px;
+                    color: white;
+                    &.high {
+                        background: $dangerColor;
+                    }
+                    &.low {
+                        background: $secondColor;
+                    }
+                }
+            }
+            .footer {
+                float: right;
+            }
+        }
+
+        .status {
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 0px;
+            line-height: 4px;
+            margin-bottom: 4px;
+            color:$bgWhite;
+            &.ended {
+                background: $dangerColor;                
+            }
+            &.progress {
+                background: $secondColor;
+            }
+            &.approved {
+                background: $thirdColor;
+            }
+        }
+        .menu {
+            display: table;
+            width: 100%;
+            a {
+                display: table-cell;
+                text-align: center;
+                i:hover {
+                    cursor: pointer;
+                }
+                i.edit-button {
+                    color: $mainColor;
+                }
+                i.clone-button {
+                    color: $font-header-color;
+                }
+                i.delete {
+                    color: $dangerColor;
+                }
+                i.desglose {
+                    color: $thirdColor;
+                }                
+            }
+        
+        }
+                
+    }
+    .export {
+        .header {
+            float: left;
+            width: 100%;
+            background: #F7F8F9;
+            font-size: 13px;
+            padding: 15px;
+            border-top: 1px solid #efefef;
+            border-bottom: 1px solid #efefef;
+            legend {
+                float: left;
+                label {
+                    padding:2px 5px;
+                    border-radius: 2px;
+                    color: white;
+                    &.high {
+                        background: $dangerColor;
+                    }
+                    &.low {
+                        background: $secondColor;
+                    }
+                }
+            }
+            .footer {
+                float: right;
+            }
+        }
+
+        .status {
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 0px;
+            line-height: 4px;
+            margin-bottom: 4px;
+            color:$bgWhite;
+            &.ended {
+                background: $dangerColor;                
+            }
+            &.progress {
+                background: $secondColor;
+            }
+            &.approved {
+                background: $thirdColor;
+            }
+        }
+        .menu {
+            display: table;
+            width: 100%;
+            a {
+                display: table-cell;
+                text-align: center;
+                i:hover {
+                    cursor: pointer;
+                }
+                i.description {
+                    color: $mainColor;
+                }
+                i.delete {
+                    color: $dangerColor;
+                }      
+            }
+        
+        }
+                
+    }
+    .container-title {
+        //border-bottom: 1px solid $greyColor;
+       // margin: 0 15px;
+        .add-campaign {
+            float: right;
+            margin: 10px 0 10px 20px;            
+            .big-button {
+                background:$mainColor;
+                color:$fontWhite;
+                padding: 13px 15px 12px 30px;
+                float: right;
+                position: relative;
+                top: 0;
+                font-size: 12px;
+                &.export {
+                    background: $thirdColor;
+                    margin-left: 10px;
+                }
+                i {
+                    color: $fontWhite;
+                    position: absolute;
+                    left: 5px;
+                    top:7px;
+                }
+                &:hover {
+                    cursor: pointer;
+                }
+            }            
+        }
+        span.title {
+            font-size: 14px;
+            display: inline-block;
+            margin: 10px 0px;
+            line-height: 40px;         
+        }
+        .search-input-block {
+            width: 40%;
+            float: right;
+            max-width: 300px;
+            margin: 0 auto;
+            position: relative;
+            &.hidden {
+                opacity: 0;
+            }
+            i {
+                position: absolute;
+                left: 5px;
+                top: 19px;
+                color: $lightColor;
+
+            }
+            input.search {
+                min-width: 300px;
+                float: right;
+                margin: 15px 0;
+                padding: 6px 6px 6px 30px;            
+                background:$bgWhite;
+                border: 1px solid $greyColor;
+                &:focus {
+                    outline: none;
+                }
+                &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                    color: $lightColor;
+                    font-weight: 300;
+                }
+                &::-moz-placeholder { /* Firefox 19+ */
+                    color: $lightColor;
+                    font-weight: 300;
+                }
+                &:-ms-input-placeholder { /* IE 10+ */
+                    color: $lightColor;
+                    font-weight: 300;
+                }
+                &:-moz-placeholder { /* Firefox 18- */
+                    color: $lightColor;
+                    font-weight: 300;
+                }                  
+            }            
+        }
+        
+    }
+    
+}

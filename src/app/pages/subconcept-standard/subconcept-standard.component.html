@@ -1,0 +1,355 @@
+<div class="container-customer">
+    <h3>Artículos Estándar
+
+        <button class="btn btn-info" style="float:right" (click)="selectSubconcept()" *ngIf="roleUser != 10 && roleUser != 11">
+        Añadir Artículo
+      </button>
+        <a class="big-button export" (click)="exportExcel()" style="margin-right:10px">
+            <i alt="excel" title="excel" class="material-icons">get_app</i>
+            <font style="color:white">Exportar a EXCEL</font>
+        </a>
+    </h3>
+
+
+
+
+    <!--     <div class="edit">
+
+    <div class="input">
+      <span>Nombre del cliente</span>
+      <input type="text" [(ngModel)]="model.customerName" value="" placeholder="Introduce el nombre del cliente">
+    </div>
+    <div class="input">
+        <span class="cif">CIF</span>
+        <span class="address">Dirección</span>
+        <input class="cif" type="text" [(ngModel)]="model.CIF" value="" placeholder="CIF del cliente">
+        <input class="address" type="text" [(ngModel)]="model.address" value="" placeholder="Introduce la dirección del cliente">            
+      </div>
+    <div class="input">
+      <span class="city">C. Postal</span>
+      <span class="city">Ciudad</span>
+      <span class="city">País</span>
+      <input class="city" type="text" [(ngModel)]="model.postal_code" value="" placeholder="C.P.">
+      <input class="city" type="text" [(ngModel)]="model.city" value="" placeholder="Ciudad">
+      <select class="city" style="height:40px" [(ngModel)]="model.country" placeholder="País">
+        <option value=1>España</option>
+      </select>      
+    </div>
+    <div class="input">
+      <span>Logotipo</span>
+      <div class="inner-form file">        
+        <input class="inputfile" id="logo_file" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputErp($event)" [uploadInput]="uploadInputERP">
+        <label for="logo_file">
+          Selecciona una imagen JPEG
+          <img class="loading-icon" *ngIf="uploading " src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </label>
+        <div class="file-upload" *ngIf="uploadFileERP">
+          <img class="preview-image" *ngIf="uploadFileERP.generatedName" [src]="urlUpload + uploadFileERP.generatedName" />
+          <span class="message-error" *ngIf="uploadFileERP.status === false">
+            Ha habido un error: {{uploadFileERP.msg}}
+          </span>        
+        </div>
+      </div>
+    </div>    
+
+  </div> -->
+
+    <div class="list">
+
+        <table class="table table-sm" id="tablaarticulos">
+            <thead>
+                <tr>
+                    <th width="5%" scope="col" (click)="ordenar($event)" id="code" style="cursor:pointer">Cód.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='code' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='code' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="15%" scope="col" (click)="ordenar($event)" id="description" style="cursor:pointer">{{nombresColumnas[5] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" (click)="ordenar($event)" class="text-right" id="unit_price" style="cursor:pointer">Precio<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unit_price' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unit_price' && !ordsentido">arrow_drop_up</i></th>
+                    <!--               <th width="7%" scope="col" (click)="ordenar($event)" class="text-right" id="unitsperitem" style="cursor:pointer">Un.x Item<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unitsperitem' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unitsperitem' && !ordsentido">arrow_drop_up</i></th> -->
+                    <th width="10%" scope="col" (click)="ordenar($event)" id="envelope" style="cursor:pointer">Embalaje<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='envelope' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='envelope' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="10%" scope="col" (click)="ordenar($event)" id="family_name" style="cursor:pointer">{{nombresColumnas[0] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='family_name' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='family_name' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="10%" scope="col" (click)="ordenar($event)" id="brand" style="cursor:pointer">Marca<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='brand' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='brand' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" (click)="ordenar($event)" id="perishable" style="cursor:pointer">{{nombresColumnas[6] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='perishable' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='perishable' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" (click)="ordenar($event)" id="stockable" style="cursor:pointer">{{nombresColumnas[2] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='stockable' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='stockable' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="10%" scope="col" (click)="ordenar($event)" id="customer_name" style="cursor:pointer">{{nombresColumnas[4] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer_name' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer_name' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="10%" scope="col" (click)="ordenar($event)" id="contact" style="cursor:pointer">Contacto<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='contact' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='contact' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" class="text-center">Imagen</th>
+                    <th width="6%" *ngIf="roleUser != 10 && roleUser != 11"></th>
+                </tr>
+                <tr>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocodigo" placeholder="Filtre código" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrodescripcion" placeholder="Filtre {{nombresColumnas[5]}}" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropreciounitario" placeholder="Filtre precio unit." /></th>
+                    <!--                 <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroudsporitem" placeholder="Filtre un.item" /></th> -->
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroembalaje" placeholder="Filtre embalaje" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofamilia" placeholder="Filtre {{nombresColumnas[0]}}" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtromarca" placeholder="Filtre marca" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroperecedero" placeholder="Filtre {{nombresColumnas[1]}}" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrostockable" placeholder="Filtre {{nombresColumnas[2]}}" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocliente" placeholder="Filtre {{nombresColumnas[4]}}" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocontacto" placeholder="Filtre contacto" /></th>
+                    <th *ngIf="roleUser != 10 && roleUser != 11"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (dblclick)="selectSubconcept(exportacion)" style="cursor:pointer" *ngFor="let exportacion of articulosfiltrados | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+                    <td>{{exportacion.code}}</td>
+                    <td>{{exportacion.description}}</td>
+                    <td class="text-right">{{exportacion.unit_price | currency:false }}</td>
+                    <!--                       <td class="text-right">{{exportacion.unitsperitem}}</td> -->
+                    <td>{{exportacion.envelope}}</td>
+                    <td>{{exportacion.familyname}}</td>
+                    <td>{{exportacion.brand}}</td>
+                    <td>{{exportacion.perishable}}</td>
+                    <td>{{exportacion.stockable}}</td>
+                    <td>{{exportacion.customer_name}}</td>
+                    <td>{{exportacion.contact}}</td>
+                    <td class="text-center" data-toggle="modal" data-target="#imgMax" (click)="selectedSubconcept = exportacion"><img style="max-height:65px; max-width:65px" *ngIf="exportacion.image && exportacion.image != null" [src]="urlUpload + exportacion.image"></td>
+                    <td *ngIf="roleUser != 10 && roleUser != 11">
+                        <div class="menu">
+                            <a title="Eliminar" (click)="deleteSubconcept(exportacion)">
+                                <i class="material-icons delete">delete</i>
+                            </a>
+                            <a title="Ver Exportación" (click)="selectSubconcept(exportacion)">
+                                <i class="material-icons edit-button">mode_edit</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <hr>
+        <div *ngIf="arrpages.length != 0" style="height:50px">
+            <div class="paginator text-center">
+                <span (click)="numPage=1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>
+                <span (click)="numPage=numPage-2" *ngIf="numPage>2" style="cursor:pointer;padding:15px">{{numPage-2}}</span>
+                <span (click)="numPage=numPage-1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>
+                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span>
+                <span (click)="numPage=numPage+1" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>
+                <span (click)="numPage=numPage+2" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>
+                <span (click)="numPage=arrpages.length" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
+            </div>
+            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+                <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{articulosfiltrados.length > [numPage]*[pagination] ? [numPage]*[pagination] : articulosfiltrados.length }} de {{articulosfiltrados.length}} artículos </i>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <!--     <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables" [(value)]="customers"  [(selection)]="selectedCustomer"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="customer_name" header="Nombre" ></p-column>
+        <p-column field="CIF" header="Cif" ></p-column>
+        <p-column field="address" header="Dirección" ></p-column>
+        <p-column field="city" header="Ciudad" ></p-column>
+        <p-column field="logo" header="Logo" styleClass="col-options">
+            <ng-template let-customer="rowData" pTemplate="body" >
+              <div class="img-logo" *ngIf="customer.logo">
+                  <img [src]="urlUpload + customer.logo" />
+              </div>
+            </ng-template>
+        </p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-customer="rowData" pTemplate="body">
+            <a (click)="selectCustomer(customer)">              
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a (click)="deleteCustomer(customer)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div> -->
+</div>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el Subconcepto" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedSubconcept">
+        <div class="ui-grid-row">
+            <span class="title">¿Estás seguro de eliminar el subconcepto?</span>
+            <span class="info">{{selectedSubconcept.description}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDelete = false" class="cancel">
+        cancelar
+      </a>
+            <a (click)="deleteApi(selectedSubconcept)">
+        Eliminar
+      </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del artículo" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedSubconcept" [ngStyle]="(!modoPreciosCliente) ? {'display': 'block'} : {'display': 'none'}">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-9">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4">
+                        <label for="subconcept_name">Código</label>
+                        <input pInputText id="code" [(ngModel)]="selectedSubconcept.code" />
+                    </div>
+                    <div class="ui-grid-col-8">
+                        <label for="subconcept_name">{{nombresColumnas[5] | titlecase}}</label>
+                        <input pInputText id="description" [(ngModel)]="selectedSubconcept.description" />
+                    </div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-4">
+                        <label for="unit_price">Precio Unitario</label>
+                        <input pInputText id="unit_price" [(ngModel)]="selectedSubconcept.unit_price" />
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <label for="unit_price">{{nombresColumnas[3] | titlecase}}</label>
+                        <input pInputText id="unitsperitem" [(ngModel)]="selectedSubconcept.unitsperitem" />
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <label for="unit_price">{{nombresColumnas[0] | titlecase}}</label>
+                        <input list="selectedArticuloFamilia" pInputText placeholder="Selecciona {{nombresColumnas[0]}}" [(ngModel)]="selectedSubconcept.familyname" />
+                        <datalist id="selectedArticuloFamilia" styleClass="dashboard-dropdown new">           
+                      <option id={{fam.value}} value={{fam.label}} *ngFor="let fam of dataCombos.families"></option>
+                  </datalist>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-row" style="min-height:105px; max-height:105px; margin:20px 10px 10px 10px">
+                    <img class="preview-image" style="max-height:100px; max-width:100px" [src]="urlUpload + selectedSubconcept.image" *ngIf="selectedSubconcept.image != null && selectedSubconcept.image!= ''" />
+                </div>
+                <div class="ui-grid-row">
+                    <input class="inputfile" id="logo_file_{{selectedSubconcept.image}}" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutput($event, selectedSubconcept)" [uploadInput]="uploadInput">
+                    <div class="ui-grid-col-6">
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <label for="logo_file_{{selectedSubconcept.image}}">
+                        <i class="material-icons delete" style="color:green; cursor:pointer; position:relative; top:-20px; left:35px">photo_camera</i>
+<!--                       <img class="loading-icon" *ngIf="uploading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                      /> -->
+                      </label>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <label>
+                    <i class="material-icons photo" (click)="selectedSubconcept.image = null" style="color:red; cursor:pointer; position:relative; top:-21px; left:40px">delete</i>
+                  </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <label for="unit_price">Marca</label>
+                <input pInputText id="brand" [(ngModel)]="selectedSubconcept.brand" />
+            </div>
+            <div class="ui-grid-col-4">
+                <label for="unit_price">Embalaje</label>
+                <input list="selectedArticuloEmbalaje" pInputText placeholder="Selecciona embalaje" [(ngModel)]="selectedSubconcept.envelope" />
+                <datalist id="selectedArticuloEmbalaje" styleClass="dashboard-dropdown new">           
+              <option id={{emb.value}} value={{emb.label}} *ngFor="let emb of dataCombos.envelopes"></option>
+          </datalist>
+            </div>
+            <div class="ui-grid-col-2">
+                <label for="unit_price">{{nombresColumnas[1] | titlecase}}</label>
+                <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.perishable" [(ngModel)]="selectedSubconcept.bperishable" placeholder="Sel.Sí/No"></p-dropdown>
+            </div>
+            <div class="ui-grid-col-2">
+                <label for="unit_price">{{nombresColumnas[2] | titlecase}}</label>
+                <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.perishable" [(ngModel)]="selectedSubconcept.bstockable" placeholder="Sel.Sí/No"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <label for="unit_price">{{nombresColumnas[4] | titlecase}}</label>
+                <input list="selectedArticulocli" pInputText placeholder="Selecciona {{nombresColumnas[4]}}" [(ngModel)]="selectedSubconcept.customer_name" />
+                <datalist id="selectedArticulocli" styleClass="dashboard-dropdown new">           
+              <option id={{cli.value}} value={{cli.label}} *ngFor="let cli of dataCombos.customer"></option>
+          </datalist>
+            </div>
+            <div class="ui-grid-col-6">
+                <label for="unit_price">Contacto</label>
+                <input pInputText id="brand" [(ngModel)]="selectedSubconcept.contact" />
+            </div>
+        </div>
+
+        <div class="ui-grid-row" *ngIf="id_company == 414">
+            <div class="ui-grid-col-4">
+                <label for="ref_prov">Ref.Proveedor</label>
+                <input pInputText id="ref_prov" [(ngModel)]="selectedSubconcept.ref_provider" />
+            </div>
+            <div class="ui-grid-col-4">
+                <label for="descrip_prov">Descrip.Proveedor</label>
+                <input pInputText id="descrip_prov" [(ngModel)]="selectedSubconcept.descrip_provider" />
+            </div>
+            <div class="ui-grid-col-4">
+                <label for="tipo_torno">Tipo Torno</label>
+                <input pInputText id="tipo_torno" [(ngModel)]="selectedSubconcept.tipo_torno" />
+            </div>
+        </div>
+    </div>
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedSubconcept" style="min-width: 570px; min-height:375px" [ngStyle]="(modoPreciosCliente) ? {'display': 'block'} : {'display': 'none'}">Precios por cliente
+        <div class="ui-grid-row" *ngFor="let preciocli of preciosporCliente">
+            <div class="ui-grid-col-6">
+                <label for="unit_price">{{nombresColumnas[4] | titlecase}}</label>
+                <input list="selectedArticulocli" pInputText placeholder="Selecciona {{nombresColumnas[4]}}" [(ngModel)]="preciocli.id_customer" />
+                <datalist id="selectedArticulocli" styleClass="dashboard-dropdown new">           
+              <option id={{cli.value}} value={{cli.label}} *ngFor="let cli of dataCombos.customer"></option>
+          </datalist>
+            </div>
+            <div class="ui-grid-col-4">
+                <label for="unit_price">Precio</label>
+                <input pInputText id="brand" [(ngModel)]="preciocli.unit_price"/>
+            </div>
+            <div class="ui-grid-col-2">
+                <label for="unit_price">Opcs.</label>
+                <div class="menu">
+                    <a title="Modificar" (click)="updatePrecioCliente(preciocli)">
+                        <i class="material-icons edit-button">mode_edit</i>
+                    </a>
+                    <a title="Eliminar" (click)="deletePrecioCliente(preciocli.id)">
+                        <i class="material-icons delete">delete</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialog = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="modoPreciosCliente=!modoPreciosCliente" *ngIf="selectedSubconcept && selectedSubconcept.id > 0 && roleUser != 10 && roleUser != 11 && id_company !== 414"  style="align-self: center; float: left; background-color: green; margin-left: 130px;">
+        <span *ngIf="modoPreciosCliente === false">Ir a Precios por cliente</span>
+        <span *ngIf="modoPreciosCliente === true">Ir a Detalle {{id_company}}</span>
+      </a>
+            <a (click)="updateApi(selectedSubconcept)" *ngIf="selectedSubconcept && selectedSubconcept.id > 0 && roleUser != 10 && roleUser != 11 && !modoPreciosCliente">
+        Guardar
+      </a>
+            <a (click)="addSubconcept()" *ngIf="selectedSubconcept && selectedSubconcept.id < 0 && !modoPreciosCliente">
+          Añadir
+      </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<div class="modal fade" id="imgMax" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imgMaxLabel">{{selectedSubconcept?.description}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body text-center" *ngIf="selectedSubconcept != undefined">
+                <!--  -->
+                <img style="max-height:400px; max-width:400px" *ngIf="selectedSubconcept.image  && selectedSubconcept.image != ''" [src]="urlUpload + selectedSubconcept.image">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

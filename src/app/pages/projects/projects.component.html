@@ -1,0 +1,381 @@
+<ng-template #choosenProjects>
+    <div *ngIf="!choosenCompany; else choosen">
+        <h2 class="title-loading">
+            Seleccione una empresa y año fiscal
+        </h2>
+    </div>    
+</ng-template>
+<ng-template #choosen>
+    <div *ngIf="!noProjects; else createProject">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando proyectos...
+        </h2>
+    </div>    
+</ng-template>
+
+<ng-template #createProject>
+    <div class="container-projects no-projects">
+        <div class="container-title" *ngIf="roleUser <=5">
+            <span class="title">Añade el primer proyecto</span>
+            <div class="add-campaign">
+                <a class="big-button" (click)="createCampaign()">
+                    <i class="material-icons">playlist_add</i>
+                    Nuevo Proyecto
+                </a>
+            </div>
+        </div>
+        <div class="container-title" *ngIf="roleUser >5">
+            <span class="title">No hay ningún proyecto añadido</span>
+        </div>
+    </div>
+</ng-template>
+
+<div class="container-projects" *ngIf="choosenCompany && projects.length > 0; else choosenProjects">
+    <div class="container-title">
+        <span class="title">Listado de Proyectos</span>
+          
+        <div class="add-campaign" *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6">
+            <a class="big-button export" (click)="exportExcel()">
+                <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+                Exportar a EXCEL
+            </a>             
+            <a class="big-button" (click)="createCampaign()" *ngIf="roleUser === 3 || roleUser === 5">
+                <i class="material-icons">playlist_add</i>
+                Nuevo Proyecto
+            </a>
+        </div>
+        <div class="search-input-block"  [ngClass]="{'hidden': !showInput}" >
+            <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
+            <i class="material-icons">search</i>
+        </div>
+    </div>
+    <div class="list" >
+
+        <p-dataTable styleClass="dashboard-tables projects" [emptyMessage]="emptyMsg" [value]="projects" [paginator]="displayPagination"
+            [rows]="pagination" [globalFilter]="inputSearch" [rowStyleClass]="lookupRowStyleClass" #dt>
+            <p-header class="header">
+                <legend> 
+                    Nivel de seguridad: 
+                    <label class="high">Alto</label>
+                    <label class="low">Bajo</label>
+                </legend>
+
+                <span class="footer">                
+                    <b>{{projects.length}}</b>
+                    resultados
+                </span>
+            </p-header>
+            <p-column field="security_level" header="" [filter]="true" hidden="true"></p-column>
+            <p-column field="campaign_code" header="Código" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por código" ></p-column>
+            <p-column field="campaign_name" header="Proyecto" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por proyecto"></p-column>
+            <p-column field="team" header="equipo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por equipo" *ngIf="showCol"></p-column>
+            <p-column field="user" header="usuario " [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por usuario"></p-column>
+            <p-column field="customer" header="cliente" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por cliente"></p-column>            
+            <p-column field="grupo" header="grupo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por grupo"></p-column>
+            <p-column field="subgroup" header="subgrupo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por subgrupo"></p-column>
+            <p-column field="creation_date" header="Creación" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por creación"></p-column>
+            <p-column field="end_date" header="Finalización" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por finalización"></p-column>
+            <p-column header="estado" field="status" [filter]="true" filterPlaceholder="Filtra por estado" filterMatchMode="in" [style]="{'overflow':'visible'}">
+                <ng-template pTemplate="filter" let-col>
+                    <p-multiSelect [options]="status" defaultLabel="Todos" [filter]="false" (onChange)="dt.filter($event.value,col.field,col.filterMatchMode)"
+                        styleClass="ui-column-filter">
+                    </p-multiSelect>
+                </ng-template>
+                <ng-template let-campaign="rowData" pTemplate="body" let-rowIndex="rowIndex">
+                    <span class="status" [ngClass]="{
+                        'ended':campaign.status == 'Finalizado',
+                        'approved':campaign.status == 'Aprobado',
+                        'progress':campaign.status == 'Presupuestado'
+                        }">{{campaign.status}}</span>
+                    <div class="menu">
+                        <a title="editar" *ngIf="showCol" (click)="selectCampaign(campaign, rowIndex)">              
+                            <i class="material-icons edit-button">mode_edit</i>
+                        </a>
+                        <a title="eliminar" *ngIf="showCol" (click)="deleteCampaign(campaign)">              
+                            <i class="material-icons delete">delete</i>
+                        </a>
+                        <a title="Desglose" *ngIf="roleUser !== 3" (click)="breakdownCampaign(campaign)">              
+                            <i class="material-icons desglose">assessment</i>
+                        </a>
+                        <a title="Resumen" *ngIf="roleUser === 6" (click)="summaryProject(campaign)">              
+                            <i class="material-icons edit-button">line_style</i>
+                        </a>
+                        
+                        <a title="Resumen" *ngIf="roleUser === 3" (click)="resumeCampaign(campaign)">              
+                            <i class="material-icons desglose">assessment</i>
+                        </a>
+                    </div>
+
+                </ng-template>
+            </p-column>
+        </p-dataTable>
+
+    </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Nuevo Proyecto" [(visible)]="displayDialogNew"  [modal]="true">    
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" >
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="campaign_code">Código <b *ngIf="autoNumbered">autonumerado</b></label></div>
+                    <div class="ui-grid-col-12">
+                        <p-inputMask  *ngIf="!autoNumbered" [disabled]="autoNumbered" id="campaign_code" [(ngModel)]="newCampaign.campaign_code" mask="99999" placeholder="Número"></p-inputMask> 
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-8">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+                    <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="newCampaign.campaign_name" /></div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Fecha de inicio</label></div>
+                    <div class="ui-grid-col-12">                                               
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="newCampaign.creation_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-2">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="end_date">Fecha de fin</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="newCampaign.end_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+
+        </div>        
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="team">Equipo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="newCampaign.id_team" placeholder="Selecciona un equipo"></p-dropdown>
+                    </div>
+                </div>
+            </div>            
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="user">Usuario</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.users" [(ngModel)]="newCampaign.id_user" placeholder="Selecciona un usuario"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="newCampaign.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="group">Grupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [(options)]="dataCombos.groups" [(ngModel)]="newCampaign.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+                    </div>
+                </div>                
+                
+            </div>            
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Subgrupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [(options)]="dataCombos.subgroups" [(ngModel)]="newCampaign.id_subgroup" placeholder="Selecciona un subgrupo"></p-dropdown>
+                    </div>
+                </div>                
+            </div>            
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.status" [(ngModel)]="newCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>                
+            </div>
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Nivel de seguridad</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.security" [(ngModel)]="newCampaign.security" placeholder="Selecciona un nivel"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>            
+    </div>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogNew = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="addCampaign()">              
+              Guardar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" *ngIf="selectedCampaign" header="Detalles del Proyecto" [(visible)]="displayDialog" [responsive]="true" showEffect="ease"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" >
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="campaign_code">Código <b *ngIf="autoNumbered">autonumerado</b></label></div>
+                    <div class="ui-grid-col-12"><p-inputMask  *ngIf="!autoNumbered" [disabled]="autoNumbered" id="campaign_code" [(ngModel)]="selectedCampaign.campaign_code" mask="99999" placeholder="Número"></p-inputMask></div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-8">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+                    <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="selectedCampaign.campaign_name" /></div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Fecha de inicio</label></div>
+                    <div class="ui-grid-col-12">                                               
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedCampaign.creation_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-2">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="end_date">Fecha de fin</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedCampaign.end_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>            
+
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="team">Equipo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="selectedCampaign.id_team" placeholder="Selecciona un equipo"></p-dropdown>
+                    </div>
+                </div>
+            </div>                 
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="user">Usuario</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.users" [(ngModel)]="selectedCampaign.id_user" placeholder="Selecciona un usuario"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="selectedCampaign.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="group">Grupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.groups" [(ngModel)]="selectedCampaign.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+                    </div>
+                </div>
+            </div>               
+          
+        </div>
+        <div class="ui-grid-row">         
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Subgrupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.subgroups" [(ngModel)]="selectedCampaign.id_subgroup" placeholder="Selecciona un subgrupo"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.status" [(ngModel)]="selectedCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>
+            </div>             
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Nivel de seguridad</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.security" [(ngModel)]="selectedCampaign.security_level" placeholder="Selecciona un nivel"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialog = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="updateApi()">              
+              Guardar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el proyecto" [(visible)]="displayDialogDelete" [responsive]="true"
+    showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign">
+        <div class="ui-grid-row">
+            <span class="title">¿Esta seguro de eliminar el proyecto?</span>
+            <span class="info">{{selectedCampaign.campaign_name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="deleteApi(selectedCampaign)">              
+              Eliminar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+

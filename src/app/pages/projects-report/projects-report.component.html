@@ -1,0 +1,170 @@
+<div class="report" *ngIf="choosenCompany; else choosen">
+  <h2>Informe de Proyectos</h2>
+
+
+  <div class="filter-container">
+    <div class="filters">
+      <div class="filter">
+        <label>Cliente</label>
+        <p-dropdown filter="true" (onChange)="changeCustomer($event)" [options]="combos.customer" placeholder="Selecciona un valor" [(ngModel)]="filter.customer"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Grupo</label>
+        <p-dropdown filter="true" (onChange)="changeGroup($event)" placeholder="Selecciona un valor" [options]="combos.group" [(ngModel)]="filter.group"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Subgrupo</label>
+        <p-dropdown filter="true" [options]="combos.subgroup" placeholder="Selecciona un valor" [(ngModel)]="filter.subgroup"></p-dropdown>
+      </div>
+      <div class="filter" *ngIf="roleUser !== 6 && roleUser !== 7">
+        <label>Equipo</label>
+        <p-dropdown filter="true" [options]="combos.team" placeholder="Selecciona un valor" [(ngModel)]="filter.team"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Proyecto</label>
+        <p-dropdown filter="true" [options]="combos.projects" placeholder="Selecciona un valor" [(ngModel)]="filter.project"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Fecha de creación inicial</label>
+        <p-dropdown filter="true" (onChange)="changeStartDate($event)" [options]="combos.startDate" placeholder="Selecciona un valor" [(ngModel)]="filter.startDate"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Fecha de creación final</label>
+        <p-dropdown filter="true" [options]="combos.endDate" placeholder="Selecciona un valor" [(ngModel)]="filter.endDate"></p-dropdown>
+      </div>
+    </div>
+    <div class="buttons">
+      <span>{{lenProjects}} proyectos encontrados</span>
+      <a (click)="filterValues()">filtrar proyectos</a>
+      <a (click)="clearValues()" class="green">limpiar valores</a>
+    </div>
+  </div>
+
+  <div class="col-titles">
+      <div class="row">
+        Ingresos
+      </div>      
+      <div class="row">
+        personal propio
+      </div>
+      <div class="row separator">
+        Fee de empresa
+      </div>
+      <div class="row separator">
+        Total Variables
+      </div>
+      <ng-template ngFor let-fixed [ngForOf]="dataVariableCost" let-i="index">
+        <div class="row fixed-cost">
+          <span class="parent">{{fixed.name}}</span>
+        </div>
+        <ng-template *ngIf="fixed.children" ngFor let-children [ngForOf]="fixed.children" let-i="index">
+          <div class="row fixed-cost">
+            <span>{{children.name}}</span>
+          </div>
+        </ng-template>
+      </ng-template>
+      
+      <div class="row final">
+        Beneficio
+      </div>
+    </div>
+    <div class="col-amounts">
+      <ul>
+        <li class="title red"> Presupuestado</li>
+        <li class="title blue"> Real</li>
+        <li class="title green"> Diferencias</li>
+  
+        <li class='amount red'>
+          <span>{{data.budget.totalIncomes | currency }}</span>
+        </li>
+        <li class='amount blue'>
+          <span>{{data.real.totalIncomes | currency }}</span>
+        </li>
+        <li class='amount green'  [ngClass]="{'danger': data.differences.totalIncomes < 0}">
+          <span>{{data.differences.totalIncomes | currency }}</span>
+        </li>     
+  
+        <li class='amount red'>
+          <span>{{data.budget.totalEmployees | currency }}</span>
+        </li>
+        <li class='amount blue'>
+          <span>{{data.real.totalEmployees | currency }}</span>
+        </li>
+        <li class='amount green' [ngClass]="{'danger': data.differences.totalEmployees < 0}">
+          <span>{{data.differences.totalEmployees | currency }}</span>
+        </li>
+  
+        <li class='amount red separator'>
+          <span>{{data.budget.totalFee | currency }}</span>
+        </li>
+        <li class='amount blue separator'>
+          <span>{{data.real.totalFee | currency }}</span>
+        </li>
+        <li class='amount green separator'  [ngClass]="{'danger': data.differences.totalFee < 0}">
+          <span>{{data.differences.totalFee | currency }}</span>
+        </li>
+  
+        <li class='amount red grey separator'>
+          <span>{{data.budget.totalVariables | currency }}</span>
+        </li>
+        <li class='amount blue grey separator'>
+          <span>{{data.real.totalVariables | currency }}</span>
+        </li>
+        <li class='amount green grey separator'  [ngClass]="{'danger': data.differences.totalVariables < 0}">
+          <span>{{data.differences.totalVariables | currency }}</span>
+        </li>
+      </ul>
+  
+      <ng-template ngFor let-fixed [ngForOf]="dataVariableCost" let-i="index">
+        <ul>
+          <li class='amount red'>
+            <span>{{fixed.budget_total | currency }}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{fixed.real_total | currency }}</span>
+          </li>
+          <li class='amount green'  [ngClass]="{'danger': fixed.differences_total < 0}">
+            <span>{{fixed.differences_total | currency }}</span>
+          </li>
+          <ng-template ngFor let-children [ngForOf]="fixed.children" let-i="index">
+            <li class='amount red'>
+              <span>{{children.budget | currency }}</span>
+            </li>
+            <li class='amount blue'>
+              <span>{{children.real | currency }}</span>
+            </li>
+            <li class='amount green'  [ngClass]="{'danger': children.differences < 0}">
+              <span>{{children.differences | currency }}</span>
+            </li>
+          </ng-template>
+        </ul>
+      </ng-template>
+  
+      <ul>
+        
+  
+        <li class='amount red final-row  separator separator-upper'>
+          <span>{{data.budget.totalBeneficios | currency }}</span>
+        </li>
+        <li class='amount blue final-row  separator separator-upper'>
+          <span>{{data.real.totalBeneficios | currency }}</span>
+        </li>
+        <li class='amount green final-row  separator separator-upper'  [ngClass]="{'danger': data.differences.totalBeneficios < 0}">
+          <span>{{data.differences.totalBeneficios | currency }}</span>
+        </li>
+      </ul>
+    </div>
+</div>
+<ng-template #choosen>
+  <div *ngIf="!choosenCompany; else loading">
+    <h2 class="title-loading">
+      Seleccione una empresa y año fiscal
+    </h2>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el informe...
+  </h2>
+</ng-template>

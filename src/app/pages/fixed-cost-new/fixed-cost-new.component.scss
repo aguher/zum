@@ -1,0 +1,58 @@
+table{
+   color:#444444;
+   background-color:#AAAAAA;
+   border-color:#444444;
+   font-size:'13px';
+}
+
+#headerfil {
+    position:fixed; /* fixing the position takes it out of html flow - knows
+    				   nothing about where to locate itself except by browser
+    				   coordinates */
+    left:0;			/* top left corner should start at leftmost spot */
+    top:75px;			/* top left corner should start at topmost spot */
+    width:100%;		/* take up the full browser width */
+    z-index:1;	/* high z index so other content scrolls underneath */
+    height:75px; 	/* define height so you can define for content */
+    background-color:white; /* otherwise content underneath will be visible */
+}
+
+#contenedor-principal{
+  padding-top:25px;
+}
+
+input{
+	text-align:right;
+	width:60px;
+}
+
+.btn-group{
+    padding-left:15px;
+    padding-top:2px;
+}
+
+
+table{
+  background-color:white !important;
+  font-size: 12px;
+}
+
+#tablagastosfijos, #tablagastosvariables{
+  border-width: 1px;
+  border: solid #DF85A5;
+}
+
+
+#tablagastosfijos thead th, #lineatotalgastosfijos, #tablagastosvariables thead th, #lineatotalgastosvariables {
+  background-color: #DF85A5;
+}
+
+#tablaingresos{
+  border-width: 1px;
+  border: solid #67d2df;
+}
+
+
+#tablaingresos thead th, #lineatotalingresos th{
+  background-color: #67d2df;
+}

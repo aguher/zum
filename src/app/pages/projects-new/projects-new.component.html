@@ -1,0 +1,678 @@
+<ng-template #choosenProjects>
+    <div *ngIf="!choosenCompany; else choosen">
+        <h2 class="title-loading">
+            Seleccione una empresa y año fiscal
+        </h2>
+    </div>
+</ng-template>
+<ng-template #choosen>
+    <div *ngIf="!noProjects; else createProject">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando presupuestos...
+        </h2>
+    </div>
+</ng-template>
+
+
+<ng-template #createProject>
+    <div class="container-projects no-projects">
+        <div class="container-title" *ngIf="roleUser <=5 || roleUser == 9 || roleUser == 10">
+            <span class="title">Añade el primer presupuesto / pedido</span>
+            <div class="add-campaign">
+                <a class="big-button" (click)="createCampaign()">
+                    <i class="material-icons">playlist_add</i> Agregar
+                </a>
+            </div>
+        </div>
+        <div class="container-title" *ngIf="roleUser >5 && roleUser != 9 && roleUser != 10">
+            <span class="title">No hay ningún presupuesto / pedido añadido</span>
+        </div>
+    </div>
+</ng-template>
+
+<div class="modal fade" id="dialogotramitarpedido" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" *ngIf="selectedCampaign">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imgMaxLabel">Pedido en Trámite</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <span *ngIf="selectedCampaign && selectedCampaign.btramite == 0">Va a indicar que se está tramitando el pedido, por lo que pasará a ser no modificable. ¿Está de acuerdo?</span>
+                <span *ngIf="selectedCampaign && selectedCampaign.btramite == 1">Va a quitar que el pedido está en trámite, por lo que volverá a ser modificable. ¿Está de acuerdo?</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" *ngIf="selectedCampaign && selectedCampaign.btramite == 1" class="btn btn-success" (click)="tramitarpedidoapi()" data-dismiss="modal">Quitar Trámite Pedido</button>
+                <button type="button" *ngIf="selectedCampaign && selectedCampaign.btramite == 0" class="btn btn-success" (click)="tramitarpedidoapi()" data-dismiss="modal">Tramitar Pedido</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-projects" *ngIf="choosenCompany else choosenProjects">
+    <div class="container-title">
+        <div class="ui-grid-row" style="margin-bottom:5px">
+
+            <!--         <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-info" (click)="tabSeleccionada=1;filtrar()" [ngClass]="{'active': 1 == tabSeleccionada}">Presupuestos</button>
+                <button type="button" class="btn btn-outline-info" (click)="tabSeleccionada=2;filtrar()" [ngClass]="{'active': 2 == tabSeleccionada}">Pedidos</button>
+                <button type="button" class="btn btn-outline-info" (click)="tabSeleccionada=3;filtrar()" [ngClass]="{'active': 3 == tabSeleccionada}" *ngIf="false">Finalizados</button>
+        </div> -->
+
+            <div class="ui-grid-col-4">
+                <button style="top:15px; position:relative" type="button" class="btn btn-outline-danger" (click)="togglefiltroPtesFacturar()" [ngClass]="{'active': filtroPtesFacturar}">Pendiente Facturar</button>
+                <button style="top:15px; position:relative" type="button" class="btn btn-outline-info" (click)="togglefiltroSinFactura()" [ngClass]="{'active': filtroSinFactura}">Pedidos sin Fra.</button>
+            </div>
+
+            <div class="ui-grid-col-4" style="position:relative; top:15px">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2" style="position:relative; top:6px">
+                        <small>Desde: </small>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="start_date_calendar" (dateChanged)="onDateChanged($event,  'start_date')"></my-date-picker>
+                    </div>
+                    <div class="ui-grid-col-2" style="position:relative; top:6px">
+                        <small>&nbsp;Hasta:</small>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="end_date_calendar" (dateChanged)="onDateChanged($event,  'end_date')"></my-date-picker>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-col-4; text-right">
+                <div class="add-campaign" *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6 || roleUser == 9 || roleUser == 10">
+                    <a class="big-button export" (click)="exportExcel()">
+                        <i alt="exportar" title="exportar" class="material-icons">get_app</i> Exportar a EXCEL
+                    </a>
+                    <a class="big-button" (click)="createCampaign()" *ngIf="roleUser === 3 || roleUser === 5  || roleUser == 9 || roleUser == 10">
+                        <i class="material-icons">playlist_add</i> Agregar
+                    </a>
+                    <a *ngIf="choosenCompany" (click)="refresh(true)">
+                        <i class="material-icons refresh" title="recargar listado y estadísticas" style="color:#418EE5; cursor:pointer; position:relative; margin-right:20px; top:10px">refresh</i>
+                    </a>
+                </div>
+            </div>
+            <!--         <div class="search-input-block"  [ngClass]="{'hidden': !showInput}" >
+            <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
+            <i class="material-icons">search</i>
+        </div> -->
+        </div>
+    </div>
+
+    <div class="list" *ngIf="!cargandolistado">
+
+        <table class="table table-sm" id="tablaproyectos">
+            <thead>
+                <tr>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Desest.</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nº Pedido</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col" class="text-right">Ing.Previstos</th>
+                    <th scope="col" class="text-right">Facturado</th>
+                    <th scope="col" class="text-right">Gas.Previstos</th>
+                    <th scope="col" class="text-right">Gas.Reales</th>
+                    <th scope="col" class="text-right">M.Prev.</th>
+                    <th scope="col" class="text-right">M.Real</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th scope="col"><select (change)="filtrar()" [(ngModel)]="filtroestado"><option value=-1>-Filtre estado-</option><option value='1'>Presupuesto</option><option value='2'>Pedido</option><option value='3'>En Proceso</option><option value='4'>Procesado</option><option value='5'>Finalizado</option></select></th>
+                    <th scope="col"><select (change)="filtrar()" [(ngModel)]="filtrodesestimado"><option value=-1>-Filtre des.-</option><option value='Sí'>Sí</option><option value='No'>No</option></select></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronumero" placeholder="Filtre código" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropedido" placeholder="Filtre núm. pedido" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroproyecto" placeholder="Filtre título" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocliente" placeholder="Filtre cliente" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofechainicio" placeholder="Filtre fecha" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroingresosprevistos" placeholder="Filtre ing. prev." /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroingresosreales" placeholder="Filtre ing. real." /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrogastosprevistos" placeholder="Filtre gas. prev." /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrogastosreales" placeholder="Filtre gas. real" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtromargenprevistos" placeholder="Filtre margen prev." /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtromargenreales" placeholder="Filtre margen real" /></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (dblclick)="breakdownCampaign(proyecto)" style="cursor:pointer" *ngFor="let proyecto of projectsfiltrados | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+                    <td>{{proyecto.status}}</td>
+                    <td *ngIf="proyecto.desestimado == 'Sí'"><label style="position:relative;top:-10px">{{proyecto.desestimado}}</label> <i *ngIf="proyecto.desestimado == 'Sí'" class="material-icons" style="color:blue" [title]="proyecto.fechadesestimado + ' - ' + proyecto.motivodesestimado">info</i></td>
+                    <td *ngIf="proyecto.desestimado == 'No'">{{proyecto.desestimado}}</td>
+                    <td *ngIf="proyecto.desestimado == 'Anulado'">No</td>
+                    <td>{{proyecto.campaign_code}}</td>
+                    <td>{{proyecto.id_status == 1 ? '' : proyecto.ped_code}}</td>
+                    <td>{{proyecto.campaign_name}}</td>
+                    <td>{{proyecto.customer}}</td>
+                    <td>{{proyecto.creation_date}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.budget_income) ? 'red' : '' }">{{proyecto.budget_income | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.real_income) ? 'red' : '' }">{{proyecto.real_income | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.budget_expenses) ? 'red' : '' }">{{proyecto.budget_expenses | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.real_expenses) ? 'red' : '' }">{{proyecto.real_expenses | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.budget_income-proyecto.budget_expenses) ? 'red' : '' }"><b>{{proyecto.budget_income-proyecto.budget_expenses | currency:false}}</b></td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(proyecto.real_income-proyecto.real_expenses) ? 'red' : '' }"><b>{{proyecto.real_income-proyecto.real_expenses | currency:false}}</b></td>
+                    <td>
+                        <div class="menu">
+                            <!-- Bloquear pedidos para súper usuarios -->
+                            <a title="Poner Pedido En Trámite (bloquear pedido)" *ngIf="id_company == 412 && proyecto.id_status >=2 && roleUser <= 5 && proyecto.btramite == 0" (click)="tramitarpedido(proyecto)" data-toggle="modal" data-target="#dialogotramitarpedido">
+                                <i class="material-icons work_sintramite">work</i>
+                            </a>
+
+                            <a title="Quitar Pedido En Trámite (desbloquear pedido)" *ngIf="id_company == 412 && proyecto.id_status >=2 && roleUser <= 5 && proyecto.btramite == 1" (click)="tramitarpedido(proyecto)" data-toggle="modal" data-target="#dialogotramitarpedido">
+                                <i class="material-icons work_entramite">work</i>
+                            </a>
+                            <!-- Fin Bloquear pedidos para súper usuarios -->
+
+                            <!-- Info bloquear pedidos para usuarios normales -->
+                            <a title="El pedido está en trámite" *ngIf="id_company == 412 && proyecto.id_status >=2 && roleUser > 5 && proyecto.btramite == 0">
+                                <i class="material-icons work_sintramite" style="opacity: 0.3">work</i>
+                            </a>
+
+                            <a title="El pedido no está en trámite" *ngIf="id_company == 412 && proyecto.id_status >=2 && roleUser > 5 && proyecto.btramite == 1">
+                                <i class="material-icons work_entramite" style="opacity: 0.3">work</i>
+                            </a>
+                            <!-- Fin Info bloquear pedidos para usuarios normales -->
+
+                            <!-- Info en el caso que sea presupuesto -->
+                            <a title="Poner/Quitar en Trámite (no aplica a presupuestos)" *ngIf="id_company == 412 && proyecto.id_status ==1">
+                                <i class="material-icons" style="opacity: 0.3">work</i>
+                            </a>
+                            <!-- Fin Info en el caso que sea presupuesto -->
+
+                            <a title="quitar pedido anulado, el pedido volverá a ser tenido en cuenta" *ngIf="showCol && proyecto.id_status >= 2 && proyecto.desestimado == 'Anulado'" (click)="anularCampaign(proyecto)">
+                                <i class="material-icons desanular">broken_image</i>
+                            </a>
+
+                            <a title="anular pedido" *ngIf="showCol && proyecto.id_status >= 2 && proyecto.desestimado == 'No'" (click)="anularCampaign(proyecto)">
+                                <i class="material-icons anular">broken_image</i>
+                            </a>
+
+                            <a title="desestimar presupuesto" *ngIf="showCol && proyecto.desestimado == 'No' && proyecto.id_status == 1" (click)="desestimarCampaign(proyecto)">
+                                <i class="material-icons estimate">thumb_down</i>
+                            </a>
+
+                            <a title="volver a estimar presupuesto" *ngIf="showCol && proyecto.desestimado == 'Sí' && proyecto.id_status == 1" (click)="desestimarCampaign(proyecto)">
+                                <i class="material-icons desestimate">thumb_up</i>
+                            </a>
+
+                            <a title="eliminar" *ngIf="showCol && roleUser != 9 && roleUser != 10 &&  proyecto.numfacturas == '0' && proyecto.btramite == '0' && proyecto.salidas == '0'" (click)="deleteCampaign(proyecto)">
+                                <i class="material-icons delete">delete</i>
+                            </a>
+                            <a title="no se puede eliminar, tiene facturas o salidas asociadas o está en trámite" *ngIf="showCol && roleUser != 9 && roleUser != 10 && (proyecto.numfacturas != '0' || proyecto.btramite == '1' || proyecto.salidas != '0')">
+                                <i class="material-icons" style="opacity: 0.3">delete</i>
+                            </a>
+                            <a title="clonar" *ngIf="showCol" (click)="createCampaign(proyecto)">
+                                <i class="material-icons clone-button">content_copy</i>
+                            </a>
+                            <a title="editar" *ngIf="showCol && proyecto.numfacturas == '0' && proyecto.btramite == '0' && proyecto.salidas == '0'" (click)="selectCampaign(proyecto, i)">
+                                <i class="material-icons edit-button">mode_edit</i>
+                            </a>
+                            <a title="no se puede modificar, tiene facturas o salidas asociadas o está en trámite" *ngIf="showCol && (proyecto.numfacturas != '0' || proyecto.btramite == '1' || proyecto.salidas != '0')">
+                                <i class="material-icons" style="opacity: 0.3">mode_edit</i>
+                            </a>
+                            <a title="Desglose" (click)="breakdownCampaign(proyecto)">
+                                <i class="material-icons desglose">assessment</i>
+                            </a>
+                            <a title="Resumen" *ngIf="roleUser === 6" (click)="summaryProject(proyecto)">
+                                <i class="material-icons edit-button">line_style</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalingresosprevistos) ? 'red' : '' }">{{totalingresosprevistos | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalingresosreales) ? 'red' : '' }">{{totalingresosreales | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalgastosprevistos) ? 'red' : '' }">{{totalgastosprevistos | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalgastosreales) ? 'red' : '' }">{{totalgastosreales | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalingresosprevistos-totalgastosprevistos) ? 'red' : '' }">{{totalingresosprevistos-totalgastosprevistos | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalingresosreales-totalgastosreales) ? 'red' : '' }">{{totalingresosreales-totalgastosreales | currency:false }}</th>
+                    <th></th>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+        <div *ngIf="arrpages.length != 0" style="height:50px">
+            <div class="paginator text-center">
+                <span (click)="irPagina(1)" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>
+                <span (click)="irPagina(numPage-2)" *ngIf="numPage>2" style="cursor:pointer;padding:15px">{{numPage-2}}</span>
+                <span (click)="irPagina(numPage-1)" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>
+                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span>
+                <span (click)="irPagina(numPage+1)" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>
+                <span (click)="irPagina(numPage+2)" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>
+                <span (click)="irPagina(arrpages.length)" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
+            </div>
+            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+                <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{projectsfiltrados.length > [numPage]*[pagination] ? [numPage]*[pagination] : projectsfiltrados.length }} de {{projectsfiltrados.length}} items </i>
+            </div>
+        </div>
+    </div>
+
+    <div class="list" *ngIf="cargandolistado">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando el listado...
+        </h2>
+    </div>
+
+    <div class="text-center">Estadísticas de
+        <span [ngSwitch]="filtroestado">
+            <span *ngSwitchCase="-1">Presupuestos y Pedidos</span>
+        <span *ngSwitchCase="1">Presupuestos</span>
+        <span *ngSwitchCase="2">Pedidos</span>
+        <span *ngSwitchCase="3">Pedidos</span>
+        <span *ngSwitchCase="4">Pedidos</span>
+        </span>
+    </div>
+
+
+    <div id="graficas" class="text-center" *ngIf="!cargandolistado">
+        <div style="display: inline-block;height:180px;width:500px;">
+            <canvas baseChart width="495" height="180" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
+        </div>
+        <div style="display: inline-block;height:180px;width:290px;">
+            <canvas baseChart width="285" height="180" [chartType]="'bar'" [datasets]="chartData" [labels]="labels" [colors]="colors" [options]="chartOptions" [legend]="true">
+                </canvas>
+
+        </div>
+        <div style="display: inline-block;height:180px;width:490px;">
+            <canvas baseChart width="485" height="180" [datasets]="chartDataHorizontal" [options]="chartOptionsHorizontal" [labels]="labelsHor" [colors]="colorsHor" [legend]="true" [chartType]="'horizontalBar'">
+                </canvas>
+        </div>
+    </div>
+    <div *ngIf="arrpages.length == 0 && !cargandolistado">
+        <div class="text-center">
+            No hay elementos para mostrar
+        </div>
+    </div>
+    <!-- "-->
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" [header]="cabeceraNuevoProyecto" [(visible)]="displayDialogNew" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row">
+            <!--             <div class="ui-grid-col-3" >
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="campaign_code">Código <b *ngIf="autoNumbered">autonumerado</b></label></div>
+                    <div class="ui-grid-col-12">
+                        <p-inputMask  *ngIf="!autoNumbered" [disabled]="autoNumbered" id="campaign_code" [(ngModel)]="newCampaign.campaign_code" mask="99999" placeholder="Número"></p-inputMask> 
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div> -->
+            <div class="ui-grid-col-7">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+                    <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="newCampaign.campaign_name" /></div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.status" [(ngModel)]="newCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Fecha</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [disabled]="id_company == 412" [options]="myDatePickerOptions" [(ngModel)]="newCampaign.creation_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <!--             <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="end_date">Fecha de fin</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="newCampaign.end_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>  -->
+
+            <div class="ui-grid-col-7">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+                    <div class="ui-grid-col-11">
+                        <!--                         <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers"></p-dropdown>
+  -->
+                        <input type="text" list="newClient" placeholder="Selecciona un cliente" [(ngModel)]="newCampaign.customer" />
+                        <datalist id="newClient" styleClass="dashboard-dropdown new">           
+                        <option id={{cliente.value}} value={{cliente.label}} *ngFor="let cliente of dataCombos.customers"></option>
+                    </datalist>
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <button class="btn btn-secondary" title="Agregar cliente" (click)="dialogoCliente()"> + </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--         <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="team">Equipo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="newCampaign.id_team" placeholder="Selecciona un equipo"></p-dropdown>
+                    </div>
+                </div>
+            </div>            
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="user">Usuario</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.users" [(ngModel)]="newCampaign.id_user" placeholder="Selecciona un usuario"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!--       <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="newCampaign.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="group">Grupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [(options)]="dataCombos.groups" [(ngModel)]="newCampaign.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+                    </div>
+                </div>                
+                
+            </div>            
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Subgrupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [(options)]="dataCombos.subgroups" [(ngModel)]="newCampaign.id_subgroup" placeholder="Selecciona un subgrupo"></p-dropdown>
+                    </div>
+                </div>                
+            </div>           
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.status" [(ngModel)]="newCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>                
+            </div>
+        </div>-->
+
+        <!--         <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Nivel de seguridad</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.security" [(ngModel)]="newCampaign.security" placeholder="Selecciona un nivel"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>  -->
+    </div>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogNew = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="addCampaign()">              
+              Guardar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" *ngIf="selectedCampaign" header="Detalle del item seleccionado" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row">
+            <!--             <div class="ui-grid-col-3">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="campaign_code">Código <b *ngIf="autoNumbered">autonumerado</b></label></div>
+                    <div class="ui-grid-col-12"><p-inputMask  *ngIf="!autoNumbered" [disabled]="autoNumbered" id="campaign_code" [(ngModel)]="selectedCampaign.campaign_code" mask="99999" placeholder="Número"></p-inputMask></div>
+                </div>
+            </div> -->
+            <!--             <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div> -->
+            <div class="ui-grid-col-7">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+                    <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="selectedCampaign.campaign_name" /></div>
+                </div>
+            </div>
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-4">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.status" [(ngModel)]="selectedCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Fecha</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [disabled]="id_company == 412" [options]="myDatePickerOptions" [(ngModel)]="selectedCampaign.creation_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-col-1">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+
+            <div class="ui-grid-col-7">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+                    <div class="ui-grid-col-11">
+                        <!--                             <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="selectedCampaign.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+ -->
+                        <input type="text" list="selectedClient" placeholder="Selecciona un cliente" [(ngModel)]="selectedCampaign.customer" />
+                        <datalist id="selectedClient" styleClass="dashboard-dropdown new">           
+                                <option id={{cliente.value}} value={{cliente.label}} *ngFor="let cliente of dataCombos.customers"></option>
+                            </datalist>
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <button class="btn btn-secondary" title="Agregar cliente" (click)="dialogoCliente()"> + </button>
+                    </div>
+                </div>
+            </div>
+            <!--             <div class="ui-grid-col-2">
+                <div class="ui-grid-row">&nbsp;</div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="end_date">Fecha de fin</label></div>
+                    <div class="ui-grid-col-12">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedCampaign.end_date_model" required></my-date-picker>
+                    </div>
+                </div>
+            </div>      -->
+
+        </div>
+        <!--         <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="team">Equipo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="selectedCampaign.id_team" placeholder="Selecciona un equipo"></p-dropdown>
+                    </div>
+                </div>
+            </div>                 
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="user">Usuario</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.users" [(ngModel)]="selectedCampaign.id_user" placeholder="Selecciona un usuario"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>  -->
+        <!--        <div class="ui-grid-row">
+
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="group">Grupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.groups" [(ngModel)]="selectedCampaign.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+                    </div>
+                </div>
+            </div>               
+          
+        </div>
+        <div class="ui-grid-row">         
+             <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Subgrupo</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.subgroups" [(ngModel)]="selectedCampaign.id_subgroup" placeholder="Selecciona un subgrupo"></p-dropdown>
+                    </div>
+                </div>
+            </div> 
+            <div class="ui-grid-col-6">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Estado</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.status" [(ngModel)]="selectedCampaign.id_status" placeholder="Selecciona un estado"></p-dropdown>
+                    </div>
+                </div>
+            </div>             
+        </div>
+-->
+        <!--         <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="subgroup">Nivel de seguridad</label></div>
+                    <div class="ui-grid-col-12">
+                        <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new edit" [options]="dataCombos.security" [(ngModel)]="selectedCampaign.security_level" placeholder="Selecciona un nivel"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>     -->
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialog = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="updateApi()">              
+              Guardar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign">
+        <div class="ui-grid-row">
+            <span class="title">¿Esta seguro de eliminar el {{selectedCampaign.status}}?</span>
+            <span class="info">{{selectedCampaign.campaign_name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="deleteApi(selectedCampaign)">              
+              Eliminar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" header="Diálogo desestimar" [(visible)]="displayDialogDesestimar" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'No'">
+        <div class="ui-grid-row">
+            <span class="title">Motivo de desestimar el presupuesto</span>
+            <br>
+            <textarea rows=4 cols=60 id="MotivoDesestimar" [(ngModel)]="motivodesestimar"></textarea>
+        </div>
+    </div>
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'Sí'">
+        <div class="ui-grid-row">
+            <span class="title">Confirme que vuelve a estimar el presupuesto</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDesestimar = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="desestimarApi(selectedCampaign)" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'Sí'">              
+              Volver a estimar
+            </a>
+            <a (click)="desestimarApi(selectedCampaign)" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'No'">              
+                Desestimar 
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" header="Diálogo anular pedido" [(visible)]="displayDialogAnular" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'No'">
+        <div class="ui-grid-row">
+            <span class="title">Confirme que anula el pedido (los importes se pondrán a cero)</span>
+        </div>
+    </div>
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'Anulado'">
+        <div class="ui-grid-row">
+            <span class="title">Confirme que vuelve a contar con el pedido (dejará de estar anulado)</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogAnular = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="anularApi(selectedCampaign)" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'Anulado'">              
+              Quitar Anular Pedido
+            </a>
+            <a (click)="anularApi(selectedCampaign)" *ngIf="selectedCampaign && selectedCampaign.desestimado == 'No'">              
+              Anular Pedido 
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" header="Agregar cliente" [(visible)]="displayDialogCliente" [responsive]="true" showEffect="ease" [modal]="true" *ngIf="selectedCustomer">
+    <app-customers-edit [selectedCustomer]="selectedCustomer" (insertar)="recargarClientes($event)" (cancelar)="cancelarCliente()"></app-customers-edit>
+    <p-dialog>

@@ -1,0 +1,92 @@
+body .dashboard-tab.ui-tabview {
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+body .dashboard-tab.no-overflow {
+    overflow: visible;
+}
+body .dashboard-tab.ui-tabview .export {
+    position: absolute;
+    z-index: 1;
+    top: -49px;
+    right: 1px;
+    font-size: 13px;
+    display: inline-block;
+    color: #6F778A;
+    border-bottom: 4px solid transparent;
+    font-weight: 400;
+    line-height: 49px;
+    margin: 0;
+    padding: 0 10px;
+    border: 0;
+}
+body .dashboard-tab.ui-tabview .export:hover {
+    cursor: pointer;
+    background: #6F778A;
+    color: #FFFFFF;
+}
+body .dashboard-tab.ui-tabview .export i {
+    top: 9px;
+    position: relative;
+}
+body .dashboard-tab.ui-tabview .export:after {
+    content:"Exportar a Excel";
+}
+body .dashboard-tab.ui-tabview .ui-tabview-panel {
+    padding:0;
+    position: relative;
+}
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav {
+    background: #F4F5F8;
+    border:1px solid #DBE0EB;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+}
+
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li {
+    margin:0 25px;
+    background: transparent;
+    position:relative;
+    top:0;
+}
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li:not(.ui-state-active):not(.ui-state-disabled):hover {
+    background: transparent;
+    border-color: transparent;
+}
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+    font-size: 13px;
+    display: inline-block;
+    color: #6F778A;
+    border-bottom:4px solid transparent;
+    font-weight: 400;
+    line-height: 35px;
+}                    
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li a.active, 
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li a:hover {
+    height: 75px;
+    cursor: pointer;
+    color: #1b1d1f;
+    border-bottom:4px solid #418EE5;
+}
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
+    background: transparent;
+    border:0;
+    border-bottom:4px solid #418EE5;
+}
+body .dashboard-tab.ui-tabview.ui-tabview-top .ui-tabview-nav li a i {
+    color: #418EE5;
+    font-size: 18px;
+}
+
+
+body .dashboard-tab.blue.ui-tabview.ui-tabview-top .ui-tabview-nav li a {
+    color:white;
+}
+body .dashboard-tab.blue.ui-tabview.ui-tabview-top .ui-tabview-nav li.ui-state-active {
+    border-bottom: 4px solid #FFFFFF;
+}
+body .dashboard-tab.blue.ui-tabview.ui-tabview-top .ui-tabview-nav {
+    background: #418EE5;
+}

@@ -1,0 +1,120 @@
+table{
+   color:#444444;
+   background-color:#AAAAAA;
+   border-color:#444444;
+   font-size:'13px';
+}
+
+#headerfil {
+    position:fixed; /* fixing the position takes it out of html flow - knows
+    				   nothing about where to locate itself except by browser
+    				   coordinates */
+    left:0;			/* top left corner should start at leftmost spot */
+    top:75px;			/* top left corner should start at topmost spot */
+    width:100%;		/* take up the full browser width */
+    z-index:1;	/* high z index so other content scrolls underneath */
+    height:75px; 	/* define height so you can define for content */
+    background-color:white; /* otherwise content underneath will be visible */
+}
+
+#contenedor-principal{
+  padding-top:75px;
+}
+
+body .dashboard-dialog.ui-dialog {
+  max-width: 100% !important;
+}
+
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 5px;
+  padding: 5px;
+}
+
+.modal-title {
+  width:100%;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  width: 1300px;
+  border-radius: 0;
+}
+
+.btn-group{
+    padding-left:15px;
+    padding-top:2px;
+}
+
+#cabeceraingresos {
+    background: #17a2b8; /* For browsers that do not support gradients */
+    background: linear-gradient(to bottom right, #ffffff, #17a2b8);
+}
+
+#cabeceragastos {
+    background: #DC3545; /* For browsers that do not support gradients */
+    background: linear-gradient(to bottom right, #ffffff, #DC3545);
+}
+
+#cabecerabalance {
+    background: #28A745; /* For browsers that do not support gradients */
+    background: linear-gradient(to bottom right, #ffffff, #28A745);
+}
+
+table{
+  background-color:white !important;
+  font-size: 12px;
+}
+
+#tablaingresos{
+  border-width: 2px;
+  border: solid #17a2b8;
+}
+
+.tablaingresos td, .tablaingresos th {
+    border: solid #17a2b8;
+    border-width:1px;
+}
+
+#tablaingresos thead th, #lineatotalingresos th{
+  border: solid white;
+  border-width: 1px;
+  background-color: #17a2b8;
+  color: white;
+}
+
+#tablagastos{
+  border-width: 2px;
+  border: solid #DC3545;
+}
+
+.tablagastos td, .tablagastos th {
+    border: solid #DC3545;
+    border-width:1px;
+}
+
+#tablagastos thead th, #lineatotalgastos th{
+  border: solid white;
+  border-width: 1px;
+  background-color: #DC3545;
+  color: white;
+}
+
+#tablabalance{
+  border-width: 2px;
+  border: solid #28A745;
+}
+
+.tablabalance td, .tablabalance th {
+    border: solid #28A745;
+    border-width:1px;
+}
+
+#tablabalance thead th, #lineatotalbalance th{
+  border: solid white;
+  border-width: 1px;
+  background-color: #28A745;
+  color: white;
+}

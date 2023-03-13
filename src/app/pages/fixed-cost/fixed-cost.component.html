@@ -1,0 +1,630 @@
+<p-tabView styleClass="dashboard-tab" *ngIf="choosenCompany; else choosen">
+  
+  <p-tabPanel header="Presupuestados">
+    <a class="export" (click)="exportExcel()">
+      <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+    </a>
+    <div class="list">
+      <p-dataTable scrollable="true" scrollHeight="calc(100vh - 300px)" [editable]="isEditable" [rowStyleClass]="lookupRowStyleClass"
+        (onEditComplete)="onEditComplete($event, conceptFixed,0)" *ngIf="conceptFixed.length" [emptyMessage]="emptyMsg" styleClass="dashboard-tables fixed-concept"
+        [(value)]="conceptFixed" [paginator]="displayPagination" [rows]="pagination" [responsive]="true" #dt>
+        <p-footer>
+          <span class="footer">
+              Conceptos fijos totales
+              <b>{{numConceptFixed}}</b>
+            </span>
+        </p-footer>
+        <p-column header="" styleClass="concept">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div class="parent" *ngIf="row.id_parent==='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+            <div class="children" *ngIf="row.id_parent!=='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+          </ng-template>
+        </p-column>
+        <p-column field="total_amount" styleClass="total-amount" header="Total">
+          <ng-template let-row="rowData" pTemplate="body">
+            <span>{{row.total_amount | currency}}</span><br/>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <span class="title">Totales</span>
+            <span class="amount"> {{accumulateMonths[0].total | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="january" header="Ene" [editable]="isEditable">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.january | currency}}</span>
+          </ng-template>               
+          <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+            <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'january')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.january" (focus)="old=valcode.january;$event.target.className=''" 
+            (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+          </ng-template>             
+          <ng-template pTemplate="header">
+            <span class="title">Ene</span>
+            <span class="amount"> {{accumulateMonths[0].january | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="february" header="Feb" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.february | currency}}</span>
+            </ng-template>            
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'february');" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.february" (focus)="old=valcode.february;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Feb</span>
+            <span class="amount"> {{accumulateMonths[0].february | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="march" header="Mar" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.march | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'march')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.march" (focus)="old=valcode.march;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Mar</span>
+            <span class="amount"> {{accumulateMonths[0].march | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="april" header="Abr" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.april | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'april')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.april" (focus)="old=valcode.april;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Abr</span>
+            <span class="amount"> {{accumulateMonths[0].april | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="may" header="May" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.may | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'may')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.may" (focus)="old=valcode.may;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">May</span>
+            <span class="amount"> {{accumulateMonths[0].may | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="june" header="Jun" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.june | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'june')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.june" (focus)="old=valcode.june;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Jun</span>
+            <span class="amount"> {{accumulateMonths[0].june | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="july" header="Jul" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.july | currency}}</span>
+            </ng-template>            
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'july')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.july" (focus)="old=valcode.july;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Jul</span>
+            <span class="amount"> {{accumulateMonths[0].july | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="august" header="Ago" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.august | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'august')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.august" (focus)="old=valcode.august;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Ago</span>
+            <span class="amount"> {{accumulateMonths[0].august | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="september" header="Sep" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.september | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'september')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.september" (focus)="old=valcode.september;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Sep</span>
+            <span class="amount"> {{accumulateMonths[0].september | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="october" header="Oct" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.october | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'october')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.october" (focus)="old=valcode.october;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Oct</span>
+            <span class="amount"> {{accumulateMonths[0].october | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="november" header="Nov" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.november | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'november')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.november" (focus)="old=valcode.november;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Nov</span>
+            <span class="amount"> {{accumulateMonths[0].november | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="december" header="Dic" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.december | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input *ngIf="valcode.id_parent != 0" (blur)="blurred($event, old,valcode, 'december')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.december" (focus)="old=valcode.december;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dt)" />     
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Dic</span>
+            <span class="amount"> {{accumulateMonths[0].december | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column [style]="{'width':'25px', 'padding':'0','position': 'relative', 'left':'-7px'}">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div *ngIf="row.id_parent!=='0' && allConcepts">
+              <i (click)="analize(row.account_number, row.name)" alt="analizar" title="analizar" class="material-icons analize">assessment</i>
+            </div>
+          </ng-template>
+
+        </p-column>
+
+      </p-dataTable>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Reales">
+    <a class="export" (click)="exportExcel()">
+      <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+    </a>
+
+    <div class="list">
+      <p-dataTable scrollable="true" scrollHeight="calc(100vh - 300px)" [editable]="isEditable" [rowStyleClass]="lookupRowStyleClass"
+        (onEditComplete)="onEditComplete($event, conceptFixedReal,1)" *ngIf="conceptFixedReal.length" [emptyMessage]="emptyMsg"
+        styleClass="dashboard-tables fixed-concept" [(value)]="conceptFixedReal" [(selection)]="selectedGroup" [paginator]="displayPagination"
+        [rows]="pagination" [responsive]="true" #dtReal>
+        <p-footer>
+          <span class="footer">
+              Conceptos fijos totales
+              <b>{{numConceptFixed}}</b>
+            </span>
+        </p-footer>
+        <p-column header="" styleClass="concept">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div class="parent" *ngIf="row.id_parent==='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+            <div class="children" *ngIf="row.id_parent!=='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+          </ng-template>
+        </p-column>
+        <p-column field="total_amount" styleClass="total-amount" header="Total">
+          <ng-template let-row="rowData" pTemplate="body">
+            <span>{{row.total_amount | currency}}</span><br/>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <span class="title">Totales</span>
+            <span class="amount"> {{accumulateMonths[1].total | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="january" header="Ene" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.january | currency}}</span>
+            </ng-template>                      
+          <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+            <input (blur)="blurred($event, old,valcode, 'january')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.january" (focus)="old=valcode.january;$event.target.className=''" 
+            (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+          </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Ene</span>
+            <span class="amount"> {{accumulateMonths[1].january | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="february" header="Feb" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.february | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'february')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.february" (focus)="old=valcode.february;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Feb</span>
+            <span class="amount"> {{accumulateMonths[1].february | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="march" header="Mar" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.march | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'march')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.march" (focus)="old=valcode.march;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Mar</span>
+            <span class="amount"> {{accumulateMonths[1].march | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="april" header="Abr" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.april | currency}}</span>
+            </ng-template>            
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'april')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.april" (focus)="old=valcode.april;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Abr</span>
+            <span class="amount"> {{accumulateMonths[1].april | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="may" header="May" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.may | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'may')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.may" (focus)="old=valcode.may;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">May</span>
+            <span class="amount"> {{accumulateMonths[1].may | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="june" header="Jun" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.june | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'june')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.june" (focus)="old=valcode.june;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Jun</span>
+            <span class="amount"> {{accumulateMonths[1].june | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="july" header="Jul" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.july | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'july')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.july" (focus)="old=valcode.july;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Jul</span>
+            <span class="amount"> {{accumulateMonths[1].july | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="august" header="Ago" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.august | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'august')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.august" (focus)="old=valcode.august;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Ago</span>
+            <span class="amount"> {{accumulateMonths[1].august | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="september" header="Sep" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.september | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'september')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.september" (focus)="old=valcode.september;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                
+          <ng-template pTemplate="header">
+            <span class="title">Sep</span>
+            <span class="amount"> {{accumulateMonths[1].september | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="october" header="Oct" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.october | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'october')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.october" (focus)="old=valcode.october;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Oct</span>
+            <span class="amount"> {{accumulateMonths[1].october | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="november" header="Nov" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.november | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'november')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.november" (focus)="old=valcode.november;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Nov</span>
+            <span class="amount"> {{accumulateMonths[1].november | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="december" header="Dic" [editable]="isEditable">
+            <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+              <span  class="amount-no-padding">{{valcode.december | currency}}</span>
+            </ng-template>                      
+            <ng-template *ngIf="isEditable" let-valcode="rowData" let-col pTemplate="editor" let-idx="rowIndex">
+                <input (blur)="blurred($event, old,valcode, 'december')" myCurrencyFormatter  type="text" pInputText [(ngModel)]="valcode.december" (focus)="old=valcode.december;$event.target.className=''" 
+                (keydown)="resetClass($event);dataTableOnBlur($event, col, valcode, idx, dtReal)" />
+              </ng-template>                          
+          <ng-template pTemplate="header">
+            <span class="title">Dic</span>
+            <span class="amount"> {{accumulateMonths[1].december | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column [style]="{'width':'25px', 'padding':'0','position': 'relative', 'left':'-7px'}">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div *ngIf="row.id_parent!=='0' && allConcepts">
+              <i (click)="analize(row.account_number, row.name)" alt="analizar" title="analizar" class="material-icons analize">assessment</i>
+            </div>
+          </ng-template>
+
+        </p-column>
+      </p-dataTable>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Diferencias">
+    <a class="export" (click)="exportExcel()">
+      <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+    </a>
+    <div class="list">
+      <p-dataTable scrollable="true" editable="true" scrollHeight="calc(100vh - 300px)" [rowStyleClass]="lookupRowStyleClass" (onEditComplete)="onEditComplete($event, conceptFixedDifferences,2)"
+        *ngIf="conceptFixedDifferences.length" [emptyMessage]="emptyMsg" styleClass="dashboard-tables fixed-concept" [(value)]="conceptFixedDifferences"
+        [(selection)]="selectedGroup" [paginator]="displayPagination" [rows]="pagination" [responsive]="true">
+        <p-footer>
+          <span class="footer">
+              Conceptos fijos totales
+              <b>{{numConceptFixed}}</b>
+            </span>
+        </p-footer>
+        <p-column header="" styleClass="concept">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div class="parent" *ngIf="row.id_parent==='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+            <div class="children" *ngIf="row.id_parent!=='0'">
+              <span>{{row.name}}</span><br/>
+              <span><b>{{row.account_number}}</b></span>
+            </div>
+          </ng-template>
+        </p-column>
+        <p-column field="total_amount" styleClass="total-amount" header="Total">
+          <ng-template let-row="rowData" pTemplate="body">
+            <span>{{row.total_amount | currency}}</span><br/>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <span class="title">Totales</span>
+            <span class="amount"> {{accumulateMonths[2].total | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="january" header="Ene">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.january | currency}}</span>
+          </ng-template>                      
+          <ng-template pTemplate="header">
+            <span class="title">Ene</span>
+            <span class="amount"> {{accumulateMonths[2].january | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="february" header="Feb">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.february | currency}}</span>
+          </ng-template>                      
+          <ng-template pTemplate="header">
+            <span class="title">Feb</span>
+            <span class="amount"> {{accumulateMonths[2].february | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="march" header="Mar">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.march | currency}}</span>
+          </ng-template>                      
+          <ng-template pTemplate="header">
+            <span class="title">Mar</span>
+            <span class="amount"> {{accumulateMonths[2].march | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="april" header="Abr">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.april | currency}}</span>
+          </ng-template>                      
+          <ng-template pTemplate="header">
+            <span class="title">Abr</span>
+            <span class="amount"> {{accumulateMonths[2].april | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="may" header="May">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.may | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">May</span>
+            <span class="amount"> {{accumulateMonths[2].may | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="june" header="Jun">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.june | currency}}</span>
+          </ng-template>                      
+          <ng-template pTemplate="header">
+            <span class="title">Jun</span>
+            <span class="amount"> {{accumulateMonths[2].june | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="july" header="Jul">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.july | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Jul</span>
+            <span class="amount"> {{accumulateMonths[2].july | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="august" header="Ago">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.august | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Ago</span>
+            <span class="amount"> {{accumulateMonths[2].august | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="september" header="Sep">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.september | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Sep</span>
+            <span class="amount"> {{accumulateMonths[2].september | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="october" header="Oct">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.october | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Oct</span>
+            <span class="amount"> {{accumulateMonths[2].october | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="november" header="Nov">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.november | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Nov</span>
+            <span class="amount"> {{accumulateMonths[2].november | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="december" header="Dic">
+          <ng-template let-valcode="rowData" let-col pTemplate="body" let-idx="rowIndex">
+            <span  class="amount-no-padding">{{valcode.december | currency}}</span>
+          </ng-template>            
+          <ng-template pTemplate="header">
+            <span class="title">Dic</span>
+            <span class="amount"> {{accumulateMonths[2].december | currency}}</span>
+          </ng-template>
+        </p-column>
+        <p-column [style]="{'width':'25px', 'padding':'0','position': 'relative', 'left':'-7px'}">
+          <ng-template let-row="rowData" pTemplate="body">
+            <div *ngIf="row.id_parent!=='0' && allConcepts">
+              <i (click)="analize(row.account_number, row.name)" alt="analizar" title="analizar" class="material-icons analize">assessment</i>
+            </div>
+          </ng-template>
+
+        </p-column>
+      </p-dataTable>
+    </div>
+  </p-tabPanel>
+</p-tabView>
+
+
+<p-dialog styleClass="dashboard-dialog analysis" header="Análisis del coste fijo {{nameToAnalysis}}" [dismissableMask]="true" showEffect="ease" modal="true" [(visible)]="displayAnalize" >
+
+  <p-dataTable   [rowStyleClass]="lookupRowStyleClass" styleClass="dashboard-tables fixed-concept" [(value)]="analysisMonths" *ngIf="analysisMonths.length">   
+    <p-column header="" field="name_concept" styleClass="concept"></p-column>
+    <p-column field="total_amount" styleClass="total-amount" header="Total"></p-column>
+    <p-column field="january" header="Ene"></p-column>
+    <p-column field="february" header="Feb"></p-column>
+    <p-column field="march" header="Mar"></p-column>
+    <p-column field="april" header="Abr"></p-column>
+    <p-column field="may" header="May"></p-column>
+    <p-column field="june" header="Jun"></p-column>
+    <p-column field="july" header="Jul"></p-column>
+    <p-column field="august" header="Ago"></p-column>
+    <p-column field="september" header="Sep"></p-column>
+    <p-column field="october" header="Oct"></p-column>
+    <p-column field="november" header="Nov"></p-column>
+    <p-column field="december" header="Dic"></p-column>
+  </p-dataTable>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayAnalize = false" class="cancel">              
+        cerrar
+      </a>
+      <a (click)="showChart = true; ">              
+        Ver gráfica
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog charts" header="Gráfica de costes de {{nameToAnalysis}}" [dismissableMask]="true" showEffect="ease" modal="true" [(visible)]="showChart" >
+  <div style="display: inline-block;height:400px;width:800px;" >
+    <canvas baseChart width="800" height="400"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                ></canvas>
+  
+  </div>  
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="closeChart()" *ngIf="showChart">              
+        Cerrar gráfica
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<ng-template #choosen>
+  <div *ngIf="!choosenCompany; else loading">
+    <h2 class="title-loading">
+      Seleccione una empresa y año fiscal
+    </h2>
+  </div>    
+</ng-template>
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el informe...
+  </h2>
+</ng-template>

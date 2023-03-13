@@ -1,0 +1,180 @@
+<div class="text-center">
+  <div class="btn-group" role="group">
+    <button type="button" (click)="tablaSeleccionada = 'CF';" class="btn btn-outline-danger" [ngClass]="{'active': 'CF' == tablaSeleccionada}">Costes Fijos</button>
+    <button type="button" (click)="tablaSeleccionada = 'IV';" class="btn btn-outline-info" [ngClass]="{'active': 'IV' == tablaSeleccionada}" >IngresosVariables</button>
+    <button type="button" (click)="tablaSeleccionada = 'CV';" class="btn btn-outline-danger" [ngClass]="{'active': 'CV' == tablaSeleccionada}" >Costes Variables</button>
+  </div>
+
+
+  <div class="btn-group" role="group" *ngIf="false">
+    <a class="big-button export" (click)="exportExcel()">
+        <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+        Exportar a EXCEL
+    </a>
+  </div>
+
+</div>
+
+<div id="contenedor-principal">
+
+   <table class="table table-sm text-right" id="tablagastosfijos" *ngIf="tablaSeleccionada == 'CF'">
+      <thead class="text-right tablagastosfijos">
+        <tr>
+          <th class="text-left" scope="col">Concepto</th>
+          <th scope="col">Total</th>
+          <th scope="col">Ene</th>
+          <th scope="col">Feb</th>
+          <th scope="col">Mar</th>
+          <th scope="col">Abr</th>
+          <th scope="col">May</th>
+          <th scope="col">Jun</th>
+          <th scope="col">Jul</th>
+          <th scope="col">Ago</th>
+          <th scope="col">Sep</th>
+          <th scope="col">Oct</th>
+          <th scope="col">Nov</th>
+          <th scope="col">Dic</th>
+        </tr>
+      </thead>
+      <tbody class="tablagastosfijos">
+        <tr *ngFor="let item of concepts; let i= index" [ngStyle]="{'background-color': (item.id_parent == 0 ? '#C8C800' : (i % 2 === 0 ? 'white' : '#CCCCCC'))}">
+          <th class="text-left" scope="row">{{item.name}}</th>
+          <th scope="row">{{item.total | currency:false}}</th>
+          <!--filas normales, donde se puede editar-->
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};january;CF" value="{{item.january | currency:false }}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};february;CF" value="{{item.february | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};march;CF" value="{{item.march | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};april;CF" value="{{item.april | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};may;CF" value="{{item.may | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};june;CF" value="{{item.june | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};july;CF" value="{{item.july | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};august;CF" value="{{item.august | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};september;CF" value="{{item.september | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};october;CF" value="{{item.october | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};november;CF" value="{{item.november | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};december;CF" value="{{item.december | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+          <!--filas no editables (totales o que no se puede tocar ya presupuestos)-->
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.january | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.february | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.march | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.april | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.may | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.june | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.july | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.august | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.september | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.october | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.november | currency:false}}</td>
+          <td scope="row" *ngIf="item.id_parent == 0">{{item.december | currency:false}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-sm text-right" id="tablaingresos" *ngIf="tablaSeleccionada == 'IV'">
+       <thead class="text-right tablaingresos">
+         <tr>
+           <th class="text-left" scope="col">Concepto</th>
+           <th scope="col">Total</th>
+           <th scope="col">Ene</th>
+           <th scope="col">Feb</th>
+           <th scope="col">Mar</th>
+           <th scope="col">Abr</th>
+           <th scope="col">May</th>
+           <th scope="col">Jun</th>
+           <th scope="col">Jul</th>
+           <th scope="col">Ago</th>
+           <th scope="col">Sep</th>
+           <th scope="col">Oct</th>
+           <th scope="col">Nov</th>
+           <th scope="col">Dic</th>
+         </tr>
+       </thead>
+       <tbody class="tablaingresos">
+         <tr *ngFor="let item of variableconcepts; let i= index" [ngStyle]="{'background-color': (item.id_parent == 0 ? '#C8C800' : (i % 2 === 0 ? 'white' : '#CCCCCC'))}">
+           <th class="text-left" scope="row">{{item.name}}</th>
+           <th scope="row">{{item.total | currency:false}}</th>
+           <!--filas normales, donde se puede editar-->
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};january;IV" value="{{item.january | currency:false }}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};february;IV" value="{{item.february | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};march;IV" value="{{item.march | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};april;IV" value="{{item.april | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};may;IV" value="{{item.may | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};june;IV" value="{{item.june | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};july;IV" value="{{item.july | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};august;IV" value="{{item.august | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};september;IV" value="{{item.september | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};october;IV" value="{{item.october | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};november;IV" value="{{item.november | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};december;IV" value="{{item.december | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+           <!--filas no editables (totales o que no se puede tocar ya presupuestos)-->
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.january | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.february | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.march | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.april | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.may | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.june | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.july | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.august | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.september | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.october | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.november | currency:false}}</td>
+           <td scope="row" *ngIf="item.id_parent == 0">{{item.december | currency:false}}</td>
+         </tr>
+       </tbody>
+     </table>
+
+     <table class="table table-sm text-right" id="tablagastosvariables" *ngIf="tablaSeleccionada == 'CV'">
+        <thead class="text-right tablagastosvariables">
+          <tr>
+            <th class="text-left" scope="col">Concepto</th>
+            <th scope="col">Total</th>
+            <th scope="col">Ene</th>
+            <th scope="col">Feb</th>
+            <th scope="col">Mar</th>
+            <th scope="col">Abr</th>
+            <th scope="col">May</th>
+            <th scope="col">Jun</th>
+            <th scope="col">Jul</th>
+            <th scope="col">Ago</th>
+            <th scope="col">Sep</th>
+            <th scope="col">Oct</th>
+            <th scope="col">Nov</th>
+            <th scope="col">Dic</th>
+          </tr>
+        </thead>
+        <tbody class="tablagastosvariables">
+          <tr *ngFor="let item of variableconceptsexpenses; let i= index" [ngStyle]="{'background-color': (item.id_parent == 0 ? '#C8C800' : (i % 2 === 0 ? 'white' : '#CCCCCC'))}">
+            <th class="text-left" scope="row">{{item.name}}</th>
+            <th scope="row">{{item.total | currency:false}}</th>
+            <!--filas normales, donde se puede editar-->
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};january;CV" value="{{item.january | currency:false }}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};february;CV" value="{{item.february | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};march;CV" value="{{item.march | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};april;CV" value="{{item.april | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};may;CV" value="{{item.may | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};june;CV" value="{{item.june | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};july;CV" value="{{item.july | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};august;CV" value="{{item.august | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};september;CV" value="{{item.september | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};october;CV" value="{{item.october | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};november;CV" value="{{item.november | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <td scope="row" *ngIf="item.id_parent != 0"><input type="text" id="{{item.id}};december;CV" value="{{item.december | currency:false}}" (keydown)="tecleado($event,item.id)" /></td>
+            <!--filas no editables (totales o que no se puede tocar ya presupuestos)-->
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.january | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.february | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.march | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.april | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.may | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.june | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.july | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.august | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.september | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.october | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.november | currency:false}}</td>
+            <td scope="row" *ngIf="item.id_parent == 0">{{item.december | currency:false}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+</div>

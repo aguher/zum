@@ -1,0 +1,238 @@
+<div class="container-customer">
+<!--       <div class="btn-group" role="group">
+          <button type="button" class="btn btn-outline-info" (click)="tabSeleccionada=1" [ngClass]="{'active': 1 == tabSeleccionada}">Clientes</button>
+          <button type="button" class="btn btn-outline-info" (click)="tabSeleccionada=2" [ngClass]="{'active': 2 == tabSeleccionada}">Contactos</button>
+      </div> -->
+      <h3>Clientes</h3>
+        <button class="big-button export" style="float:right" (click)="exportExcel()">
+          <i alt="excel" title="excel" class="material-icons">get_app</i> Exportar a EXCEL
+        </button>&nbsp;&nbsp;
+        <button class="btn btn-info" style="float:right" (click)="selectCustomer()" *ngIf="roleUser != 10">
+          Añadir Cliente
+        </button>
+
+
+
+
+
+<!--     <div class="edit">
+  
+      <div class="input">
+        <span>Nombre del cliente</span>
+        <input type="text" [(ngModel)]="model.customerName" value="" placeholder="Introduce el nombre del cliente">
+      </div>
+      <div class="input">
+          <span class="cif">CIF</span>
+          <span class="address">Dirección</span>
+          <input class="cif" type="text" [(ngModel)]="model.CIF" value="" placeholder="CIF del cliente">
+          <input class="address" type="text" [(ngModel)]="model.address" value="" placeholder="Introduce la dirección del cliente">            
+        </div>
+      <div class="input">
+        <span class="city">C. Postal</span>
+        <span class="city">Ciudad</span>
+        <span class="city">País</span>
+        <input class="city" type="text" [(ngModel)]="model.postal_code" value="" placeholder="C.P.">
+        <input class="city" type="text" [(ngModel)]="model.city" value="" placeholder="Ciudad">
+        <select class="city" style="height:40px" [(ngModel)]="model.country" placeholder="País">
+          <option value=1>España</option>
+        </select>      
+      </div>
+      <div class="input">
+        <span>Logotipo</span>
+        <div class="inner-form file">        
+          <input class="inputfile" id="logo_file" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputErp($event)" [uploadInput]="uploadInputERP">
+          <label for="logo_file">
+            Selecciona una imagen JPEG
+            <img class="loading-icon" *ngIf="uploading " src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+          </label>
+          <div class="file-upload" *ngIf="uploadFileERP">
+            <img class="preview-image" *ngIf="uploadFileERP.generatedName" [src]="urlUpload + uploadFileERP.generatedName" />
+            <span class="message-error" *ngIf="uploadFileERP.status === false">
+              Ha habido un error: {{uploadFileERP.msg}}
+            </span>        
+          </div>
+        </div>
+      </div>    
+  
+    </div> -->
+
+  <div class="list" style="width:100%" *ngIf="tabSeleccionada==1">
+    <table class="table table-sm" id="tablaclientes">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cif</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Ciudad</th>
+            <th scope="col">Código Postal</th>
+            <th scope="col">País</th>
+            <th scope="col">Cta. Cliente</th>
+            <th scope="col">Cta. Proveedor</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">E-Mail</th>           
+            <th></th>               
+          </tr>
+          <tr>
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronombre" placeholder="Filtre cliente"/></th>
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocif" placeholder="Filtre cif" /></th>
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrodireccion" placeholder="Filtre dirección" /></th>                    
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrociudad" placeholder="Filtre ciudad" /></th>     
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocodigopostal" placeholder="Filtre código postal" /></th>     
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropais" placeholder="Filtre país" /></th>     
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroctacliente" placeholder="Filtre cta cliente" /></th>                                                
+                <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroctaproveedor" placeholder="Filtre cta proveedor" /></th>                                                                                                           
+                <th></th> 
+                <th></th> 
+                <th></th> 
+              </tr>
+        </thead>
+        <tbody>
+            <tr (dblclick)="selectCustomer(cliente)"  style="cursor:pointer" *ngFor="let cliente of clientesfiltrados | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index"  [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+            <td>{{cliente.customer_name}}</td>
+             <td>{{cliente.CIF}}</td> 
+            <td>{{cliente.address}}</td>
+            <td>{{cliente.city}}</td>
+            <td>{{cliente.postal_code}}</td>
+            <td>{{cliente.country}}</td>
+            <td>{{cliente.account_numberc}}</td>
+            <td>{{(cliente.account_numbers == "0" ? "" : cliente.account_numbers)}}</td>  
+            <td>{{cliente.phone}}</td>
+            <td>{{cliente.email}}</td>          
+            <td *ngIf="roleUser != 10">
+                    <a (click)="selectCustomer(cliente)">              
+                        <i class="material-icons edit-button">mode_edit</i>
+                      </a>
+                      <a (click)="deleteCustomer(cliente)">              
+                        <i class="material-icons delete">delete</i>
+                      </a>
+            </td>                                                       
+          </tr>
+        </tbody>
+      </table> 
+    </div>
+    <hr>  
+     <div *ngIf="arrpages.length != 0 && tabSeleccionada == 1" style="height:50px"> 
+      <div class="paginator text-center">
+        <span (click)="numPage=1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>      
+        <span (click)="numPage=numPage-2" *ngIf="numPage>2"  style="cursor:pointer;padding:15px">{{numPage-2}}</span>                      
+        <span (click)="numPage=numPage-1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>              
+        <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span> 
+        <span (click)="numPage=numPage+1" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>  
+        <span (click)="numPage=numPage+2" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>              
+        <span (click)="numPage=arrpages.length" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>                 
+      </div>
+      <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+          <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{clientesfiltrados.length > [numPage]*[pagination] ? [numPage]*[pagination] : clientesfiltrados.length }} de {{clientesfiltrados.length}} clientes </i>
+      </div>        
+   </div> 
+
+   <div class="list" style="width:100%" *ngIf="tabSeleccionada==2">
+      <table class="table table-sm" id="tablacontactos">
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Empresa</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">E-Mail</th>
+             
+              <th></th>               
+            </tr>
+            <tr>
+                  <th scope="col"><input (keyup)="filtrarcontactos()" type="text" [(ngModel)]="filtroconnombre" placeholder="Filtre nombre"/></th>
+                  <th scope="col"><input (keyup)="filtrarcontactos()" type="text" [(ngModel)]="filtroconapellido" placeholder="Filtre apellido" /></th>
+                  <th scope="col"><input (keyup)="filtrarcontactos()" type="text" [(ngModel)]="filtroconempresa" placeholder="Filtre empresa" /></th>                    
+                  <th scope="col"><input (keyup)="filtrarcontactos()" type="text" [(ngModel)]="filtrocontelefono" placeholder="Filtre teléfono" /></th>     
+                  <th scope="col"><input (keyup)="filtrarcontactos()" type="text" [(ngModel)]="filtroconmail" placeholder="Filtre e-mail" /></th>                                                                                                             
+                  <th></th> 
+                </tr>
+          </thead>
+          <tbody>
+              <tr (dblclick)="selectContact(contacto)"  style="cursor:pointer" *ngFor="let contacto of contactosfiltrados | slice:([numPageContactos]-1)*[pagination]:[numPageContactos]*[pagination]; let impar = even; let i = index"  [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+              <td>{{contacto.name}}</td>
+               <td>{{contacto.surname}}</td> 
+              <td>{{contacto.customer_name}}</td>
+              <td>{{contacto.phone}}</td>
+              <td>{{contacto.email}}</td>      
+              <td >
+                      <a (click)="selectContact(contacto)">              
+                          <i class="material-icons edit-button">mode_edit</i>
+                        </a>
+                        <a (click)="deleteContact(contacto)">              
+                          <i class="material-icons delete">delete</i>
+                        </a>
+              </td>                                                       
+            </tr>
+          </tbody>
+        </table> 
+      </div>
+      <hr>  
+       <div *ngIf="arrpagescontactos.length != 0 && tabSeleccionada == 2" style="height:50px"> 
+        <div class="paginator text-center">
+          <span (click)="numPageContactos=1" *ngIf="numPageContactos!=1" style="cursor:pointer;padding:15px">|<</span>      
+          <span (click)="numPageContactos=numPageContactos-2" *ngIf="numPageContactos>2"  style="cursor:pointer;padding:15px">{{numPageContactos-2}}</span>                      
+          <span (click)="numPageContactos=numPageContactos-1" *ngIf="numPageContactos!=1" style="cursor:pointer;padding:15px">{{numPageContactos-1}}</span>              
+          <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPageContactos}}</span> 
+          <span (click)="numPageContactos=numPageContactos+1" *ngIf="numPageContactos!=arrpagescontactos.length&&arrpagescontactos.length>1" style="cursor:pointer;padding:15px">{{numPageContactos+1}}</span>  
+          <span (click)="numPageContactos=numPageContactos+2" *ngIf="numPageContactos<arrpagescontactos.length-1" style="cursor:pointer;padding:15px">{{numPageContactos+2}}</span>              
+          <span (click)="numPageContactos=arrpagescontactos.length" *ngIf="numPageContactos!=arrpagescontactos.length&&arrpagescontactos.length>1" style="cursor:pointer;padding:15px">>|</span>                 
+        </div>
+        <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+            <i>Mostrando {{([numPageContactos]-1)*[pagination]+1}} - {{contactosfiltrados.length > [numPageContactos]*[pagination] ? [numPageContactos]*[pagination] : contactosfiltrados.length }} de {{contactosfiltrados.length}} contactos </i>
+        </div>        
+     </div> 
+   <div style="min-height:100px">&nbsp;<br><br>&nbsp;
+    </div>
+    
+
+  
+<!--     <div class="list">
+      <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables" [(value)]="customers"  [(selection)]="selectedCustomer"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+          <p-column field="customer_name" header="Nombre" ></p-column>
+          <p-column field="CIF" header="Cif" ></p-column>
+          <p-column field="address" header="Dirección" ></p-column>
+          <p-column field="city" header="Ciudad" ></p-column>
+          <p-column field="logo" header="Logo" styleClass="col-options">
+              <ng-template let-customer="rowData" pTemplate="body" >
+                <div class="img-logo" *ngIf="customer.logo">
+                    <img [src]="urlUpload + customer.logo" />
+                </div>
+              </ng-template>
+          </p-column>
+          <p-column field="options" header="opciones" styleClass="col-options" >
+            <ng-template let-customer="rowData" pTemplate="body">
+              <a (click)="selectCustomer(customer)">              
+                <i class="material-icons edit-button">mode_edit</i>
+              </a>
+              <a (click)="deleteCustomer(customer)">              
+                <i class="material-icons delete">delete</i>
+              </a>
+          </ng-template>
+          </p-column>
+      </p-dataTable>
+  
+    </div> -->
+  </div>
+  
+  <p-dialog styleClass="dashboard-dialog delete" header="Eliminar el cliente" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+      <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCustomer">
+          <div class="ui-grid-row">
+              <span class="title">¿Estás seguro de eliminar el cliente?</span>
+              <span class="info">{{selectedCustomer.customer_name}}</span>
+          </div>
+      </div>
+      <p-footer>
+          <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDelete = false" class="cancel">              
+                cancelar
+              </a>  
+            <a (click)="deleteApi(selectedCustomer)">              
+                Eliminar
+              </a>            
+          </div>
+      </p-footer>
+  </p-dialog>
+
+  <p-dialog [closable]="false" header="Detalles del cliente" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true" *ngIf="selectedCustomer">
+      <app-customers-edit [selectedCustomer]="selectedCustomer" (insertar)="recargar()" (cancelar)="cancelEdition()"></app-customers-edit>
+  <p-dialog>

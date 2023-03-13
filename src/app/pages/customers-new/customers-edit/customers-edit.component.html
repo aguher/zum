@@ -1,0 +1,229 @@
+
+<ul class="nav" *ngIf="selectedCustomer.id > 0" style="margin-bottom:20px">
+    <li class="nav-item">
+        <button type="button" class="btn btn-outline-secondary" (click)="tabSeleccionada=1" [ngClass]="{'active': 1 == tabSeleccionada}">Principal</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="tabSeleccionada=2;cargardirecciones()" [ngClass]="{'active': 2 == tabSeleccionada}">Otras direcciones</button>
+    </li>
+</ul>
+<div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="tabSeleccionada==1">
+    <div class="ui-grid-col-12">
+        <div class="ui-grid-col-6">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedCustomer.customer_name" /></div>
+        </div>
+        <div class="ui-grid-col-6">
+            <div class="ui-grid-col-12"><label for="cif">CIF</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="cif" [(ngModel)]="selectedCustomer.CIF" /></div>
+        </div>
+      </div>
+      <div class="ui-grid-col-12">
+        <div class="ui-grid-col-6">
+            <div class="ui-grid-col-12"><label for="address">Dirección</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="address" [(ngModel)]="selectedCustomer.address" /></div>
+        </div>
+        <div class="ui-grid-col-2">
+            <div class="ui-grid-col-12"><label for="postal_code">CP</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="postal_code" [(ngModel)]="selectedCustomer.postal_code" /></div>
+        </div>  
+        <div class="ui-grid-col-2">
+            <div class="ui-grid-col-12"><label for="city">Ciudad</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="city" [(ngModel)]="selectedCustomer.city" /></div>
+        </div>    
+        <div class="ui-grid-col-2">
+            <div class="ui-grid-col-12"><label for="country">País</label></div>
+            <p-dropdown styleClass="dashboard-dropdown" [options]="countries" [(ngModel)]="pais" placeholder="Seleccione país"></p-dropdown>
+        </div> 
+      </div>    
+      <div class="ui-grid-col-12">
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-12"><label for="address">Cta. Cliente</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="address" [(ngModel)]="selectedCustomer.account_numberc" /></div>
+        </div>
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-12"><label for="postal_code">Cta. Proveedor</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="postal_code" [(ngModel)]="selectedCustomer.account_numbers" /></div>
+        </div>  
+        <div class="ui-grid-col-2">
+            <div class="ui-grid-col-12"><label for="phone">Teléfono</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="phone" [(ngModel)]="selectedCustomer.phone" /></div>
+        </div>
+        <div class="ui-grid-col-4">
+            <div class="ui-grid-col-12"><label for="email">E-Mail</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="email" [(ngModel)]="selectedCustomer.email" /></div>
+        </div>          
+      </div>         
+<p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" *ngIf="selectedCustomer.id == -1"> 
+          <button (click)="addCustomer()" class="btn btn-primary">              
+              Agregar
+          </button> 
+            <button (click)="cancelEdition()" class="btn btn-secondary">              
+                Cancelar
+            </button>            
+        </div>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" *ngIf="selectedCustomer.id != -1">
+            <button (click)="updateApi(selectedCustomer)" class="btn btn-warning" *ngIf="roleUser != 10">              
+                Modificar
+            </button>   
+            <button (click)="cancelEdition()" class="btn btn-secondary">              
+                Cancelar
+            </button>           
+        </div>
+</p-footer>
+</div>
+<div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="tabSeleccionada==2">
+        <div class="ui-grid-col-12" *ngIf="selectedAddress==null">
+            <div class="ui-grid-col-5">          
+                <div class="ui-grid-col-2">Nueva<br>Dirección:
+                </div>
+                <div class="ui-grid-col-10">
+                        <textarea rows="3" cols="60" id="address" [(ngModel)]="selectedNewAddress.address" style="width:98%; resize:none"></textarea>
+                </div> 
+            </div>
+            <div class="ui-grid-col-7">
+                <div class="ui-grid-col-12">
+                    <div class="ui-grid-col-8">
+                        <div class="ui-grid-col-2">Nombre:
+                        </div>
+                        <div class="ui-grid-col-10">
+                            <input id="name" [(ngModel)]="selectedNewAddress.nombre" style="width:98%" />
+                        </div>                 
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <div class="ui-grid-col-2">Telf.:
+                        </div>
+                        <div class="ui-grid-col-10">
+                            <input id="phone" [(ngModel)]="selectedNewAddress.telefono" style="width:98%" />
+                        </div>                   
+                    </div>
+                </div>
+                <div class="ui-grid-col-12">
+                    <div class="ui-grid-col-8">
+                        <div class="ui-grid-col-2">Ciudad:
+                        </div>
+                        <div class="ui-grid-col-10">
+                            <input id="city" [(ngModel)]="selectedNewAddress.city" style="width:98%" />
+                        </div>  
+                    </div>                    
+                    <div class="ui-grid-col-4">
+                        <div class="ui-grid-col-2">CP:
+                        </div>
+                        <div class="ui-grid-col-10">
+                            <input id="postal_code" [(ngModel)]="selectedNewAddress.postal_code" style="width:98%" />
+                        </div>                 
+                    </div>
+                </div>
+                <div class="ui-grid-col-12 text-right" *ngIf="roleUser != 10">
+                    <button class="btn btn-primary" (click)="addAddress()" style="top:10px; position:relative"> Agregar Dirección </button>                    
+                </div>
+            </div>
+<!--             <div class="ui-grid-col-2">
+                <div class="ui-grid-col-12"><label for="postal_code">CP</label></div>
+                <div class="ui-grid-col-12"><input pInputText id="postal_code" [(ngModel)]="selectedNewAddress.postal_code" /></div>
+            </div>  
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-col-12"><label for="city">Ciudad</label></div>
+                <div class="ui-grid-col-12"><input pInputText id="city" [(ngModel)]="selectedNewAddress.city" /></div>
+            </div>  
+            <div class="ui-grid-col-1">
+                    <div class="ui-grid-col-12">&nbsp;</div>
+                    <div class="ui-grid-col-12"></div>    
+            </div>   -->
+          </div>   
+          <div class="ui-grid-col-12" *ngIf="bHayDirecciones">
+                <div class="ui-grid-col-12 text-center">
+                    <i><b>Lista Direcciones del Cliente</b></i>
+                </div>
+
+                <table class="table table-sm" id="tablaclientes">
+                        <thead>
+                          <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Dirección</th>
+                            <th scope="col">Ciudad</th>
+                            <th scope="col">Teléfono</th>
+                            <th></th>               
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr (dblclick)="selectAddress(dir)"  style="cursor:pointer" *ngFor="let dir of direcciones | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let i = index"  [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+                                
+                            <td *ngIf="selectedAddress!=dir">{{dir.Nombre}}</td>
+                            <td *ngIf="selectedAddress!=dir">{{dir.address}}</td> 
+                            <td *ngIf="selectedAddress!=dir">{{dir.city}}</td>
+                            <td *ngIf="selectedAddress!=dir">{{dir.telefono}}</td>          
+                            <td *ngIf="selectedAddress!=dir">
+                                <a (click)="selectAddress(dir)">              
+                                    <i class="material-icons edit-button">mode_edit</i>
+                                </a>
+                                <a (click)="removeAddress(dir.id,i)">              
+                                    <i class="material-icons delete">delete</i>
+                                </a>
+                            </td> 
+                            <td colspan="5" *ngIf="selectedAddress==dir">
+                                    <div class="ui-grid-col-12">
+                                        <div class="ui-grid-col-5">          
+                                            <div class="ui-grid-col-2">Dirección:
+                                            </div>
+                                            <div class="ui-grid-col-10">
+                                                    <textarea rows="3" cols="60" id="address" [(ngModel)]="dir.address" style="width:98%; resize:none"></textarea>
+                                            </div> 
+                                        </div>
+                                    <div class="ui-grid-col-7">
+                                            <div class="ui-grid-col-12">
+                                                <div class="ui-grid-col-8">
+                                                    <div class="ui-grid-col-2">Nombre:
+                                                    </div>
+                                                    <div class="ui-grid-col-10">
+                                                        <input id="name" [(ngModel)]="dir.Nombre" style="width:98%" />
+                                                    </div>                 
+                                                </div>
+                                                <div class="ui-grid-col-4">
+                                                    <div class="ui-grid-col-2">Telf.:
+                                                    </div>
+                                                    <div class="ui-grid-col-10">
+                                                        <input id="phone" [(ngModel)]="dir.telefono" style="width:98%" />
+                                                    </div>                   
+                                                </div>
+                                            </div>
+                                            <div class="ui-grid-col-12">
+                                                <div class="ui-grid-col-8">
+                                                    <div class="ui-grid-col-2">Ciudad:
+                                                    </div>
+                                                    <div class="ui-grid-col-10">
+                                                        <input id="city" [(ngModel)]="dir.city" style="width:98%" />
+                                                    </div>  
+                                                </div>                    
+                                                <div class="ui-grid-col-4">
+                                                    <div class="ui-grid-col-2">CP:
+                                                    </div>
+                                                    <div class="ui-grid-col-10">
+                                                        <input id="postal_code" [(ngModel)]="dir.postal_code" style="width:98%" />
+                                                    </div>                 
+                                                </div>
+                                            </div>
+                                            <div class="ui-grid-col-12 text-right">
+                                                <button class="btn btn-warning" (click)="updateAddress(dir.id,i)" style="top:10px; position:relative" *ngIf="roleUser != 10"> Modificar Dirección </button>                    
+                                                <button class="btn btn-secondary" (click)="selectedAddress=null" style="top:10px; position:relative"> Cancelar </button>                                                                    
+                                            </div>
+                                        </div>
+                                    </div>  
+                            </td>                                                     
+                          </tr>
+                        </tbody>
+                      </table> 
+                      <div *ngIf="arrpages.length != 0" style="height:50px"> 
+                        <div class="paginator text-center">
+                            <span (click)="numPage=1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>      
+                            <span (click)="numPage=numPage-2" *ngIf="numPage>2"  style="cursor:pointer;padding:15px">{{numPage-2}}</span>                      
+                            <span (click)="numPage=numPage-1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>              
+                            <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span> 
+                            <span (click)="numPage=numPage+1" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>  
+                            <span (click)="numPage=numPage+2" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>              
+                            <span (click)="numPage=arrpages.length" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>                 
+                        </div>
+                        <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+                            <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{direcciones.length > [numPage]*[pagination] ? [numPage]*[pagination] : direcciones.length }} de {{direcciones.length}} direcciones </i>
+                     </div>        
+                     </div>             
+    </div>

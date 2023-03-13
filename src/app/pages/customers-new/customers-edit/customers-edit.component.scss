@@ -1,0 +1,13 @@
+@import "~assets/variables.scss";
+@import "~assets/mixins.scss";
+
+i.edit-button {
+    color: $mainColor;
+}
+i.delete {
+    color: $dangerColor;
+}
+
+.ui-dialog{
+    max-width:700px;
+}

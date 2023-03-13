@@ -1,0 +1,361 @@
+<h1 class='title-page'> Configuración General </h1>
+<div class="left-side">
+  <div class="company-list">
+    <span class="title">
+      Listado de empresas
+      <a class="big-button" (click)="addCompany()">
+        <i class="material-icons">playlist_add</i>
+        Nueva Empresa
+      </a>
+    </span>
+    <div class="company-item" *ngFor="let inner of companies">
+      <ng-container *ngIf="inner.company">
+        <div class="title-company">
+          <div *ngIf="inner.company.new">
+            <input class="edit-input" [(ngModel)]="inner.company.name" type="text" placeholder="Introduzca un nombre de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.cif" type="text" placeholder="Introduzca un CIF de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.address" type="text" placeholder="Introduzca una dirección de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.address_bis" type="text" placeholder="Introduzca CP y Ciudad">
+
+            <div class="inner-form file">
+              <input class="inputfile" id="logo_file_{{inner.company.id}}" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputLogo($event, inner.company)"
+                [uploadInput]="uploadInputLogo">
+              <label for="logo_file_{{inner.company.id}}">
+                Selecciona una imagen
+                <img class="loading-icon" *ngIf="uploading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                />
+              </label>
+              <span class="warning">La imagen debe tener la misma altura/anchura y con formato JPEG</span>
+              <div class="file-upload" *ngIf="uploadFileLogo">
+                <img class="preview-image" *ngIf="uploadFileLogo.generatedName" [src]="urlUpload + uploadFileLogo.generatedName" />
+                <span class="message-error" *ngIf="uploadFileLogo.status === false">
+                  Ha habido un error: {{uploadFileLogo.msg}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div [hidden]="inner.company.edit || inner.company.new">
+           <img class="preview-image" *ngIf="inner.company.logo" [src]="urlUpload + inner.company.logo" />
+             <div class="no-image" *ngIf="inner.company.logo == 'undefined' || !inner.company.logo">
+              <i class="material-icons">insert_photo</i>
+            </div>
+
+            <div class="company-cif">
+              <span class="company-name">
+                {{inner.company.name}}
+              </span>
+              <span *ngIf="inner.company.cif" class="cif">
+                {{inner.company.cif}}
+              </span>
+            </div>
+
+            <span *ngIf="inner.company.address">
+              <b>Dirección: </b>{{inner.company.address}}</span>
+            <span *ngIf="inner.company.address_bis">
+              <b>CP / Ciudad: </b>{{inner.company.address_bis}}</span>
+          </div>
+
+          <div [hidden]="!inner.company.edit">
+            <input class="edit-input" [(ngModel)]="inner.company.name" type="text" placeholder="Introduzca un nombre de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.cif" type="text" placeholder="Introduzca un CIF de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.address" type="text" placeholder="Introduzca una dirección de Empresa">
+            <input class="edit-input" [(ngModel)]="inner.company.address_bis" type="text" placeholder="Introduzca CP y Ciudad">
+
+            <a class="remove-logo" (click)="inner.company.remove_logo = true" *ngIf="inner.company.logo && inner.company.logo != 'undefined'">
+              <i class="material-icons">delete</i>
+              eliminar logotipo
+            </a>
+            <div class="inner-form file">
+              <input class="inputfile" id="logo_file_{{inner.company.id}}" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputLogo($event, inner.company)"
+                [uploadInput]="uploadInputLogo">
+              <label for="logo_file_{{inner.company.id}}">
+                Selecciona una imagen
+                <img class="loading-icon" *ngIf="uploading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                />
+              </label>
+              <span class="warning">La imagen debe tener la misma altura/anchura y con formato JPEG</span>
+              <div class="file-upload" *ngIf="uploadFileLogo">
+                <img class="preview-image" *ngIf="uploadFileLogo.generatedName" [src]="urlUpload + uploadFileLogo.generatedName" />
+                <span class="message-error" *ngIf="uploadFileLogo.status === false">
+                  Ha habido un error: {{uploadFileLogo.msg}}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!inner.company.new && inner.company.visible" class="button-edition">
+            <a class="button edit" *ngIf="!inner.company.edit" (click)="editCompany(inner.company)">Editar</a>
+            <a class="button delete" *ngIf="!inner.company.edit && inner.company.removable === '1'" (click)="removeCompany(inner.company)">Eliminar</a>
+            <a class="button edit" *ngIf="inner.company.edit" (click)="saveCompany(inner.company)">Guardar</a>
+            <a class="button delete" *ngIf="inner.company.edit" (click)="cancelSave(inner.company)">Cancelar</a>
+          </div>
+          <div *ngIf="inner.company.new">
+            <a class="button edit" (click)="saveNewCompany(inner.company)">Guardar nueva empresa</a>
+            <a class="button delete" (click)="cancelNewCompany(inner.company)">cancelar</a>
+          </div>
+          <div class="projects-number">
+            <div class="numeration">
+              <span>Proyectos autonumerados:</span>
+              <input [id]="inner.company.id" type="checkbox"  [checked]="inner.company.auto_number"/>
+              <label  (click)="toggleAutoNumbered(inner)"  [attr.for]="inner.company.id"></label>
+            </div>
+          </div>
+        </div>
+        <div class="exercises">
+          <div class="data" *ngIf="inner.company.years.length > 0">
+            <ul class="fiscal-taxes" *ngFor="let year of inner.company.years">
+              <li class="year">
+                <span class="title-year">Ejercicio</span>
+                <p-dropdown styleClass="year-selector" (onChange)="onChangeYear(year)" [options]="fiscalYears" [(ngModel)]="year.year"></p-dropdown>
+              </li>
+              <li class="tax">
+                <span class="title-year">Impuesto(%)</span>
+                <input type="text" (change)="onChangeYear(year)" [(ngModel)]="year.tax" value="{{year.tax}}">
+              </li>
+              <li class="tax">
+                <span class="title-year">Serie</span>
+                <input type="text" (change)="onChangeSerie(year)" [(ngModel)]="year.serie" value="{{year.serie}}">
+              </li>
+              <li class="actions">
+                <a class="button delete" (click)="removeFiscalYear(year)">
+                  <i class="material-icons">delete_forever</i>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+          <div class="buttons-fiscal-year" *ngIf="inner.company.years && !inner.company.new">
+            <a *ngIf="!inner.company.editYear" (click)="addFiscalYear(inner.company)">añadir ejercicio</a>
+            <a *ngIf="inner.company.editYear" (click)="saveFiscalYear(inner.company)">guardar </a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="company-list">
+    <span class="title">
+      Tipos de IVA
+    </span>
+    <div class="taxes">
+      <div class="input">
+        <label for="tax">Añadir nuevo tipo de IVA (%):</label>
+        <input name="tax" type="text" [(ngModel)]="input_tax" />
+        <a class="big-button" (click)="addTax()">
+          <i class="material-icons">playlist_add</i>
+          Añadir Tipo
+        </a>
+      </div>
+      <ul>
+        <li *ngFor="let tax of taxes">
+          <span>
+            {{tax.value}} %
+            <i class="material-icons" (click)="deleteTax(tax)">delete</i>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+<div class="right-side">
+
+
+  <div class="mini-container">
+    <span class="title">
+      Configuración de Cuentas
+      <i class="material-icons">receipt</i>
+    </span>
+    <div class="container-fluid inner-form">
+      <div class="row no-gutters">
+        <div class="col-md-12">
+          <label class="accounts">Amortización</label>
+          <p-dropdown styleClass="select-input" [options]="accounts" (onChange)="flagUpdated = true" [(ngModel)]="amortizacion" placeholder="Selecciona cuenta padre"></p-dropdown>
+        </div>
+        <div class="col-md-12">
+          <label class="accounts">Gastos Financieros</label>
+          <p-dropdown styleClass="select-input" [options]="accounts" (onChange)="flagUpdated = true" [(ngModel)]="financiero" placeholder="Selecciona cuenta padre"></p-dropdown>
+        </div>
+        <div class="col-md-12">
+          <label class="accounts">Gastos Extraordinarios</label>
+          <p-dropdown styleClass="select-input" [options]="accounts" (onChange)="flagUpdated = true" [(ngModel)]="extraordinario" placeholder="Selecciona cuenta padre"></p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="buttons accounts">
+      <a (click)="updateAccountsCompany()" [ngClass]="{'enabled' : flagUpdated}">actualizar</a>
+    </div>
+  </div>
+  <div class="mini-container">
+    <span class="title">
+      Porcentaje de Presupuestos
+      <i class="material-icons">inbox</i>
+    </span>
+    <div class="inner-form">
+      <label class="budget">Pesimista (%)</label>
+      <label class="budget">Optimista (%)</label>
+
+      <input type="text" [(ngModel)]='budget.pesimist' placeholder="Introduce un porcentaje">
+      <input type="text" [(ngModel)]='budget.optimist' placeholder="Introduce un porcentaje">
+    </div>
+    <div class="buttons">
+      <a (click)="updateBudgetPercent()">actualizar</a>
+    </div>
+  </div>
+  <div class="mini-container">
+    <span class="title">
+      Importación ERP
+      <i class="material-icons">card_travel</i>
+    </span>
+    <div class="inner-form file">
+
+      <input class="inputfile" id="erp_file" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputErp($event)" [uploadInput]="uploadInputERP">
+      <label for="erp_file">Elige un archivo</label>
+      <div class="file-upload" *ngIf="uploadFileERP">
+        <span class="message-success" *ngIf="uploadFileERP.status">
+          El archivo ha sido subido.
+        </span>
+        <span class="message-error" *ngIf="uploadFileERP.status === false">
+          Ha habido un error: {{uploadFileERP.msg}}
+        </span>
+      </div>
+    </div>
+    <div class="buttons">
+      <a (click)="importERP()" [ngClass]="{'disabled': !enableBtnImport}">importar</a>
+    </div>
+  </div>
+  <div class="mini-container">
+    <span class="title">
+      Copias de seguridad
+      <i class="material-icons">backup</i>
+    </span>
+    <div class="inner-form">
+      <a class="button" [ngClass]="{'disabled': backupInProcess}" (click)="createBackup()">
+        Realizar copia de seguridad
+        <img class="loading-icon" *ngIf="backupInProcess" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+        />
+      </a>
+      <a class="link" *ngIf="linkBackup" (click)="downloadLink()">Descarga el fichero</a>
+    </div>
+    <div class="inner-form file line">
+      <input class="inputfile" id="backup" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputBackup($event)" [uploadInput]="uploadInputBackup">
+      <label for="backup">Elige un archivo a restaurar</label>
+
+      <div class="file-upload" *ngIf="uploadFileBackup">
+        <span class="message-success" *ngIf="uploadFileBackup.status">
+          El archivo ha sido subido
+        </span>
+        <span class="message-error" *ngIf="uploadFileBackup.status === false">
+          Ha habido un error: {{uploadFileBackup.msg}}
+        </span>
+        <span class="message-success" *ngIf="requestBackup.success">
+          La importación ha concluido
+        </span>
+        <span class="message-error" *ngIf="requestBackup.error">
+          Ha habido un error
+        </span>
+      </div>
+    </div>
+    <div class="buttons">
+      <a class="danger" (click)="restoreDB()">Restaurar Copia</a>
+    </div>
+  </div>
+
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar la empresa" [(visible)]="displayDialogDelete" [responsive]="true"
+  showEffect="ease" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCompany">
+    <div class="ui-grid-row">
+      <span class="title">¿Estás seguro de eliminar la empresa?</span>
+      <span class="info">{{selectedCompany.name}}</span>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialogDelete = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="deleteCompany(selectedCompany)">
+        Eliminar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el ejercicio" [(visible)]="displayDialogDeleteYear" [responsive]="true"
+  showEffect="ease" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedYear">
+    <div class="ui-grid-row">
+      <span class="title">¿Estás seguro de eliminar el ejercicio?</span>
+      <span class="info">{{selectedYear.year}}</span>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialogDelete = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="deleteYear(selectedYear)">
+        Eliminar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog modal-erp" header="Resultado de la importación" [(visible)]="displayImportDialog"
+  [responsive]="true" showEffect="ease" [modal]="true">
+  <div *ngIf="loadingErp">
+    <h2 class="title-loading" *ngIf="!noProjects; else createProject">
+      <div class="loader"></div>
+      Importando ERP
+    </h2>
+  </div>
+  <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="!loadingErp">
+    <h3 class="title">Datos importados para costes fijos:</h3>
+    <span class="info">{{fixedImportedLen || '0'}}</span>
+    <h3 class="title">Datos importados para conceptos variables (Gastos): </h3>
+    <span class="info">{{variablesExpensesImportedLen || '0'}}</span>
+    <h3 class="title">Datos importados para conceptos variables (Ingresos): </h3>
+    <span class="info">{{variablesIncomesImportedLen || '0'}}</span>
+    <hr>
+
+    <div *ngIf="arrayBadProjects.length > 0">
+      <p-dataTable styleClass="dashboard-tables erp" [value]="arrayBadProjects" [paginator]="true" [rows]="3">
+        <p-footer>
+          <span class="footer">
+            <b>{{arrayBadProjects.length}}</b>
+            Proyectos no encontrados en la empresa
+          </span>
+        </p-footer>
+        <p-column field="Proyecto" header="Cod. Proyecto"></p-column>
+        <p-column field="Fecha" header="Fecha"></p-column>
+        <p-column field="Importe" header="Importe"></p-column>
+        <p-column field="Cuenta" header="Num. Cuenta"></p-column>
+      </p-dataTable>
+    </div>
+    <div *ngIf="arrayBadAccounts.length > 0">
+      <p-dataTable styleClass="dashboard-tables erp" [value]="arrayBadAccounts" [paginator]="true" [rows]="3">
+        <p-footer>
+          <span class="footer">
+            <b>{{arrayBadAccounts.length}}</b>
+            Cuentas no encontradas en la empresa
+          </span>
+        </p-footer>
+        <p-column field="Proyecto" header="Cod. Proyecto"></p-column>
+        <p-column field="Fecha" header="Fecha"></p-column>
+        <p-column field="Importe" header="Importe"></p-column>
+        <p-column field="Cuenta" header="Num. Cuenta"></p-column>
+      </p-dataTable>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayImportDialog = false" class="cancel">
+        cerrar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>

@@ -1,0 +1,779 @@
+@import "~assets/variables.scss";
+@import "~assets/mixins.scss";
+
+.report {
+	h2 {
+		font-weight: 300;
+		color: $fontDark;
+	}
+	.filter-container {
+		background: $bgWhite;
+		border:1px solid $borderColor;
+		.filters {
+			display: table;
+			padding: 15px 10px;
+			width:100%;
+			.filter {
+				display: table-cell;
+				margin: 0 auto;
+				text-align: center;				
+				label {
+					color: $fontDark;
+					font-weight: 300;
+					font-size: 14px;
+					display: block;
+					margin-bottom: 5px;
+				}
+			}
+		}
+		.buttons {
+			background: $bottomForm;
+			display: block;
+			border:1px solid $borderColor;
+			padding: 15px 0;
+			height: 63px;
+			span {
+				float: left;
+				font-size: 13px;
+				font-weight: 300;
+				line-height: 29px;
+				padding-left: 30px;
+			}
+			a {
+				float: right;
+				border: 1px solid $mainColor;
+				border-radius: 15px;
+				text-align: center;
+				display: block;
+				line-height: 23px;
+				padding: 3px 25px;
+				font-size: 14px;
+				color: $mainColor;		
+				margin-right: 30px;		
+				&:hover {
+					cursor: pointer;
+					background: $mainColor;
+					color: $bgWhite;
+				}
+				&.green {
+					border: 1px solid $thirdColor;
+					background: $thirdColor;
+					color:$bgWhite;
+					&:hover {
+						background: transparent;
+						color: $thirdColor;
+					}
+				}
+			}
+		}
+	}
+
+	.info-projects {
+		width: 50%;
+		float: left;
+		margin-top:10px;
+		background: $bgWhite;
+		border:1px solid $borderColor;
+		&.reduced {
+			width: 50%;
+			.row {
+				ul {
+					li {
+						width: calc(100%/5);
+					}
+				}
+			}
+		}
+		.row {
+			ul{
+				display: table;
+				width: 100%;
+			}
+
+			&.total {
+				text-align: right;
+				padding: 15px;
+				font-weight: 300;
+				border-top: 1px solid $borderColor;
+				float: left;
+				width: 100%;
+				margin: 25px 0;
+				box-sizing: border-box;
+				
+				&.amount {
+					margin: 10px 0 0 0;
+					font-weight: 400;
+					padding-top: 50px;
+					padding-right: 0;
+					color:$fontDark;
+				}
+			}
+			ul {
+				li {
+					float: left;
+					width: calc(100%/6);
+					font-size: 13px;
+					padding: 10px 0;
+					text-indent: 7px;
+					white-space: nowrap;
+					overflow: hidden;
+					text-overflow: ellipsis;					
+				}
+			}
+			&.title {
+				float:left;
+				width: 100%;
+				h2 {
+					border-bottom: 1px solid $borderColor;					
+					font-weight: 300;
+					color: $fontDark;
+					font-size: 18px;
+					margin: 20px 0 0 0;
+					text-indent: 10px;
+				}
+				ul {
+					li{
+							color: $fontDark;
+							text-transform: uppercase;
+							font-size: 12px;
+					}
+				}
+
+			}
+		}
+
+	}
+	.info-money {
+		width: 50%;
+		float: left;
+		margin: 10px 0 50px 0;
+		background: $bgWhite;
+		overflow-x: scroll;
+		&.reduced {
+			width: 50%;
+			&.account1 {
+				width: 50%;
+				overflow: auto;
+				.row {
+					width:100%;
+					&.title {
+						width: 100%;
+					}
+					.col {
+						ul {
+							li {
+								width: calc(100%/2);
+							}
+						}
+					}
+				}
+			}			
+		}
+		.row {
+			width: 2000px;
+			float: left;
+			&.total {
+				text-align: right;
+				padding: 7px 0;
+				font-weight: 300;
+				border-top: 1px solid $borderColor;
+				float: left;			
+				margin: 25px 0;
+				box-sizing: border-box;
+				&.amount {
+					margin: 10px 0 0 0;
+					font-weight: bold;
+					padding-top: 50px;
+					padding-bottom: 0;
+				}
+				.col {
+					width: 100%;
+					ul {
+						float:left;
+						width: calc(100%/3);
+						border-right:1px solid $borderColor;
+						&:last-child {
+							border-right:0;
+						}
+
+						li {
+							width: calc(100%/5);
+						}
+					}
+				}
+			}
+			&.title {
+				color:white;
+				.col:nth-child(1) {
+					span {
+						background: $thirdColor;
+					}					
+				}	
+				.col:nth-child(2) {
+					span {
+						background: $dangerColor;
+					}					
+				}	
+				.col:nth-child(3) {
+					span {
+						background: $secondColor;
+					}					
+				}
+				
+			}
+			.col {
+				float: left;
+				width: calc(100%/3);
+				&.large {
+					width: 100%;
+					ul {
+						float:left;
+						width: calc(100%/3);
+						border-right:1px solid $borderColor;
+						&:last-child {
+							border-right:0;
+						}
+
+						li {
+							width: calc(100%/5);
+							text-align: right;
+						}
+
+					}
+				}
+				span {
+					font-weight: 300;
+					text-align: center;
+					width: 100%;
+					float: left;
+					padding:12px;
+					border-bottom:1px solid $borderColor;
+				}
+				ul {
+					li {
+						float:left;
+						width: 20%;
+						text-align: right;		
+						padding:10px;		
+						color: $fontDark;
+						text-transform: uppercase;
+						font-size: 12px;						
+					}
+				}
+			}
+		}
+	}
+
+	
+}
+.col-titles {
+    padding: 10px 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 300;    
+    float: left;
+    max-width: 300px;
+    width: 100%;
+    margin-top: 50px;
+    .row {
+      background: $bgWhite;
+      border-width: 0px 0 1px 1px;
+      border-color: $borderColor;
+	  border-style: solid;      
+	  font-weight: 300;
+      height: 49px;
+      padding: 15px 10px;
+      border-bottom: 1px solid $borderColor;
+      &.separator {
+        margin-bottom: 10px;
+      }
+      &.separator-upper {
+        margin-top: 10px;
+      }
+      &.grey {
+        background-color: white;
+      }
+      &.final {
+        background: transparent;
+        border: 0;
+        text-align: right;
+        font-weight: 500;
+        line-height: 33px;        
+      }
+      &.fixed-cost {
+        span {
+          font-size: 13px;
+          display: block;
+          padding-left: 10px;          
+          &.parent {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+  .col-amounts {
+    float:left;
+    width: calc(100% - 300px);
+    ul {
+      width: 100%;
+      float:left;
+      /*box-shadow: -3px 1px 4px 0px rgba(0,0,0,0.5);*/
+      li {
+        width: calc(100%/3);
+        float: left;        
+        &.title {
+          padding: 19px 0;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 400;
+          color: white;
+          text-shadow: 2px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        &.blue {
+          background: #A3E3F0;
+        }
+        &.red {
+          background: #F0B0A3;
+        }
+        &.green {
+          background: #A3F0B0;
+        }
+        &.danger {
+          background: $dangerColor;
+        }
+        &.amount {
+          font-weight: 300;
+          font-size: 14px;
+          text-align: right;
+          padding: 15px 20px;
+          border-bottom: 1px solid $borderColor;
+          display: table;
+          &.separator {
+            margin-bottom: 10px;
+          }
+          &.separator-upper {
+            margin-top: 10px;
+          }
+          &.grey {
+            background-color: white;
+          }
+          &.final-row {
+            border-bottom:0;
+          }
+          input[type="text"] {
+            display: table-cell;
+            border: 0;
+            padding: 9px;
+            color: $fontDark;
+            text-align: right;
+            margin: -8px auto -10px auto;
+          }
+          span {
+            display: table-cell;
+            width: 50%;
+            &:nth-child(1) {          
+              font-weight: 400;
+            }
+            &:nth-child(2) {
+              &:after {
+                content:'%';
+              }
+            }            
+            &.alone {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+.container-titles {
+	float: left;
+	width: 100%;
+	.subtitle {
+    font-weight: 300;
+		color: #222222;		
+		margin: 35px 0 20px;
+	}
+	.title {
+		background: $bottomForm;
+		display: block;
+		border:1px solid $borderColor;
+		border-right: 0;
+		padding: 15px 0;
+		height: 63px;
+
+		float:left;
+		line-height: 63px;
+		top:0;
+		left: 0;			
+		width: 50%;
+		ul {
+			width:100%;
+			li {
+				width: calc(100%/6);
+				float:left;
+				height:40px;
+				line-height:40px;
+
+				float: left;
+				font-size: 13px;
+				font-weight: 300;
+				line-height: 29px;
+				padding-left: 10px
+			}
+			&.reduced {
+				li {
+					width: calc(100%/5);
+				}
+			}
+		}		
+	}
+	.tabs-title {
+		width: 50%;
+		float:left;
+		ul:not(.concepts) {
+			height: 40px;
+			width: 100%;
+			float: left;
+			line-height: 40px;
+			text-align: center;
+			text-transform: uppercase;
+			font-size: 13px;
+			margin-bottom: 23px;
+			margin-top: -39px;
+			li {
+				width: calc(100%/3);
+				float: left;
+				&:hover {
+					cursor: pointer;
+				}
+				&.active {
+					color:white;
+					&:hover {
+						cursor: normal;
+					}
+					&:nth-child(1) {
+						background: $thirdColor;
+					}
+					&:nth-child(2) {
+						background: $dangerColor;
+					}
+					&:nth-child(3) {
+						background: $secondColor;
+					}
+				}
+			}
+		}
+		ul.concepts {
+			width: 100%;
+			border-bottom: 1px solid #efefef;
+			height: 63px;
+			border:1px solid $borderColor;
+			border-left: 0;
+			background: $bottomForm;
+			li {
+				width: calc(100%/5);
+				float: left;
+				text-align: center;
+				font-weight: 400;
+				font-size: 12px;
+				text-transform: uppercase;
+			}
+			&.reduced {
+				li {
+					width: calc(100%/2);
+				}
+			}
+		}
+	}	
+}
+.total-amount {
+	float: left;
+	width: 100%;
+	margin-bottom: 50px;	
+	.col {
+		.content {
+			width:100%;
+			float:left;
+			&.reduced {
+				width:calc(100%/3);
+			}
+			.title {
+				border-bottom: 1px solid #efefef;
+				font-weight: 300;
+				color: #222222;
+				font-size: 18px;
+				margin: 20px 0;
+				float: left;
+				width: 100%;
+				padding-bottom: 10px;			
+			}
+			ul {
+				float:left;
+				width: 100%;
+				&.reduced {
+					
+					li {
+						width: calc(90%/2);
+					}
+				}
+				&.budget {
+					li {
+						i {
+							background: $thirdColor;
+						}
+						p {
+							color:$thirdColor;
+						}
+					}
+				}
+				&.real {
+					li {
+						i {
+							background: $dangerColor;
+						}
+						p {
+							color:$dangerColor;
+						}
+					}
+				}
+				&.differences {
+					li {
+						i {
+							background: $secondColor;
+						}
+						p {
+							color:$secondColor;
+						}
+					}
+				}						
+				li {
+					float:left;
+					width: calc(90%/5);
+					background: $bgWhite;
+					border:1px solid $borderColor;
+					border-radius: 6px;
+					margin: 0 1%;			
+					display: table;	
+					padding:20px;
+					.icon {
+						display: table-cell;
+						vertical-align: middle;
+						width: 50px;
+					}
+					i {
+						width: 50px;					
+						text-align: center;
+						color: white;
+						background: green;
+						border-radius: 50%;
+						height: 50px;
+						line-height: 50px;
+					}
+					p {
+						float: left;
+						margin-left: 20px;
+						font-size: 14px;
+						label {
+							color: #6D6D6D;
+							display: block;
+							
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.container {
+	background: #fbfbfc;
+	float: left;
+	width: calc(100% + 17px);
+	position: relative;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: overlay;
+	
+	.info {
+    width: calc(50% - 11px);
+    float: left;
+    background: #FFFFFF;
+    position: relative;
+    z-index: 1;
+    box-shadow: -13px 0 59px rgba(0,0,0,0.6);
+
+		ul {
+			width: 100%;
+			height: 50px;
+			border-bottom: 1px solid #cccccc;
+			display: table;
+			li {
+				width: calc(100%/6);
+				font-size: 13px;
+				padding-left: 5px;
+				display: table-cell;
+				vertical-align: middle;
+			}
+		}
+	}
+	.tabs {
+		width: 50%;
+		float:left;
+		position:relative;
+		ul.tab {
+			position:fixed;
+			width: 50%;
+			float: left;
+			border-bottom:1px solid #999999;
+			background: #cccccc;
+			z-index:1;
+			height: 40px;			
+			li {
+				float:left;
+				text-align:center;
+				width:calc(100%/3);
+				height: 40px;
+				line-height: 40px;
+				&:hover {
+					cursor:pointer;
+					text-decoration:underline;
+				}
+			}
+		}
+		#container-tabs {
+			position:relative;
+			max-height: 400px;
+		 
+			#estimated-budget {
+				left:0;
+			}
+			#real-budget {
+				left: 100%;
+			}
+			#differences-budget {
+				left: 200%;
+			}
+
+			#estimated-approved {
+				left:0;
+			}
+			#real-approved {
+				left: 100%;
+			}
+			#differences-approved {
+				left: 200%;
+			}
+
+			#estimated-finished {
+				left:0;
+			}
+			#real-finished {
+				left: 100%;
+			}
+			#differences-finished {
+				left: 200%;
+			}
+			.content-tab{
+				float: left;
+				width: 100%;
+				position: absolute;
+				transition: all 0.5s cubic-bezier(0.31, -0.105, 0.43, 1.4);
+				overflow: hidden;       
+				ul:not(.tab) {
+					width:100%;
+					height: 50px;
+					border-bottom: 1px solid #cccccc;
+					li {
+						width: calc(100%/5);
+						float: left;
+						height: 50px;
+						line-height: 50px;
+						font-size: 13px;
+						text-align: center;
+					}
+					&.reduced{
+						li {
+							width: calc(100%/2);
+						}						
+					}
+				}          
+			}                
+		}
+		
+	}
+}
+.container-footer {
+	float: left;
+	width: 100%;
+	margin-bottom: 50px;
+	.col {
+		width: calc(50%);
+    float: left;
+    text-align: right;
+    padding-right: 15px;
+    padding-top: 10px;
+    font-weight: 300;
+	}
+	.tab-footer {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+    height: 40px;
+    position: relative;
+		.content-tab {
+			float: left;
+			width: 100%;
+			position: absolute;
+			transition: all 0.5s cubic-bezier(0.31, -0.105, 0.43, 1.4);
+			overflow: hidden;
+		 
+			&#estimated-total-budget {
+				left:0;
+			}
+			&#real-total-budget {
+				left: 100%;
+			}
+			&#differences-total-budget {
+				left: 200%;
+			}
+			&#estimated-total-approved {
+				left:0;
+			}
+			&#real-total-approved {
+				left: 100%;
+			}
+			&#differences-total-approved {
+				left: 200%;
+			}
+			&#estimated-total-finished {
+				left:0;
+			}
+			&#real-total-finished {
+				left: 100%;
+			}
+			&#differences-total-finished {
+				left: 200%;
+			}			
+			
+		
+			ul {
+				li {
+					width: calc(100%/5);
+					float: left;
+					height: 50px;
+					line-height: 50px;
+					font-size: 12px;
+					text-align: center;
+				}
+				&.reduced{
+					li {
+						width: calc(100%/2);
+					}						
+				}
+			}			
+		}
+		
+	}
+}

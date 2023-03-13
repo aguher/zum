@@ -1,0 +1,242 @@
+<ng-template #choosenBudgets>
+  <div *ngIf="!choosenCompany; else choosen">
+    <h2 class="title-loading">
+      Seleccione una empresa y año fiscal
+    </h2>
+  </div>
+</ng-template>
+<ng-template #choosen>
+  <div *ngIf="!noBudgets; else createBudget">
+    <h2 class="title-loading">
+      <div class="loader"></div>
+      Cargando Presupuestos...
+    </h2>
+  </div>
+</ng-template>
+
+<ng-template #createBudget>
+  <div class="container-budgets no-budgets">
+    <div class="container-title" >
+      <span class="title">Añade el primer presupuesto</span>
+      <div class="add-campaign">
+        <a class="big-button" (click)="createNewBudget()">
+          <i class="material-icons">playlist_add</i>
+          Nuevo Presupuesto
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div class="container-budgets" *ngIf="choosenCompany && budgets.length > 0; else choosenBudgets">
+  <div class="container-title">
+    <span class="title">Listado de Presupuestos</span>
+
+    <div class="add-campaign">
+      <!--<a class="big-button export" (click)="exportExcel()">
+        <i alt="exportar" title="exportar" class="material-icons">get_app</i>
+        Exportar a EXCEL
+      </a>-->
+      <a class="big-button" (click)="createNewBudget()">
+        <i class="material-icons">playlist_add</i>
+        Nuevo Presupuesto
+      </a>
+    </div>
+    <div class="search-input-block" [ngClass]="{'hidden': !showInput}">
+      <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
+      <i class="material-icons">search</i>
+    </div>
+  </div>
+  <div class="list">
+
+    <p-dataTable styleClass="dashboard-tables budgets" [emptyMessage]="emptyMsg" [value]="budgets" [paginator]="displayPagination"
+      [rows]="pagination" [globalFilter]="inputSearch" [rowStyleClass]="lookupRowStyleClass" #dt>
+      <p-column field="id" header="Código" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por código"></p-column>
+      <p-column field="name" header="Nombre" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por nombre"></p-column>
+      <p-column *ngIf="roleUser === 3 && showCol" field="team" header="equipo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por equipo"></p-column>
+      <p-column field="user" header="usuario " [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por usuario"></p-column>
+      <p-column field="customer" header="cliente" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por cliente"></p-column>
+      <p-column field="grupo" header="grupo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por grupo"></p-column>
+      <p-column field="subgroup" header="subgrupo" [filter]="true" filterMatchMode="contains" filterPlaceholder="Filtra por subgrupo"></p-column>
+
+      <p-column header="opciones"  [style]="{'overflow':'visible', 'width': '100px','text-align': 'center', 'padding-top': '0'}">
+          <ng-template let-budget="rowData" pTemplate="body" let-rowIndex="rowIndex">
+
+              <div class="menu">
+                  <a title="editar" *ngIf="showCol" (click)="selectBudget(budget, rowIndex)">              
+                      <i class="material-icons edit-button">mode_edit</i>
+                  </a>
+                  <a title="eliminar" *ngIf="showCol" (click)="deleteBudget(budget)">              
+                      <i class="material-icons delete">delete</i>
+                  </a>
+                  <a title="Resumen" (click)="resumeBudget(budget)">              
+                      <i class="material-icons desglose">assessment</i>
+                  </a>
+              </div>
+
+          </ng-template>
+      </p-column>
+
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog"  [contentStyle]="{'width':'500px'}" header="Nuevo Presupuesto" [(visible)]="displayDialogNew" [modal]="true" [resizable]="false">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-1">
+        <div class="ui-grid-row">&nbsp;</div>
+      </div>
+      <div class="ui-grid-col-10">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="name">Nombre</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <input type="text" pInputText id="name" [(ngModel)]="newBudget.name" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="customer">Cliente</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers"
+              [(ngModel)]="newBudget.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="group">Grupo</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.groups"
+              [(ngModel)]="newBudget.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+          </div>
+        </div>
+      </div>      
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="subgroup">Subgrupo</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.subgroups" [(ngModel)]="newBudget.id_subgroup"
+              placeholder="Selecciona un subgrupo"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialogNew = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="addBudget()">
+        Guardar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" *ngIf="selectedBudget"   [contentStyle]="{'width':'500px'}" header="Detalles del Presupuesto" [(visible)]="displayDialog"
+  [responsive]="true" showEffect="ease" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-1">
+        <div class="ui-grid-row">&nbsp;</div>
+      </div>
+      <div class="ui-grid-col-10">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="name">Nombre</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <input type="text" pInputText id="name" [(ngModel)]="selectedBudget.name" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="customer">Cliente</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeCustomer($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.customers"
+              [(ngModel)]="selectedBudget.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="group">Grupo</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeGroup($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.groups"
+              [(ngModel)]="selectedBudget.id_group" placeholder="Selecciona un grupo"></p-dropdown>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="subgroup">Subgrupo</label>
+          </div>
+          <div class="ui-grid-col-12">
+            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.subgroups" [(ngModel)]="selectedBudget.id_subgroup"
+              placeholder="Selecciona un subgrupo"></p-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialog = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="updateBudget()">
+        Guardar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el Presupuesto" [(visible)]="displayDialogDelete" [responsive]="true"
+  showEffect="ease" [modal]="true">
+  <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBudget">
+    <div class="ui-grid-row">
+      <span class="title">¿Esta seguro de eliminar el Presupuesto?</span>
+      <span class="info">{{selectedBudget.name}}</span>
+    </div>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialogDelete = false" class="cancel">
+        cancelar
+      </a>
+      <a (click)="deleteApi(selectedBudget)">
+        Eliminar
+      </a>
+    </div>
+  </p-footer>
+</p-dialog>

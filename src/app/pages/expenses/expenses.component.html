@@ -1,0 +1,492 @@
+<ng-template #choosenExpenses>
+    <div *ngIf="!choosenCompany; else choosen">
+        <h2 class="title-loading">
+            Seleccione una empresa y año fiscal
+        </h2>
+    </div>    
+</ng-template>
+<ng-template #choosen>
+    <div *ngIf="!noExpenses; else createExpense">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando compras...
+        </h2>
+    </div>    
+</ng-template>
+
+<ng-template #createExpense>
+    <div class="container-expenses no-expenses">
+        <div class="container-title">
+            <span class="title">Añade la primera compra</span>
+            <div class="add-campaign">
+                <a class="big-button" (click)="selectExpense()">
+                    <i class="material-icons">playlist_add</i>
+                    Agregar
+                </a>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<div class="container-expenses" *ngIf="choosenCompany && expenses.length > 0; else choosenExpenses">
+    <div class="container-title">
+        <div class="ui-grid-row" style="margin-bottom:5px">
+        <div class="ui-grid-col-3" style="margin-top:15px">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-secondary" (click)="tabSeleccionada=1;filtrar()" [ngClass]="{'active': 1 == tabSeleccionada}">Compras</button>
+                <button type="button" class="btn btn-outline-secondary" (click)="tabSeleccionada=2;agregarexp=false;getExpensesExp()" [ngClass]="{'active': 2 == tabSeleccionada}">Exportación</button>
+            </div>
+        </div>
+        <div class="ui-grid-col-5" style="margin-top:15px">
+            &nbsp;
+        </div>
+
+        <div class="ui-grid-col-4 text-right" style="max-height: 70px">
+            <div style="float:right" class="add-campaign" *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6">
+                <a class="big-button export" (click)="exportExcel()" *ngIf="tabSeleccionada == 1">
+                    <i  alt="exportar" title="exportar"  class="material-icons">get_app</i>
+                    Exportar a EXCEL
+                </a>             
+                <a class="big-button" (click)="selectExpense()" *ngIf="tabSeleccionada == 1">
+                    <i class="material-icons">playlist_add</i>
+                    Agregar
+                </a>
+                <a class="big-button" (click)="showNewExport = true" *ngIf="tabSeleccionada == 2 && agregarexp">
+                        <i alt="Crear Agenda de Exportación" title="Crear Agenda de Exportación" class="material-icons">assignment</i>
+                        Nueva Exportación
+                </a>
+            </div>
+        </div>
+
+    </div>
+<!--         <div class="search-input-block"  [ngClass]="{'hidden': !showInput}" >
+            <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
+            <i class="material-icons">search</i>
+        </div> -->
+    </div>
+    <div class="list" *ngIf="tabSeleccionada == 1">
+        <table class="table table-sm" id="tablagastos">
+                <thead>
+                  <tr>                                         
+                    <th width="5%" scope="col" (click)="ordenar($event)" id="id" style="cursor:pointer">Cd<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='id' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='id' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" (click)="ordenar($event)" id="date" style="cursor:pointer">Fecha<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='date' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='date' && !ordsentido">arrow_drop_up</i></th>                    
+                    <th width="7%" scope="col" (click)="ordenar($event)" id="due_date" style="cursor:pointer">Vcmto.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='due_date' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='due_date' && !ordsentido">arrow_drop_up</i></th>                    
+                    <th width="13%" scope="col" (click)="ordenar($event)" id="description" style="cursor:pointer">Descripción<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="13%" scope="col" (click)="ordenar($event)" id="customer_name" style="cursor:pointer">Proveedor<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer_name' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer_name' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="8%" scope="col" (click)="ordenar($event)" id="ped_code" style="cursor:pointer">Nº.Ped.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='ped_code' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='ped_code' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="11%" scope="col" (click)="ordenar($event)" id="campaign_name" style="cursor:pointer">Pedido<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='campaign_name' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='campaign_name' && !ordsentido">arrow_drop_up</i></th> 
+                    <th width="11%" scope="col" (click)="ordenar($event)" id="concept_name" style="cursor:pointer">C.Coste<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='concept_name' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='concept_name' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="amount" style="cursor:pointer">B.I.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='amount' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='amount' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="iva" style="cursor:pointer">Iva<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='iva' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='iva' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="total" style="cursor:pointer">Total<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="retention" style="cursor:pointer">Ret.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='retention' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='retention' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="4%" scope="col" (click)="ordenar($event)" id="number" style="cursor:pointer">Fact.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='number' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='number' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="5%"></th>               
+                  </tr>
+                  <tr>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocodigo" placeholder="Filtre código"/></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofecha" placeholder="Filtre fecha"/></th>      
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrovencimiento" placeholder="Filtre venc."/></th>                        
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrodescripcion" placeholder="Filtre descripción" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroproveedor" placeholder="Filtre proveedor" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronumpedido" placeholder="Filtre nº.ped." /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropedido" placeholder="Filtre pedido" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroccoste" placeholder="Filtre c.coste" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrobaseimponible" placeholder="Filtre b.imponible" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroiva" placeholder="Filtre iva" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrototal" placeholder="Filtre total" /></th>                                                        
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroretencion" placeholder="Filtre retención" /></th>
+                        <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronumfactura" placeholder="Filtre nºfactura" /></th> 
+                        <th></th>
+                      </tr>
+                </thead>
+                <tbody>
+                  <tr (dblclick)="selectExpense(gasto)" style="cursor:pointer" *ngFor="let gasto of expensesfiltrados | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index"  [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">                                      
+                    <td>{{gasto.id}}</td>
+                    <td>{{gasto.date | date:'dd/MM/yyyy'}}</td>  
+                    <td>{{gasto.due_date | date:'dd/MM/yyyy'}}</td>                    
+                    <td>{{gasto.description}}</td>
+                    <td>{{gasto.customer_name}}</td>    
+                    <td>{{gasto.ped_code}}</td>   
+                    <td>{{gasto.campaign_name}}</td>   
+                    <td>{{gasto.concept_name}}</td>                    
+                    <td class="text-right">{{gasto.amount | currency:false}}</td>
+                    <td class="text-right">{{gasto.iva | currency:false}}</td> 
+                    <td class="text-right">{{gasto.total | currency:false}}</td>  
+                    <td class="text-right">{{gasto.retention | currency:false}}</td>   
+                    <td>{{gasto.number}}</td>   
+                    <td>
+                            <div class="menu">
+
+
+                                    <a title="Eliminar" (click)="deleteExpense(gasto)" *ngIf="gasto.id_export == 0">              
+                                        <i class="material-icons delete">delete</i>
+                                    </a>
+                                    <a title="Compra ya exportada, no se puede eliminar" *ngIf="gasto.id_export != 0">              
+                                            <i class="material-icons" style="opacity: 0.3">delete</i>
+                                    </a>
+<!--                                     <a title="no se puede eliminar, tiene facturas asociadas" *ngIf="showCol && gasto.numfacturas != '0'">              
+                                            <i class="material-icons" style="opacity: 0.3">delete</i>
+                                    </a> -->
+                                    <a title="clonar" *ngIf="showCol" (click)="selectExpense(gasto,true)">              
+                                        <i class="material-icons clone-button">content_copy</i>
+                                    </a>
+                                    <a title="editar" *ngIf="showCol" (click)="selectExpense(gasto)">              
+                                            <i class="material-icons edit-button">mode_edit</i>
+                                    </a>
+<!--                                     <a title="Desglose" (click)="breakdownCampaign(gasto)">              
+                                        <i class="material-icons desglose">assessment</i>
+                                    </a>
+                                    <a title="Resumen" *ngIf="roleUser === 6" (click)="summaryExpense(gasto)">              
+                                        <i class="material-icons edit-button">line_style</i>
+                                    </a> -->
+                                </div>
+                    </td>                                                       
+                  </tr>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th scope="col" class="text-right">{{totalbaseimponible | currency:false }}</th>
+                    <th scope="col" class="text-right">{{totaliva | currency:false }}</th>
+                    <th scope="col" class="text-right">{{totaltotal | currency:false }}</th>   
+                    <th scope="col" class="text-right">{{totalretenciones | currency:false }}</th>                                                          
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tbody>
+              </table> 
+ 
+              <hr>
+              <div *ngIf="arrpages.length != 0" style="height:50px"> 
+                  <div class="paginator text-center">
+                      <span (click)="numPage=1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>      
+                      <span (click)="numPage=numPage-2" *ngIf="numPage>2"  style="cursor:pointer;padding:15px">{{numPage-2}}</span>                      
+                      <span (click)="numPage=numPage-1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>              
+                      <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span> 
+                      <span (click)="numPage=numPage+1" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>  
+                      <span (click)="numPage=numPage+2" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>              
+                      <span (click)="numPage=arrpages.length" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>                 
+                  </div>
+                  <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+                      <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{expensesfiltrados.length > [numPage]*[pagination] ? [numPage]*[pagination] : expensesfiltrados.length }} de {{expensesfiltrados.length}} compras </i>
+                  </div>        
+               </div>
+               <div *ngIf="arrpages.length == 0">
+                  <div class="text-center">
+                      No hay elementos para mostrar
+                  </div>
+               </div>
+    </div>
+     <!-- "-->
+     <div class="export"  *ngIf="tabSeleccionada == 2">
+
+            <table class="table table-sm" id="tablaexport">
+                <thead>
+                  <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Fecha Compras Hasta</th>                
+                    <th scope="col">Nº Compras</th>
+                    <th scope="col">Archivo</th>
+                    <th></th>               
+                  </tr>
+                </thead>
+                <tbody>
+                    <tr  (dblclick)="openExportation(exportacion)" style="cursor:pointer" *ngFor="let exportacion of exportaciones">
+                            <td>{{exportacion.id}}</td>
+                            <td>{{exportacion.export_date}}</td> 
+                            <td>{{exportacion.expenses_date}}</td>
+                            <td>{{exportacion.expenses_number}}</td>
+                            <td>{{exportacion.file}}</td>
+                            <td>
+                                    <div class="menu">
+                                        <a title="Eliminar" (click)="deleteExportation(exportacion)">              
+                                                <i class="material-icons delete">delete</i>
+                                        </a>
+                                        <a title="Ver Exportación" (click)="openExportation(exportacion)">
+                                            <i class="material-icons description">description</i>
+                                        </a>
+                                    </div>
+                            </td>                           
+                    </tr>
+    
+                </tbody>
+              </table> 
+    
+        <hr>
+    <!--      <div *ngIf="arrpagesExportation.length != 0"> 
+           <div class="text-center paginator" style="float:left">
+                <span (click)="numPageExportation=1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">|<</span>      
+                <span (click)="numPageExportation=numPageExportation-2" *ngIf="numPageExportation>2"  style="cursor:pointer;padding:15px">{{numPageExportation-2}}</span>                      
+                <span (click)="numPageExportation=numPageExportation-1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">{{numPageExportation-1}}</span>              
+                <span style="font-weight: bold; color:white; background-color:gray; cursor:pointer;padding:15px">{{numPageExportation}}</span> 
+                <span (click)="numPageExportation=numPageExportation+1" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">{{numPageExportation+1}}</span>  
+                <span (click)="numPageExportation=numPageExportation+2" *ngIf="numPageExportation<arrpagesExportation.length-1" style="cursor:pointer;padding:15px">{{numPageExportation+2}}</span>              
+                <span (click)="numPageExportation=arrpagesExportation.length" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">>|</span>                 
+            </div>
+            <div class="text-right" style="float:right">
+                <i>Mostrando {{([numPageExportation]-1)*[paginationExportation]+1}} - {{facturasfiltradas.length > [numPageExportation]*[paginationExportation] ? [numPageExportation]*[paginationExportation] : facturasfiltradas.length }} de {{facturasfiltradas.length}} facturas </i>
+            </div>      
+         </div> 
+     -->
+    </div>
+</div>
+
+
+
+
+<p-dialog styleClass="dashboard-dialog" [header]="titulodialog" [(visible)]="displayDialog" [responsive]="true" showEffect="ease"
+    [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" >
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Fecha</label></div>
+                    <div class="ui-grid-col-12">                                               
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedExpense.date" required></my-date-picker>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="ui-grid-col-3"> 
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12"><label for="customer">Cif</label></div>
+                        <div class="ui-grid-col-11">
+                            <input [appAutofocus]="( focus === 'one' )" list="selectedClientCif" pInputText placeholder="Selecciona cif" [(ngModel)]="selectedExpense.CIF" (keydown)="cifkey($event)" (input)="cifkey($event)"/>
+                            <datalist id="selectedClientCif" styleClass="dashboard-dropdown new">           
+                                <option id={{cliente.value}} value={{cliente.label}} *ngFor="let cliente of dataCombos.customerscif"></option>
+                            </datalist>
+                        </div>
+                    </div>
+            </div>  
+
+            <div class="ui-grid-col-6">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12"><label for="customer">Proveedor</label></div>
+                        <div class="ui-grid-col-11">
+                            <input type="text" list="selectedClient" placeholder="Selecciona un proveedor" [(ngModel)]="selectedExpense.customer_name"  (keydown)="proveedorkey($event)" (input)="proveedorkey($event)"/>
+                            <datalist id="selectedClient" styleClass="dashboard-dropdown new">           
+                                <option id={{cliente.value}} value={{cliente.label}} *ngFor="let cliente of dataCombos.customers"></option>
+                            </datalist>
+                        </div>
+                        <div class="ui-grid-col-1">
+                            <button class="btn btn-secondary" title="Agregar proveedor" (click)="dialogoCliente()" > + </button>                            
+                        </div>
+                    </div>
+            </div>   
+
+        </div>
+
+        <div class="ui-grid-row">
+
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="status">Centro Coste</label></div>
+                    <div class="ui-grid-col-12">
+                        <input type="text" list="selectedCC" placeholder="Selecciona centro de coste" [(ngModel)]="selectedExpense.concept_name"/>
+                        <datalist id="selectedCC" styleClass="dashboard-dropdown new">           
+                            <option id={{ccoste.value}} value={{ccoste.label}} *ngFor="let ccoste of dataCombos.all_concepts"></option>
+                        </datalist>
+                    </div>
+                </div>
+            </div> 
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Nº.Ped.Cli</label></div>
+                    <div class="ui-grid-col-12">                                               
+                        <input type="text" list="selectedPedidoNum" placeholder="Selecciona nº pedido" [(ngModel)]="selectedExpense.ped_code" (keydown)="pedidokey($event)" (input)="pedidokey($event)"/>
+                        <datalist id="selectedPedidoNum" styleClass="dashboard-dropdown new">           
+                            <option id={{pedido.value}} value={{pedido.label}} *ngFor="let pedido of dataCombos.pedidosnum"></option>
+                        </datalist>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="ui-grid-col-4">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12"><label for="creation_date">Pedido Cliente</label></div>
+                        <div class="ui-grid-col-12">                                               
+                            <input type="text" list="selectedPedido" placeholder="Selecciona pedido cliente (si lo hay)" [(ngModel)]="selectedExpense.campaign_name"/>
+                            <datalist id="selectedPedido" styleClass="dashboard-dropdown new">           
+                                <option id={{pedido.value}} value={{pedido.label}} *ngFor="let pedido of dataCombos.pedidos"></option>
+                            </datalist>
+                        </div>
+                    </div> 
+                </div>
+
+        </div>
+
+        <div class="ui-grid-row">
+
+            <div class="ui-grid-col-3">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="creation_date">Vencimiento</label></div>
+                    <div class="ui-grid-col-12">                                               
+                        <my-date-picker name="duedate" [options]="myDatePickerOptions" [(ngModel)]="selectedExpense.due_date"></my-date-picker>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-col-4">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="numfactura">Nº Factura</label></div>
+                    <div class="ui-grid-col-12"><input [appAutofocus]="( focus === 'two' )" type="text" pInputText id="factura" [(ngModel)]="selectedExpense.number" /></div>
+                </div>
+            </div>
+ 
+
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-12"><label for="name">Descripción</label></div>
+                    <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="selectedExpense.description" /></div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+                <div class="ui-grid-row">
+
+                    <div class="ui-grid-col-2">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12"><label for="name">Base Imponible</label></div>
+                            <div class="ui-grid-col-12"><input type="text" pInputText id="name" (keyup)="updateTotal()" [(ngModel)]="selectedExpense.amount" /></div>
+                        </div> 
+                    </div>
+                    <div class="ui-grid-col-2">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-12"><label for="name">%Iva</label></div>
+                            <p-dropdown styleClass="dashboard-dropdown" [options]="taxes" [(ngModel)]="selectedExpense.id_tax" (onChange)="updateTotal()" placeholder="Sel. iva"></p-dropdown>
+                        </div> 
+                    </div>
+                    <div class="ui-grid-col-2">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12"><label for="name">Iva</label></div>
+                                <div class="ui-grid-col-12"><input type="text" pInputText id="name" [(ngModel)]="selectedExpense.iva" (keyup)="updateIva()" /></div>                                
+                            </div> 
+                        </div>                    
+                    <div class="ui-grid-col-2">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12"><label for="total">Total</label></div>
+                                <div class="ui-grid-col-12"><input type="text" pInputText id="total" [(ngModel)]="selectedExpense.total" (keyup)="updateBI()" /></div>
+                            </div> 
+                    </div>
+                    <div class="ui-grid-col-2">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12"><label for="name">%Retenc.</label></div>
+                                <div class="ui-grid-col-12"><input type="text" pInputText id="percent_retention" (keyup)="updateRetencion()" [(ngModel)]="selectedExpense.percent_retention" /></div>
+                            </div> 
+                    </div>
+                    <div class="ui-grid-col-2">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-12"><label for="name">Retención</label></div>
+                                <div class="ui-grid-col-12"><input type="text" pInputText id="retention" [(ngModel)]="selectedExpense.retention" /></div>
+                            </div> 
+                    </div>                                        
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="closeDialog()" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="updateApi()"  *ngIf="selectedExpense && selectedExpense.id != -1">              
+              Guardar
+            </a>
+            <a (click)="addApi()" *ngIf="selectedExpense && selectedExpense.id == -1">              
+               Añadir Compra
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog pdf" header="Exportar" [(visible)]="showNewExport" [responsive]="true"
+    showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row text-center">
+            <div style="height:50px;margin-top:20px">
+                <span class="title">Seleccione Fecha fin de la Exportación</span>
+            </div>
+            <div class="ui-grid-col-12 text-center">
+            
+                <div class="ui-grid-col-4">
+                    &nbsp;
+                </div>
+                <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="exportation_date">                   
+                            </my-date-picker>
+                </div>
+                <div class="ui-grid-col-4">
+                    &nbsp;
+                </div>
+            </div>
+            <!-- <span class="info">{{selectedBill.numbertext}}</span> -->
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="showNewExport = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="createExportation()">              
+              Generar Exportación
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar Exportación" [(visible)]="displayDialogDeleteExportation" [responsive]="true"
+    showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedExportation">
+        <div class="ui-grid-row">
+            <span class="title">¿Está seguro de eliminar la Exportación?</span>
+            <span class="info">{{selectedExportation.id}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDeleteExportation = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="deleteExp(selectedExportation)">              
+              Eliminar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar" [(visible)]="displayDialogDelete" [responsive]="true"
+    showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedExpense">
+        <div class="ui-grid-row">
+            <span class="title">¿Está seguro de eliminar la compra?</span>
+            <span class="info">{{selectedExpense.description}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+            <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>
+            <a (click)="deleteApi(selectedExpense)">              
+              Eliminar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog" header="Agregar cliente" [(visible)]="displayDialogCliente" [responsive]="true" showEffect="ease" [modal]="true" *ngIf="selectedCustomer">
+        <app-customers-edit [selectedCustomer]="selectedCustomer" (insertar)="recargarClientes($event)" (cancelar)="cancelarCliente()"></app-customers-edit>
+<p-dialog>

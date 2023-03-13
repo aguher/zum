@@ -1,0 +1,330 @@
+body .ui-dialog.modal-minimal {
+    min-width: 350px !important;
+    overflow: visible;
+}
+body .ui-dialog.modal-minimal .ui-dialog-content {
+    padding:0;
+}
+body .ui-dialog.modal-minimal .ui-dialog-titlebar {
+    border: 0;
+    padding-bottom:0;
+}
+body .dashboard-dialog .remove-logo{
+    color: white;
+    background: #E76F6F;
+    font-size: 12px;
+    padding: 7px;
+    line-height: 30px;
+    position: relative;
+    top: -33px;
+    right: calc(-50% + 73px);
+}
+body .dashboard-dialog .remove-logo i{
+    position: relative;
+    top: 6px;
+    font-size: 24px;
+}
+
+body .dashboard-dialog img {
+    max-height: 120px;
+    margin: 10px auto;
+    display: block;
+}
+
+body .dashboard-dialog.ui-dialog {
+	min-width: 400px;	
+    max-width: 600px;
+}
+body .dashboard-dialog.analysis.ui-dialog {
+    max-width: 98%;
+    width: 100%;
+}
+
+body .dashboard-dialog.charts.ui-dialog {
+    max-width: 820px;
+    width: 100%;
+}
+
+body .dashboard-dialog.ui-dialog .ui-dialog-titlebar {
+    background: white;
+    border: 0;
+    border-radius: 0;
+    color: #222222;
+    border-bottom: 1px solid #c1c1c1;
+    margin: 0 17px;
+    padding: 7px 0;
+
+}
+body .dashboard-dialog.ui-dialog .ui-dialog-footer {
+    padding: 0;
+    border-width: 0;
+    background-image: none;
+    border-radius: 0;
+}
+body .dashboard-dialog.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+	display: none;
+}
+body .dashboard-dialog.ui-dialog .ui-dialog-content {
+    overflow:visible;
+	background: #FFFFFF;
+	padding: 0 15px 15px 15px;
+}
+body .dashboard-dialog.ui-dialog.modal-erp .ui-dialog-content {
+    overflow: auto;
+    background: #FFFFFF;
+    padding: 0 15px 15px 15px;
+    max-height: 80vh;
+}
+
+body .dashboard-dialog .ui-dialog-buttonpane {
+	background: #F6F7F8;
+	margin:0;
+	padding: 15px;
+}
+body .dashboard-dialog .ui-grid {
+    background: white;
+    padding: 0;
+    border: 0;
+    text-transform: capitalize;
+}
+body .dashboard-dialog .ui-grid .ui-grid-row {
+	display:block;
+}
+body .dashboard-dialog.delete .ui-grid .ui-grid-row span.title{
+    display: block;
+    text-transform: none;
+    text-align: center;
+	padding: 20px;
+}
+body .dashboard-dialog.delete .ui-grid .ui-grid-row span.info{
+    display: block;
+    text-transform: none;
+    text-align: center;
+}
+body .dashboard-dialog.delete .ui-grid .ui-grid-row span.info::before{
+    content: '';
+    width: 70px;
+    height: 2px;
+    background: #E76F6F;
+    margin: 10px auto;
+    display: block;
+}
+
+body .dashboard-dialog .ui-grid .ui-grid-row label{
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 400;
+    color: #222222;
+    margin-top: 20px;
+    font-size: 14px;
+	font-family: 'Assistant', sans-serif;
+}
+
+body .dashboard-dialog .ui-grid .ui-grid-row label.ui-dropdown-label {
+    margin:0;
+}
+body .dashboard-dialog .ui-grid .ui-grid-row .help-block {
+    color: #E76F6F;
+    font-size: 12px;
+    padding: 5px;
+}
+
+body .dashboard-dialog .ui-grid .ui-grid-row input[type="text"]{
+    border: 1px solid #C7CFD7;
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 13px;
+	width: 100%;
+	font-family: 'Assistant', sans-serif;
+}
+body .dashboard-dialog .ui-dialog-buttonpane a{
+	background: #418EE5;
+	color: white;
+	padding: 10px;
+	font-size: 14px;
+	font-weight: 300;
+	border-radius: 3px;
+	float: right;
+}
+body .dashboard-dialog .ui-dialog-buttonpane a.disabled {
+    pointer-events: none;
+    opacity: 0.8;
+}
+body .dashboard-dialog.delete .ui-dialog-buttonpane a{ 
+	background:#E76F6F;
+	float: right;
+}
+
+body .dashboard-dialog .ui-dialog-buttonpane a:hover{ 
+	cursor: pointer;
+}
+body .dashboard-dialog .ui-dialog-buttonpane a.cancel {
+    background: transparent;
+    color: #747474;
+    font-size: 13px;
+    font-weight: 400;
+    float: left;
+    border: 1px solid #747474;
+}
+body .dashboard-dialog .ui-dialog-buttonpane a.cancel:hover {
+	background: #747474;
+	color: white;
+}
+body .dashboard-dialog.ui-dialog .ui-dialog-titlebar span{
+	color: #222222;
+	font-size: 16px;
+	font-weight: 400;
+	text-transform: uppercase;
+    font-family: 'Assistant', sans-serif;
+    text-align: center;
+    display: block;
+}
+
+body .dashboard-dialog.ui-widget-content {
+	border: 0;
+	border-radius: 0;
+}
+.modal-erp h3 {
+    font-weight: 400;
+    text-transform: none;
+    font-size: 16px;
+    display: inline-block;
+}
+.modal-erp h4 {
+    text-align: center;
+    font-size: 13px;
+    text-transform: uppercase;
+    display: block;
+    font-weight: 400;
+}
+.modal-erp span.info {
+    font-weight: 600;
+    text-transform: none;
+    font-size: 16px;
+    display: inline-block;
+    background: #F6F7F8;
+    padding: 13px;
+    border-radius: 4px;
+    color: #747474;
+}
+
+
+   .inner-form {
+    padding: 0px 30px 20px 30px;
+    display: block;
+    text-align: center;
+  }
+  .inner-form.line:before {
+    content: '';
+    width: 100%;
+    border-top: 1px solid #efefef;
+    height: 4px;
+    float: left;
+    margin-bottom: 16px;
+  }
+  body .dashboard-dialog .inner-form.file {
+    display: block;
+    margin-top: -11px;
+    margin-bottom: -30px;
+  }
+  body .dashboard-dialog .inner-form.file label {
+      color: white;
+  }
+  .inner-form .file-upload {
+    display: inline-block;
+  }
+  .inner-form .file-upload .preview-image {
+    display: inline-block;
+    height: 39px;
+    margin-top: -15px;
+    position: relative;
+    top: 14px;
+  }
+  .inner-form .message-success {
+    color: #0058a2;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    display: block;
+    font-size: 12px;
+  }
+  .inner-form .message-error {
+    color: #0058a2;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    display: block;
+    font-size: 12px;
+  }
+  .inner-form .link {
+    font-size: 12px;
+    display: block;
+    margin: 12px auto 0;
+    color: #418EE5;
+    padding: 10px;
+    width: 180px;
+    text-align: center;
+  }
+  .inner-form .link:hover {
+    background-color: #418EE5;
+    color: white;
+    cursor: pointer;
+  }
+  .inner-form .button {
+    background: #01ab5d;
+    margin: 0 auto;
+    display: inline-block;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 10px 20px;
+  }
+  .inner-form .button:hover {
+    cursor: pointer;
+  }
+  .inner-form .button.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .inner-form .inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+  }
+  .inner-form .inputfile + label {
+    font-size: 15px;
+    color: white;
+    background-color: #0058a2;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    float: none;
+  }
+  .inner-form .inputfile:focus + label, .inner-form .inputfile + label:hover {
+    cursor: pointer;
+  }
+  .inner-form input, .inner-form label.budget {
+    text-align: left;
+    width: 60%;
+    float: left;
+    font-size: 13px;
+    color: #adaeae;
+    margin-bottom: 10px;
+  }
+  .inner-form label.budget:last-of-type {
+    width: 40%;
+  }
+  .inner-form input {
+    padding: 10px;
+    width: 40%;
+    margin-right: 20%;
+  }
+  .inner-form input:last-child {
+    margin-right: 0;
+  }
+  

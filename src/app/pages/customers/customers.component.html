@@ -1,0 +1,154 @@
+<div class="container">
+  <div class="header">
+    <i class="header material-icons">card_travel</i>
+    <h1>Clientes</h1>
+    <h3>Todos los clientes de tu empresa</h3>
+  </div>
+  <div class="edit">
+
+    <div class="input">
+      <span>Nombre del cliente</span>
+      <input type="text" [(ngModel)]="model.customerName" value="" placeholder="Introduce el nombre del cliente">
+    </div>
+    <div class="input">
+        <span class="cif">CIF</span>
+        <span class="address">Dirección</span>
+        <input class="cif" type="text" [(ngModel)]="model.CIF" value="" placeholder="CIF del cliente">
+        <input class="address" type="text" [(ngModel)]="model.address" value="" placeholder="Introduce la dirección del cliente">            
+      </div>
+    <div class="input">
+      <span class="city">C. Postal</span>
+      <span class="city">Ciudad</span>
+      <span class="city">País</span>
+      <input class="city" type="text" [(ngModel)]="model.postal_code" value="" placeholder="C.P.">
+      <input class="city" type="text" [(ngModel)]="model.city" value="" placeholder="Ciudad">
+      <select class="city" style="height:40px" [(ngModel)]="model.country" placeholder="País">
+        <option value=1>España</option>
+      </select>      
+    </div>
+    <div class="input">
+      <span>Logotipo</span>
+      <div class="inner-form file">        
+        <input class="inputfile" id="logo_file" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputErp($event)" [uploadInput]="uploadInputERP">
+        <label for="logo_file">
+          Selecciona una imagen JPEG
+          <img class="loading-icon" *ngIf="uploading " src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </label>
+        <div class="file-upload" *ngIf="uploadFileERP">
+          <img class="preview-image" *ngIf="uploadFileERP.generatedName" [src]="urlUpload + uploadFileERP.generatedName" />
+          <span class="message-error" *ngIf="uploadFileERP.status === false">
+            Ha habido un error: {{uploadFileERP.msg}}
+          </span>        
+        </div>
+      </div>
+    </div>    
+
+    <div class="button">
+      <a (click)="addCustomer()" [ngClass]="{'disabled': uploading }">
+        <i class="material-icons">add_box</i>
+        Añadir
+      </a>
+    </div>
+  </div>
+
+  <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables" [(value)]="customers"  [(selection)]="selectedCustomer"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="customer_name" header="Nombre" ></p-column>
+        <p-column field="CIF" header="Cif" ></p-column>
+        <p-column field="address" header="Dirección" ></p-column>
+        <p-column field="city" header="Ciudad" ></p-column>
+        <p-column field="logo" header="Logo" styleClass="col-options">
+            <ng-template let-customer="rowData" pTemplate="body" >
+              <div class="img-logo" *ngIf="customer.logo">
+                  <img [src]="urlUpload + customer.logo" />
+              </div>
+            </ng-template>
+        </p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-customer="rowData" pTemplate="body">
+            <a (click)="selectCustomer(customer)">              
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a (click)="deleteCustomer(customer)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del cliente" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+     <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCustomer">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedCustomer.customer_name" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="cif">CIF</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="cif" [(ngModel)]="selectedCustomer.CIF" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="address">Dirección</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="address" [(ngModel)]="selectedCustomer.address" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="address_bis">CP - Ciudad</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="address_bis" [(ngModel)]="selectedCustomer.address_bis" /></div>
+        </div>        
+        <div class="ui-grid-row edit">
+          <img [src]="urlUpload + selectedCustomer.logo" />
+          <a class="remove-logo" (click)="selectedCustomer.logo = ''" *ngIf="selectedCustomer.logo">
+            <i class="material-icons">delete</i>
+            eliminar logotipo
+          </a>
+          <div class="ui-grid-col-12">
+            <label for="logo">Logotipo</label>
+            <div class="inner-form file">        
+                <input class="inputfile" id="logo_file_edit" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputErp($event, true)" [uploadInput]="uploadInputERP">
+              <label for="logo_file_edit">
+                Selecciona una imagen JPEG
+                <img class="loading-icon" *ngIf="uploading " src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              </label>
+              <div class="file-upload" *ngIf="uploadFileERP">
+                <img class="preview-image" *ngIf="uploadFileERP.generatedName" [src]="urlUpload + uploadFileERP.generatedName" />
+                <span class="message-error" *ngIf="uploadFileERP.status === false">
+                  Ha habido un error: {{uploadFileERP.msg}}
+                </span>        
+              </div>
+            </div>
+          </div>          
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="cancelEdition()" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="updateApi(selectedCustomer)">              
+              Guardar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el cliente" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedCustomer">
+        <div class="ui-grid-row">
+            <span class="title">¿Estás seguro de eliminar el cliente?</span>
+            <span class="info">{{selectedCustomer.customer_name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="deleteApi(selectedCustomer)">              
+              Eliminar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>

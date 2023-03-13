@@ -1,0 +1,650 @@
+<div class="lines-subconcept">
+  <a class="big-button export" (click)="exportExcel()">
+    <i alt="exportar" title="exportar" class="material-icons">get_app</i>
+  </a>
+  <div class="row-header" *ngIf="role < 7">
+    <div class="col empty">&nbsp;</div>
+    <div class="col total">Total</div>
+    <div class="col">ENE</div>
+    <div class="col">FEB</div>
+    <div class="col">MAR</div>
+    <div class="col">ABR</div>
+    <div class="col">MAY</div>
+    <div class="col">JUN</div>
+    <div class="col">JUL</div>
+    <div class="col">AGO</div>
+    <div class="col">SEP</div>
+    <div class="col">OCT</div>
+    <div class="col">NOV</div>
+    <div class="col">DIC</div>
+  </div>
+
+  <!-- NUEVOS INGRESOS -->
+  <ng-container *ngIf="role < 7 ">
+    <div class="row-incomes" *ngFor="let income of incomes">
+      <div class="col title income">
+        {{income.name_variable_concept}}
+        <span class="account right">{{income.account_contability}}</span>
+      </div>
+      <div class="col total" [ngClass]="{'error': income.wrong_income}">{{income.total_incomes_budget.total | currency}}</div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['january']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'january')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['january']" (focus)="old=income.incomes_estimated.january;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'january');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['february']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'february')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['february']" (focus)="old=income.incomes_estimated.february;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'february');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['march']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'march')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['march']" (focus)="old=income.incomes_estimated.march;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'march');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['april']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'april')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['april']" (focus)="old=income.incomes_estimated.april;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'april');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['may']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'may')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['may']" (focus)="old=income.incomes_estimated.may;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'may');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['june']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'june')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['june']" (focus)="old=income.incomes_estimated.june;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'june');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['july']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'july')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['july']" (focus)="old=income.incomes_estimated.july;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'july');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['august']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'august')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['august']" (focus)="old=income.incomes_estimated.august;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'august');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['september']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'september')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['september']" (focus)="old=income.incomes_estimated.september;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'september');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['october']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'october')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['october']" (focus)="old=income.incomes_estimated.october;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'october');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['november']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'november')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['november']" (focus)="old=income.incomes_estimated.november;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'november');" />
+      </div>
+      <div class="col">
+        <span *ngIf="!isEditable">{{income.incomes_estimated['december']}}</span>
+        <input *ngIf="isEditable" (blur)="blurred($event, old, income.incomes_estimated, 'december')" myCurrencyFormatter type="text"
+          [(ngModel)]="income.incomes_estimated['december']" (focus)="old=income.incomes_estimated.december;$event.target.className=''"
+          (keydown)="resetClass($event);updateIncome($event, old, income, 'december');" />
+      </div>
+    </div>
+  </ng-container>
+  <!-- FEE DE EMPRESA -->
+
+  <div class="row-incomes" *ngIf="role < 7 && feeIncome">
+    <div class="col title income">Fee de Empresa</div>
+    <div class="col total" [ngClass]="{'error': feeIncome.wrong_income}">{{feeIncome.total | currency}}</div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['january']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'january')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['january']"
+        (focus)="old=feeIncome.january;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'january');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['february']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'february')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['february']"
+        (focus)="old=feeIncome.february;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'february');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['march']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'march')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['march']"
+        (focus)="old=feeIncome.march;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'march');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['april']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'april')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['april']"
+        (focus)="old=feeIncome.april;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'april');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['may']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'may')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['may']"
+        (focus)="old=feeIncome.may;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'may');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['june']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'june')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['june']"
+        (focus)="old=feeIncome.june;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'june');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['july']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'july')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['july']"
+        (focus)="old=feeIncome.july;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'july');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['august']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'august')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['august']"
+        (focus)="old=feeIncome.august;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'august');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['september']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'september')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['september']"
+        (focus)="old=feeIncome.september;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'september');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['october']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'october')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['october']"
+        (focus)="old=feeIncome.october;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'october');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['november']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'november')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['november']"
+        (focus)="old=feeIncome.november;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'november');"
+      />
+    </div>
+    <div class="col">
+      <span *ngIf="!isEditable">{{feeIncome['december']}}</span>
+      <input *ngIf="isEditable" (blur)="blurred($event, old, feeIncome, 'december')" myCurrencyFormatter type="text" [(ngModel)]="feeIncome['december']"
+        (focus)="old=feeIncome.december;$event.target.className=''" (keydown)="resetClass($event);updateFeeIncome($event, old, feeIncome, 'december');"
+      />
+    </div>
+  </div>
+  <div class="row-header" [ngClass]="{'error': wrong_income}" *ngIf="role < 7">
+    <div class="col empty">Total Ingresos</div>
+    <div class="col total">{{total.budget_total | currency}}</div>
+    <div class="col">{{totalIncome.january | currency}}</div>
+    <div class="col">{{totalIncome.february | currency}}</div>
+    <div class="col">{{totalIncome.march | currency}}</div>
+    <div class="col">{{totalIncome.april | currency}}</div>
+    <div class="col">{{totalIncome.may | currency}}</div>
+    <div class="col">{{totalIncome.june | currency}}</div>
+    <div class="col">{{totalIncome.july | currency}}</div>
+    <div class="col">{{totalIncome.august | currency}}</div>
+    <div class="col">{{totalIncome.september | currency}}</div>
+    <div class="col">{{totalIncome.october | currency}}</div>
+    <div class="col">{{totalIncome.november | currency}}</div>
+    <div class="col">{{totalIncome.december | currency}}</div>
+  </div>
+  <!-- Conceptos variables -->
+  <div class="row-header" style="margin-top:40px">
+    <div class="col empty">&nbsp;</div>
+    <div class="col total">total</div>
+    <div class="col">ENE</div>
+    <div class="col">FEB</div>
+    <div class="col">MAR</div>
+    <div class="col">ABR</div>
+    <div class="col">MAY</div>
+    <div class="col">JUN</div>
+    <div class="col">JUL</div>
+    <div class="col">AGO</div>
+    <div class="col">SEP</div>
+    <div class="col">OCT</div>
+    <div class="col">NOV</div>
+    <div class="col">DIC</div>
+  </div>
+  <!-- Conceptos variables -->
+  <div class="row-header" id="header-cloned-budget">
+    <div class="col empty">&nbsp;</div>
+    <div class="col total">total</div>
+    <div class="col">ENE</div>
+    <div class="col">FEB</div>
+    <div class="col">MAR</div>
+    <div class="col">ABR</div>
+    <div class="col">MAY</div>
+    <div class="col">JUN</div>
+    <div class="col">JUL</div>
+    <div class="col">AGO</div>
+    <div class="col">SEP</div>
+    <div class="col">OCT</div>
+    <div class="col">NOV</div>
+    <div class="col">DIC</div>
+  </div>
+
+  <div class="row-incomes" *ngFor="let concept of lines">
+    <div *ngIf="concept.subconcepts.length" class="lines" [ngClass]="{'error': concept.wrong_value}">
+      <div class="col title">
+        <span class="name">{{concept.name}}</span>
+        <span class="account">{{concept.account}}</span>
+      </div>
+      <div class="col total">{{concept.budget.total | currency}}</div>
+      <div class="col total">
+        {{concept.totals.january | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.february | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.march | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.april | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.may | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.june | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.july | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.august | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.september | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.october | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.november | currency:false}}
+      </div>
+      <div class="col total">
+        {{concept.totals.december | currency:false}}
+      </div>
+    </div>
+    <div class="line-subconcepts" *ngFor="let subconcept of concept.subconcepts">
+      <div class="col title">
+        <span class="name">{{subconcept.name}}</span>
+      </div>
+      <div class="col total" [ngClass]="{'error': subconcept.wrong_value}">{{subconcept.total | currency}}</div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_jan">{{subconcept.lines['january']}}</span>
+        <ng-template #editable_jan>
+          <input *ngIf="startMonth <= 1 && endMonth >=1;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'january')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['january']" (focus)="old=subconcept.lines.january;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'january');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable; else editable_feb">{{subconcept.lines['february']}}</span>
+        <ng-template #editable_feb>
+          <input *ngIf="startMonth <= 2 && endMonth >=2;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'february')"
+            myCurrencyFormatter type="text" [(ngModel)]="subconcept.lines['february']" (focus)="old=subconcept.lines.february;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'february');" />
+        </ng-template>
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable; else editable_mar">{{subconcept.lines['march']}}</span>
+        <ng-template #editable_mar>
+          <input *ngIf="startMonth <= 3 && endMonth >=3;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'march')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['march']" (focus)="old=subconcept.lines.march;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'march');" />
+        </ng-template>
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable; else editable_apr">{{subconcept.lines['april']}}</span>
+        <ng-template #editable_apr>
+          <input *ngIf="startMonth <= 4 && endMonth >=4;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'april')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['april']" (focus)="old=subconcept.lines.april;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'april');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_may">{{subconcept.lines['may']}}</span>
+        <ng-template #editable_may>
+          <input *ngIf="startMonth <= 5 && endMonth >=5;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'may')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['may']" (focus)="old=subconcept.lines.may;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'may');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_jun">{{subconcept.lines['june']}}</span>
+        <ng-template #editable_jun>
+          <input *ngIf="startMonth <= 6 && endMonth >=6;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'june')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['june']" (focus)="old=subconcept.lines.june;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'june');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_jul">{{subconcept.lines['july']}}</span>
+        <ng-template #editable_jul>
+          <input *ngIf="startMonth <= 7 && endMonth >=7;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'july')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['july']" (focus)="old=subconcept.lines.july;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'july');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_ago">{{subconcept.lines['august']}}</span>
+        <ng-template #editable_ago>
+          <input *ngIf="startMonth <= 8 && endMonth >=8;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'august')" myCurrencyFormatter
+            type="text" [(ngModel)]="subconcept.lines['august']" (focus)="old=subconcept.lines.august;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'august');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_sep">{{subconcept.lines['september']}}</span>
+        <ng-template #editable_sep>
+          <input *ngIf="startMonth <= 9 && endMonth >=9;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'september')"
+            myCurrencyFormatter type="text" [(ngModel)]="subconcept.lines['september']" (focus)="old=subconcept.lines.september;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'september');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_oct">{{subconcept.lines['october']}}</span>
+        <ng-template #editable_oct>
+          <input *ngIf="startMonth <= 10 && endMonth >=10;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'october')"
+            myCurrencyFormatter type="text" [(ngModel)]="subconcept.lines['october']" (focus)="old=subconcept.lines.october;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'october');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_nov">{{subconcept.lines['november']}}</span>
+        <ng-template #editable_nov>
+          <input *ngIf="startMonth <= 11 && endMonth >=11;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'november')"
+            myCurrencyFormatter type="text" [(ngModel)]="subconcept.lines['november']" (focus)="old=subconcept.lines.november;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept,'november');" />
+        </ng-template>
+
+      </div>
+      <div class="col total">
+        <span *ngIf="!isEditable;else editable_dec">{{subconcept.lines['december']}}</span>
+        <ng-template #editable_>
+          <input *ngIf="startMonth <= 12 && endMonth >=12;else not_fill" (blur)="blurred($event, old, subconcept.lines, 'december')"
+            myCurrencyFormatter type="text" [(ngModel)]="subconcept.lines['december']" (focus)="old=subconcept.lines.december;$event.target.className=''"
+            (keydown)="resetClass($event);updateLineSubconcept($event, old, concept, subconcept, 'december');" />
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+  <div class="row-subtotal">
+    <div class="col title">
+      <span class="name">subtotal</span>
+    </div>
+    <div class="col total">
+      {{subtotal.total | currency }}
+    </div>
+    <div class="col total">
+      {{subtotal.january | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.february | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.march | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.april | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.may | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.june | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.july | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.august | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.september | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.october | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.november | currency:false }}
+    </div>
+    <div class="col total">
+      {{subtotal.december | currency:false }}
+    </div>
+  </div>
+
+  <ul class="body no-shadow no-margins border-bottom darken">
+    <li class="subtitle blue">Personal Propio</li>
+    <li class="total">{{employeesCostEstimated.total}}</li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.january}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 1 && endMonth >=1;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'january')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.january" (focus)="old=employeesCostEstimated.january;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'january');" />
+      </ng-template>
+
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.february}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 2 && endMonth >=2;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'february')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.february" (focus)="old=employeesCostEstimated.february;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'february');" />
+      </ng-template>
+    </li>
+
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.march}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 3 && endMonth >=3;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'march')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.march" (focus)="old=employeesCostEstimated.march;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'march');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.april}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 4 && endMonth >=4;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'april')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.april" (focus)="old=employeesCostEstimated.april;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'april');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.may}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 5 && endMonth >=5;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'may')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.may" (focus)="old=employeesCostEstimated.may;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'may');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.june}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 6 && endMonth >=6;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'june')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.june" (focus)="old=employeesCostEstimated.june;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'june');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.july}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 7 && endMonth >=7;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'july')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.july" (focus)="old=employeesCostEstimated.july;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'july');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.august}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 8 && endMonth >=8;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'august')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.august" (focus)="old=employeesCostEstimated.august;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'august');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.september}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 9 && endMonth >=9;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'september')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.september" (focus)="old=employeesCostEstimated.september;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'september');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.october}}</span>
+      <ng-template [ngIf]="isEditable">
+
+        <input *ngIf="startMonth <= 10 && endMonth >=10;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'october')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.october" (focus)="old=employeesCostEstimated.october;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'october');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.november}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 11 && endMonth >=11;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'november')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.november" (focus)="old=employeesCostEstimated.november;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'november');" />
+      </ng-template>
+    </li>
+    <li>
+      <span *ngIf="!isEditable">{{employeesCostEstimated.december}}</span>
+      <ng-template [ngIf]="isEditable">
+        <input *ngIf="startMonth <= 12 && endMonth >=12;else not_fill" (blur)="blurred($event, old,employeesCostEstimated, 'december')"
+          myCurrencyFormatter type="text" pInputText [(ngModel)]="employeesCostEstimated.december" (focus)="old=employeesCostEstimated.december;$event.target.className=''"
+          (keydown)="resetClass($event);changeEstimatedEmployeesCost($event, old,'december');" />
+      </ng-template>
+    </li>
+  </ul>
+  <ul class="body total no-margins">
+    <li class="subtitle">Total Gastos</li>
+
+    <li class="total">{{totalExpensesEstimated.total | currency}}</li>
+    <li>
+      <span>{{totalExpensesEstimated.january | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.february | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.march | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.april | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.may | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.june | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.july | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.august | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.september | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.october | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.november | currency:false}}</span>
+    </li>
+    <li>
+      <span>{{totalExpensesEstimated.december | currency:false}}</span>
+    </li>
+  </ul>
+
+  <ul class="header" *ngIf="role < 7">
+    <li class="subtitle">Valores</li>
+    <li class="total">Total</li>
+    <li>Ene</li>
+    <li>Feb</li>
+    <li>Mar</li>
+    <li>Abr</li>
+    <li>May</li>
+    <li>Jun</li>
+    <li>Jul</li>
+    <li>Ago</li>
+    <li>Sep</li>
+    <li>Oct</li>
+    <li>Nov</li>
+    <li>Dic</li>
+  </ul>
+  <ul class="body" *ngIf="role < 7">
+    <li class="subtitle">Beneficios</li>
+
+    <li class="total">{{benefitsEstimated.total}} </li>
+    <li class="total">{{benefitsEstimated.january}} </li>
+    <li class="total">{{benefitsEstimated.february}} </li>
+    <li class="total">{{benefitsEstimated.march}} </li>
+    <li class="total">{{benefitsEstimated.april}} </li>
+    <li class="total">{{benefitsEstimated.may}} </li>
+    <li class="total">{{benefitsEstimated.june}} </li>
+    <li class="total">{{benefitsEstimated.july}} </li>
+    <li class="total">{{benefitsEstimated.august}} </li>
+    <li class="total">{{benefitsEstimated.september}} </li>
+    <li class="total">{{benefitsEstimated.october}} </li>
+    <li class="total">{{benefitsEstimated.november}} </li>
+    <li class="total">{{benefitsEstimated.december}} </li>
+  </ul>
+
+  <ul class="header" *ngIf="role < 7">
+    <li class="subtitle">Valores</li>
+    <li class="total">Total</li>
+    <li>Ene</li>
+    <li>Feb</li>
+    <li>Mar</li>
+    <li>Abr</li>
+    <li>May</li>
+    <li>Jun</li>
+    <li>Jul</li>
+    <li>Ago</li>
+    <li>Sep</li>
+    <li>Oct</li>
+    <li>Nov</li>
+    <li>Dic</li>
+  </ul>
+  <ul class="body" *ngIf="role < 7">
+    <li class="subtitle">Margen</li>
+
+    <li class="total">{{marginEstimated.total}} %</li>
+    <li class="total">{{marginEstimated.january}} %</li>
+    <li class="total">{{marginEstimated.february}} %</li>
+    <li class="total">{{marginEstimated.march}} %</li>
+    <li class="total">{{marginEstimated.april}} %</li>
+    <li class="total">{{marginEstimated.may}} %</li>
+    <li class="total">{{marginEstimated.june}} %</li>
+    <li class="total">{{marginEstimated.july}} %</li>
+    <li class="total">{{marginEstimated.august}} %</li>
+    <li class="total">{{marginEstimated.september}} %</li>
+    <li class="total">{{marginEstimated.october}} %</li>
+    <li class="total">{{marginEstimated.november}} %</li>
+    <li class="total">{{marginEstimated.december}} %</li>
+  </ul>
+</div>
+<ng-template #not_fill>
+  <div class="not_fill"></div>
+</ng-template>

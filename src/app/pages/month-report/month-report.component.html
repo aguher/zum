@@ -1,0 +1,770 @@
+<div class="report"  *ngIf="choosenCompany; else choosen">
+  <h2>Informe Mensual</h2>
+  <div class="filter-container">
+    <div class="filters">
+      <div class="filter">
+        <label>Cliente</label>
+        <p-dropdown  (onChange)="changeCustomer($event)" [options]="combos.customer" placeholder="Selecciona un valor" [(ngModel)]="filter.customer"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Grupo</label>
+        <p-dropdown (onChange)="changeGroup($event)" placeholder="Selecciona un valor" [options]="combos.group" [(ngModel)]="filter.group"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Subgrupo</label>
+        <p-dropdown [options]="combos.subgroup" placeholder="Selecciona un valor" [(ngModel)]="filter.subgroup"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Equipo</label>
+        <p-dropdown [options]="combos.team" placeholder="Selecciona un valor" [(ngModel)]="filter.team"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Mes Inicio</label>
+        <p-dropdown (onChange)="changeStartDate($event)" [options]="combos.startDate" placeholder="Selecciona un valor" [(ngModel)]="filter.startDate"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Mes Fin</label>
+        <p-dropdown [options]="combos.endDate" placeholder="Selecciona un valor" [(ngModel)]="filter.endDate"></p-dropdown>
+      </div>
+    </div>
+    <div class="buttons">
+      <span>{{lenProjects }} proyectos encontrados</span>
+      <a (click)="filterValues()">filtrar proyectos</a>
+      <a (click)="clearValues()" class="green">limpiar valores</a>
+    </div>
+  </div>
+  <div class="chart-container">
+    <h3> Gráfica Resumen </h3>
+    <canvas baseChart width="800" height="400" *ngIf="showChart"
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [colors]="lineChartColors"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+    ></canvas>    
+  </div>
+
+  <ul class="header" >
+    <li class="empty">&nbsp;</li>
+    <li>Ingresos</li>
+    <li>Costes</li>
+    <li>Beneficios</li>
+
+  </ul>
+  <ul class="subheader" >
+    <li class="empty">&nbsp;</li>
+    <li >Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+    
+    <li>Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+
+    <li>Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+  </ul>
+  <ul class="body" *ngIf="monthValues && monthVisibles[0].visible">   
+    <li class="empty">
+      <span> Enero</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.january | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.january | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.january | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.january | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[1].visible">   
+    <li class="empty">
+      <span> Febrero</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.february | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.february | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.february | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.february | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[2].visible">   
+    <li class="empty">
+      <span> Marzo</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.march | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.march | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.march | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.march | currency }}
+      </span>
+    </li>    
+  </ul>
+<ul class="body"  *ngIf="monthValues && monthVisibles[3].visible">   
+    <li class="empty">
+      <span> Abril</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.april | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.april | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.april | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.april | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[4].visible">   
+    <li class="empty">
+      <span> Mayo</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.may | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.may | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.may | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.may | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[5].visible">   
+    <li class="empty">
+      <span> Junio</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.june | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.june | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.june | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.june | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[6].visible">   
+    <li class="empty">
+      <span> Julio</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.july | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.july | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.july | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.july | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[7].visible">   
+    <li class="empty">
+      <span> Agosto</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.august | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.august | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.august | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.august | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[8].visible">   
+    <li class="empty">
+      <span> Septiembre</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.september | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.september | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.september | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.september | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[9].visible">   
+    <li class="empty">
+      <span> Octubre</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.october | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.october | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.october | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.october | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[10].visible">   
+    <li class="empty">
+      <span> Noviembre</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.november | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.november | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.november | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.november | currency }}
+      </span>
+    </li>    
+  </ul>
+  <ul class="body"  *ngIf="monthValues && monthVisibles[11].visible">   
+    <li class="empty">
+      <span> Diciembre</span>
+    </li>
+
+    <li >
+      <span>
+        {{monthValues.incomes && monthValues.incomes.real.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.estimated.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.incomes && monthValues.incomes.differences.december | currency }}
+      </span>
+    </li>
+    <li >
+      <span>
+        {{monthValues.expenses && monthValues.expenses.real.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.estimated.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.expenses && monthValues.expenses.differences.december | currency }}
+      </span>
+    </li>    
+    <li >
+      <span>
+        {{monthValues.benefit && monthValues.benefit.real.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.estimated.december | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{monthValues.benefit && monthValues.benefit.differences.december | currency }}
+      </span>
+    </li>    
+  </ul>  
+
+  <ul class="body total"  *ngIf="monthValues">   
+    <li class="empty">
+      <span> TOTAL</span>
+    </li>
+
+    <li >
+      <span>
+        {{valuesTotal.incomes && valuesTotal.incomes.real | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.incomes && valuesTotal.incomes.estimated | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.incomes && valuesTotal.incomes.differences | currency }}
+      </span>
+    </li>
+
+    <li >
+      <span>
+        {{valuesTotal.expenses && valuesTotal.expenses.real | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.expenses && valuesTotal.expenses.estimated | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.expenses && valuesTotal.expenses.differences | currency }}
+      </span>
+    </li>
+
+    <li >
+      <span>
+        {{valuesTotal.benefits && valuesTotal.benefits.real | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.benefits && valuesTotal.benefits.estimated | currency }}
+      </span>
+    </li>
+    <li>
+      <span>
+        {{valuesTotal.benefits && valuesTotal.benefits.differences | currency }}
+      </span>
+    </li>
+  </ul>  
+ 
+  <ul class="subheader border" >
+    <li class="empty">&nbsp;</li>
+    <li >Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+    
+    <li>Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+
+    <li>Real</li>
+    <li>Presupuestado</li>
+    <li >Diferencias</li>
+  </ul>  
+  <ul class="header border" >
+      <li class="empty">&nbsp;</li>
+      <li>Ingresos</li>
+      <li>Costes</li>
+      <li>Beneficios</li>
+    </ul>  
+</div>
+
+<ng-template #choosen>
+  <div *ngIf="!choosenCompany; else loading">
+      <h2 class="title-loading">
+        Seleccione una empresa y año fiscal
+      </h2>
+  </div>    
+</ng-template>
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el informe...
+  </h2>
+</ng-template>

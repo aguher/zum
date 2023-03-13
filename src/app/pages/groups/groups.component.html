@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="header">
+    <i class="header material-icons">copyright</i>
+    <h1>Grupos</h1>
+    <h3>Todos los grupos de tu empresa</h3>
+  </div>
+  <div class="edit">
+
+    <div class="input">
+      <span>Nombre del grupo</span>
+      <input type="text" [(ngModel)]="model.groupName" value="" placeholder="Introduce el nombre del grupo">
+    </div>
+    <div class="input">
+      <span>Cliente</span>
+      <p-dropdown  styleClass="dashboard-dropdown"[options]="customers" [(ngModel)]="model.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+    </div>
+    <div class="button">
+      <a (click)="addGroup()">
+        <i class="material-icons">add_box</i>
+        Añadir
+      </a>
+    </div>
+  </div>
+
+  <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables settings" [(value)]="groups"  [(selection)]="selectedGroup"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="group_name" header="Nombre" ></p-column>
+        <p-column field="customer_name" header="Cliente" ></p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-group="rowData" pTemplate="body">
+            <a (click)="selectGroup(group)">              
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a (click)="deleteGroup(group)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del grupo" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+     <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedGroup">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="customer">Cliente</label></div>
+            <div class="ui-grid-col-12"><p-dropdown styleClass="dropdown-dialog" [options]="customers" [(ngModel)]="selectedGroup.id_customer" placeholder="Selecciona un cliente"></p-dropdown></div>
+        </div>         
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedGroup.group_name" /></div>
+        </div>                  
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialog = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="updateApi(selectedGroup)">              
+              Guardar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el grupo" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedGroup">
+        <div class="ui-grid-row">
+            <span class="title">¿Estás seguro de eliminar el grupo?</span>
+            <span class="info">{{selectedGroup.group_name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="deleteApi(selectedGroup)">              
+              Eliminar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>

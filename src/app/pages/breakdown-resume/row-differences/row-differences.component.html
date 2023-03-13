@@ -1,0 +1,223 @@
+<ul class="header" *ngIf="header">
+  <li class="subtitle">Valores</li>
+  <li class="total">Total</li>
+  <li>Ene</li>
+  <li>Feb</li>
+  <li>Mar</li>
+  <li>Abr</li>
+  <li>May</li>
+  <li>Jun</li>
+  <li>Jul</li>
+  <li>Ago</li>
+  <li>Sep</li>
+  <li>Oct</li>
+  <li>Nov</li>
+  <li>Dic</li>
+</ul>
+<ul class="body">
+  <li class="subtitle">
+    <span>{{labelTitle}} Real</span>
+  </li>
+
+  <li class="total">
+    {{real.total |currency:false}}{{symbol}}
+  </li>
+  <li>
+    <span>
+        {{real.january |currency:false}} {{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.february |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.march |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.april |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.may |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.june |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.july |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.august |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.september |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.october |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.november |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{real.december |currency:false}}{{symbol}}
+      </span>
+  </li>
+</ul>
+<ul class="body">
+  <li class="subtitle">
+    <span>{{labelTitle}} Pto</span>
+  </li>
+
+  <li class="total">
+    {{estimated.total |currency:false}}{{symbol}}
+  </li>
+  <li>
+    <span>
+        {{estimated.january |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.february |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.march |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.april |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.may |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.june |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.july |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.august |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.september |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.october |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.november |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{estimated.december |currency:false}}{{symbol}}
+      </span>
+  </li>
+</ul>
+<ul class="body differences">
+  <li class="subtitle">
+    <span>Diferencias</span>
+  </li>
+
+  <li class="total">
+    {{differences.total |currency:false}}{{symbol}}
+  </li>
+  <li>
+    <span>
+        {{differences.january |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.february |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.march |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.april |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.may |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.june |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.july |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.august |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.september |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.october |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.november |currency:false}}{{symbol}}
+      </span>
+  </li>
+  <li>
+    <span>
+        {{differences.december |currency:false}}{{symbol}}
+      </span>
+  </li>
+</ul>

@@ -1,0 +1,158 @@
+@import "~assets/variables.scss";
+@import "~assets/mixins.scss";
+
+.inner-container {
+    float:left;
+    width: 100%;
+
+    .title {
+        display: block;
+        background: white;
+        border: 1px solid #EEEFF2;
+        padding: 22px;
+        border-bottom: 0;
+        border-radius: 5px 5px 0 0;
+        font-weight: 400;
+        & > div.label {
+            font-family: 'Assistant';
+            display: inline-block;
+            line-height: 23px;
+            vertical-align: top;
+            font-weight: 800;
+            font-size: 23px;
+        }
+        .campaign-code {
+            font-weight: 400;
+            padding: 5px 10px;
+            border: 1px solid #222222;
+            margin-left: 10px;
+            font-size: 12px;
+            color: #222222;
+        }
+        .campaign-name {
+            color: $fontDark;
+            padding-left: 10px;
+            font-weight: 400;
+            font-size: 16px;
+        }
+        .update-project {
+            float: right;
+            position: relative;
+            top: -12px;
+            padding-right: 5px;
+            .big-button {
+                background:$mainColor;
+                color:$fontWhite;
+                padding: 13px 15px 12px 40px;
+                float: right;
+                position: relative;
+                top: 5px;
+                font-size: 12px;
+
+                i {
+                    color: $fontWhite;
+                    position: absolute;
+                    left: 13px;
+                    top: 12px;
+                    font-size: 17px;
+                }
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .info {
+        float: left;
+        width:100%;
+        display: table;
+        .block {
+            position: relative;
+            display: table-cell;
+            vertical-align: middle;
+            width: calc(100% / 6);
+            text-align: left;
+            font-family: 'Assistant';
+            font-weight: 400;
+            background: #F5F6FA;
+            border: 1px solid #e7e8ec;
+            color: #8a919a;
+            margin-left: -1px;
+            text-transform: uppercase;
+            border-left: 0;
+            font-size: 13px;
+            padding: 22px 6px;
+            &:first-child {
+                border-left: 1px solid #e7e8ec;
+            }
+            i {
+                margin: 5px;
+                position: absolute;
+                right: 5px;
+                font-size: 29px;
+            }
+            em {
+                font-style: normal;
+                font-family: 'Assistant';
+                display: block;
+                font-size: 15px;
+                font-weight: 700;
+                color: #37394a;
+                text-transform: none;
+            }
+            .status-date {
+                .status {
+                    font-size: 12px;
+                    color: #37394a;
+                    padding: 5px;
+                    margin: 0 auto;
+                    text-align: center;
+                    display: block;
+
+                    span.value {
+                        color: $fontWhite;
+                        padding: 6px;
+                        &.ended {
+                            background: $dangerColor;
+                        }
+                        &.budget {
+                            background: $secondColor;
+                        }
+                        &.passed {
+                            background: $thirdColor;
+                        }
+                      }
+                }
+                .date {
+                    display: block;
+                    line-height: 20px;
+                    font-size: 14px;
+                    width: 100%;
+                    text-align: center;
+                    em {
+                        font-family:  'Assistant';
+                        font-weight: 400;
+                        display: inline-block;
+                        font-style: normal;
+                        &:first-child {
+                            &:after {
+                                content: '/';
+                                padding-left: 8px;
+                                font-size: 28px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.panels {
+    background: white;
+    width: 100%;
+    float: left;
+    margin-bottom: 50px;
+}

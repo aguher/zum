@@ -1,0 +1,519 @@
+<div class="report" *ngIf="choosenCompany; else choosen">
+    <h2>Informe de Proyectos por Estados</h2>
+  
+  
+    <div class="filter-container">
+      <div class="filters">
+        <div class="filter">
+          <label>Cliente</label>
+          <p-dropdown (onChange)="changeCustomer($event)" [options]="combos.customer" placeholder="Selecciona un valor" [(ngModel)]="filter.customer"></p-dropdown>
+        </div>
+        <div class="filter">
+          <label>Grupo</label>
+          <p-dropdown (onChange)="changeGroup($event)" placeholder="Selecciona un valor" [options]="combos.group" [(ngModel)]="filter.group"></p-dropdown>
+        </div>
+        <div class="filter">
+          <label>Subgrupo</label>
+          <p-dropdown [options]="combos.subgroup" placeholder="Selecciona un valor" [(ngModel)]="filter.subgroup"></p-dropdown>
+        </div>
+        <div class="filter" *ngIf="roleUser !== 6 && roleUser !== 7">
+          <label>Equipo</label>
+          <p-dropdown [options]="combos.team" placeholder="Selecciona un valor" [(ngModel)]="filter.team"></p-dropdown>
+        </div>
+        <div class="filter">
+          <label>Fecha de creación inicial</label>
+          <p-dropdown (onChange)="changeStartDate($event)" [options]="combos.startDate" placeholder="Selecciona un valor" [(ngModel)]="filter.startDate"></p-dropdown>
+        </div>
+        <div class="filter">
+          <label>Fecha de creación final</label>
+          <p-dropdown [options]="combos.endDate" placeholder="Selecciona un valor" [(ngModel)]="filter.endDate"></p-dropdown>
+        </div>
+      </div>
+      <div class="buttons">
+        <span>{{lenProjects}} proyectos encontrados</span>
+        <a (click)="filterValues()">filtrar proyectos</a>
+        <a (click)="clearValues()" class="green">limpiar valores</a>
+      </div>
+    </div>
+  
+  <!-- presupuestados -->
+    <div class="container-titles"  *ngIf="budgetProjects.length">
+      <div class="subtitle">Presupuestados</div>
+      <div class="title">
+          <ul [ngClass]="{'reduced': roleUser === 6 || roleUser === 7}">
+            <li>Cliente</li>
+            <li>Grupo</li>
+            <li>Subgrupo</li>
+            <li *ngIf="roleUser !== 6 && roleUser !== 7">Equipo</li>
+            <li>Nombre</li>
+            <li>Código</li>
+          </ul>
+        </div>
+        <div class="tabs-title">
+          <ul class="tab">
+            <li [ngClass]="{'active': estimatedTabBudget}" (click)="clickTab('estimated-budget')">Presupuestados</li>
+            <li [ngClass]="{'active': realTabBudget}" (click)="clickTab('real-budget')">Real</li>
+            <li  [ngClass]="{'active': differencesTabBudget}" (click)="clickTab('differences-budget')">Diferencias</li>
+          </ul>
+          <ul class="concepts" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">Ingresos</li>
+              <li>Costes</li>
+              <li>Personal</li>
+              <li *ngIf="roleUser !== 7">Beneficio</li>
+              <li *ngIf="roleUser !== 7">Margen(%)</li>
+          </ul>
+        </div>
+          
+    </div>    
+    <div class="container">
+      <div class="info">
+        <ul *ngFor="let budget of budgetProjects">
+          <li class="col">{{budget.info.customer}}</li>
+          <li class="col">{{budget.info.group}}</li>
+          <li class="col">{{budget.info.subgroup}}</li>
+          <li *ngIf="roleUser !== 6 && roleUser !== 7" class="col">{{budget.info.team}}</li>
+          <li class="col">{{budget.info.projectName}}</li>
+          <li class="col">{{budget.info.projectCode}}</li>
+        </ul>      
+      </div>
+      <div class="tabs">
+        <div id="container-tabs">
+          <div id="estimated-budget" class="content-tab">
+            <ul *ngFor="let budget of budgetProjects"  [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{budget.estimated.incomes | currency:false }}</li>
+              <li>{{budget.estimated.expenses | currency:false }}</li>
+              <li>{{budget.estimated.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.estimated.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.estimated.margin | currency:false }}</li>
+            </ul>  
+          </div>
+          <div id="real-budget" class="content-tab">
+            <ul *ngFor="let budget of budgetProjects" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{budget.real.incomes | currency:false }}</li>
+              <li>{{budget.real.expenses | currency:false }}</li>
+              <li>{{budget.real.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.real.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.real.margin | currency:false }}</li>
+            </ul>              
+          </div>
+          <div id="differences-budget" class="content-tab">
+            <ul *ngFor="let budget of budgetProjects" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{budget.differences.incomes | currency:false }}</li>
+              <li>{{budget.differences.expenses | currency:false }}</li>
+              <li>{{budget.differences.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.differences.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{budget.differences.margin | currency:false }}</li>
+            </ul>             
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-footer" *ngIf="budgetProjects.length">
+      <div class="col">Total Presupuestados:</div>
+      <div class="tab-footer">
+          <div id="estimated-total-budget" class="content-tab">
+              <ul  [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.estimated.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.estimated.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.estimated.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.estimated.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.estimated.margin | currency:false }}</li>
+              </ul>          
+            </div>
+            <div id="real-total-budget" class="content-tab">
+              <ul [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.real.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.real.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.real.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.real.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.real.margin | currency:false }}</li>
+              </ul>                 
+            </div>
+            <div id="differences-total-budget" class="content-tab">
+              <ul [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.differences.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.differences.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.budget.differences.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.differences.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.budget.differences.margin | currency:false }}</li>
+              </ul>                 
+            </div>        
+      </div>    
+    </div>    
+    
+    <!-- aprobados -->
+  <div class="container-titles" *ngIf="approvedProjects.length">
+      <div class="subtitle">Aprobados</div>
+      <div class="title">
+          <ul [ngClass]="{'reduced': roleUser === 6 || roleUser === 7}">
+            <li>Cliente</li>
+            <li>Grupo</li>
+            <li>Subgrupo</li>
+            <li *ngIf="roleUser !== 6 && roleUser !== 7">Equipo</li>
+            <li>Nombre</li>
+            <li>Código</li>
+          </ul>
+        </div>
+        <div class="tabs-title">
+          <ul class="tab">
+            <li [ngClass]="{'active': estimatedTabApproved}" (click)="clickTab('estimated-approved')">Presupuestados</li>
+            <li [ngClass]="{'active': realTabApproved}" (click)="clickTab('real-approved')">Real</li>
+            <li [ngClass]="{'active': differencesTabApproved}" (click)="clickTab('differences-approved')">Diferencias</li>
+          </ul>
+          <ul class="concepts" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">Ingresos</li>
+              <li>Costes</li>
+              <li>Personal</li>
+              <li *ngIf="roleUser !== 7">Beneficio</li>
+              <li *ngIf="roleUser !== 7">Margen(%)</li>
+          </ul>
+        </div>
+          
+    </div>    
+    <div class="container">
+      <div class="info">
+        <ul *ngFor="let approved of approvedProjects">
+          <li class="col">{{approved.info.customer}}</li>
+          <li class="col">{{approved.info.group}}</li>
+          <li class="col">{{approved.info.subgroup}}</li>
+          <li *ngIf="roleUser !== 6 && roleUser !== 7" class="col">{{approved.info.team}}</li>
+          <li class="col">{{approved.info.projectName}}</li>
+          <li class="col">{{approved.info.projectCode}}</li>
+        </ul>      
+      </div>
+      <div class="tabs">
+        <div id="container-tabs">
+          <div id="estimated-approved" class="content-tab">
+            <ul *ngFor="let approved of approvedProjects" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{approved.estimated.incomes | currency:false }}</li>
+              <li>{{approved.estimated.expenses | currency:false }}</li>
+              <li>{{approved.estimated.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.estimated.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.estimated.margin | currency:false }}</li>
+            </ul>  
+          </div>
+          <div id="real-approved" class="content-tab">
+            <ul *ngFor="let approved of approvedProjects" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{approved.real.incomes | currency:false }}</li>
+              <li>{{approved.real.expenses | currency:false }}</li>
+              <li>{{approved.real.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.real.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.real.margin | currency:false }}</li>
+            </ul>              
+          </div>
+          <div id="differences-approved" class="content-tab">
+            <ul *ngFor="let approved of approvedProjects" [ngClass]="{'reduced': roleUser === 7}">
+              <li *ngIf="roleUser !== 7">{{approved.differences.incomes | currency:false }}</li>
+              <li>{{approved.differences.expenses | currency:false }}</li>
+              <li>{{approved.differences.employees | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.differences.benefits | currency:false }}</li>
+              <li *ngIf="roleUser !== 7">{{approved.differences.margin | currency:false }}</li>
+            </ul>             
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container-footer" *ngIf="approvedProjects.length">
+      <div class="col">Total Aprobados:</div>
+      <div class="tab-footer">
+          <div id="estimated-total-approved" class="content-tab">
+              <ul [ngClass]="{'reduced':roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.estimated.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.estimated.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.estimated.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.estimated.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.estimated.margin | currency:false }}</li>
+              </ul>          
+            </div>
+            <div id="real-total-approved" class="content-tab">
+              <ul [ngClass]="{'reduced':roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.real.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.real.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.real.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.real.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.real.margin | currency:false }}</li>
+              </ul>                 
+            </div>
+            <div id="differences-total-approved" class="content-tab">
+              <ul [ngClass]="{'reduced':roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.differences.incomes | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.differences.expenses | currency:false }}</li>
+                <li>{{this.totalAmounts.approved.differences.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.differences.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{this.totalAmounts.approved.differences.margin | currency:false }}</li>
+              </ul>                 
+            </div>        
+      </div>    
+    </div> 
+    <!-- finalizados -->
+    <div class="container-titles" *ngIf="finishedProjects.length">
+        <div class="subtitle">Finalizados</div>
+        <div class="title">
+            <ul [ngClass]="{'reduced': roleUser === 6 || roleUser === 7}">
+              <li>Cliente</li>
+              <li>Grupo</li>
+              <li>Subgrupo</li>
+              <li *ngIf="roleUser !== 6 && roleUser !== 7">Equipo</li>
+              <li>Nombre</li>
+              <li>Código</li>
+            </ul>
+          </div>
+          <div class="tabs-title">
+            <ul class="tab">
+              <li [ngClass]="{'active': estimatedTabFinished}" (click)="clickTab('estimated-finished')">Presupuestados</li>
+              <li [ngClass]="{'active': realTabFinished}" (click)="clickTab('real-finished')">Real</li>
+              <li [ngClass]="{'active': differencesTabFinished}" (click)="clickTab('differences-finished')">Diferencias</li>        
+            </ul>
+            <ul class="concepts" [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">Ingresos</li>
+                <li>Costes</li>
+                <li>Personal</li>
+                <li *ngIf="roleUser !== 7">Beneficio</li>
+                <li *ngIf="roleUser !== 7">Margen(%)</li>
+            </ul>
+          </div>
+            
+      </div>    
+      <div class="container">
+        <div class="info">
+          <ul *ngFor="let finished of finishedProjects">
+            <li class="col">{{finished.info.customer}}</li>
+            <li class="col">{{finished.info.group}}</li>
+            <li class="col">{{finished.info.subgroup}}</li>
+            <li *ngIf="roleUser !== 6 && roleUser !== 7" class="col">{{finished.info.team}}</li>
+            <li class="col">{{finished.info.projectName}}</li>
+            <li class="col">{{finished.info.projectCode}}</li>
+          </ul>      
+        </div>
+        <div class="tabs">
+          <div id="container-tabs">
+            <div id="estimated-finished" class="content-tab">
+              <ul *ngFor="let finished of finishedProjects" [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{finished.estimated.incomes | currency:false }}</li>
+                <li>{{finished.estimated.expenses | currency:false }}</li>
+                <li>{{finished.estimated.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.estimated.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.estimated.margin | currency:false }}</li>
+              </ul>  
+            </div>
+            <div id="real-finished" class="content-tab">
+              <ul *ngFor="let finished of finishedProjects" [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{finished.real.incomes | currency:false }}</li>
+                <li>{{finished.real.expenses | currency:false }}</li>
+                <li>{{finished.real.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.real.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.real.margin | currency:false }}</li>
+              </ul>              
+            </div>
+            <div id="differences-finished" class="content-tab">
+              <ul *ngFor="let finished of finishedProjects" [ngClass]="{'reduced':  roleUser === 7}">
+                <li *ngIf="roleUser !== 7">{{finished.differences.incomes | currency:false }}</li>
+                <li>{{finished.differences.expenses | currency:false }}</li>
+                <li>{{finished.differences.employees | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.differences.benefits | currency:false }}</li>
+                <li *ngIf="roleUser !== 7">{{finished.differences.margin | currency:false }}</li>
+              </ul>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container-footer"  *ngIf="finishedProjects.length">
+        <div class="col">Total Finalizados:</div>
+        <div class="tab-footer">
+            <div id="estimated-total-finished" class="content-tab">
+                <ul [ngClass]="{'reduced':  roleUser === 7}">
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.estimated.incomes | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.estimated.expenses | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.estimated.employees | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.estimated.benefits | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.estimated.margin | currency:false }}</li>
+                </ul>          
+              </div>
+              <div id="real-total-finished" class="content-tab">
+                <ul [ngClass]="{'reduced':  roleUser === 7}">
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.real.incomes | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.real.expenses | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.real.employees | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.real.benefits | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.real.margin | currency:false }}</li>
+                </ul>                 
+              </div>
+              <div id="differences-total-finished" class="content-tab">
+                <ul [ngClass]="{'reduced':  roleUser === 7}">
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.differences.incomes | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.differences.expenses | currency:false }}</li>
+                  <li>{{this.totalAmounts.finished.differences.employees | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.differences.benefits | currency:false }}</li>
+                  <li *ngIf="roleUser !== 7">{{this.totalAmounts.finished.differences.margin | currency:false }}</li>
+                </ul>                 
+              </div>        
+        </div>    
+      </div> 
+      <div class="total-amount">
+          <div class="col">
+            <div class="content" [ngClass]="{'reduced':  roleUser === 7}">
+              <span class="title">Total presupuestados</span>
+              <ul  [ngClass]="{'reduced':  roleUser === 7, 'budget': true}">
+                <li *ngIf="roleUser !== 7">
+                  <div class="icon">
+                    <i class="material-icons">account_balance</i>
+                  </div>
+                  <p>
+                    {{this.totalAmounts.total.estimated.incomes | currency }}
+                    <label>Ingresos</label>
+                  </p>
+                </li>
+                <li>
+                  <div class="icon">
+                    <i class="material-icons">receipt</i>
+                  </div>
+                  <p>
+                    {{this.totalAmounts.total.estimated.expenses | currency }}
+                    <label>Costes</label>
+                  </p>              
+                </li>
+                <li>
+                  <div class="icon">
+                    <i class="material-icons">wc</i>
+                  </div>
+                  <p>
+                    {{this.totalAmounts.total.estimated.employees | currency }}
+                    <label>Personal</label>
+                  </p>               
+                </li>
+                <li *ngIf="roleUser !== 7">
+                  <div class="icon">
+                    <i class="material-icons">timeline</i>
+                  </div>
+                  <p>
+                    {{this.totalAmounts.total.estimated.benefits | currency }}
+                    <label>Beneficios</label>
+                  </p>               
+                </li>  
+                <li *ngIf="roleUser !== 7">
+                  <div class="icon">
+                    <i class="material-icons">swap_horiz</i>
+                  </div>
+                  <p>
+                    {{this.totalAmounts.total.estimated.margin | currency:false }} %
+                    <label>Margen</label>
+                  </p>                             
+                </li>
+              </ul>
+            </div>
+            <div class="content" [ngClass]="{'reduced':  roleUser === 7}">
+              <span class="title">Total reales</span>
+              <ul  [ngClass]="{'reduced':  roleUser === 7, 'real': true}">
+                  <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">account_balance</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.real.incomes | currency }}
+                        <label>Ingresos</label>
+                      </p>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="material-icons">receipt</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.real.expenses | currency }}
+                        <label>Costes</label>
+                      </p>              
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="material-icons">wc</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.real.employees | currency }}
+                        <label>Personal</label>
+                      </p>               
+                    </li>
+                    <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">timeline</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.real.benefits | currency }}
+                        <label>Beneficios</label>
+                      </p>               
+                    </li>  
+                    <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">swap_horiz</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.real.margin | currency:false }} %
+                        <label>Margen</label>
+                      </p>                             
+                    </li>
+              </ul>
+            </div>
+            <div class="content" [ngClass]="{'reduced':  roleUser === 7}">
+              <span class="title">Total diferencias</span>
+              <ul  [ngClass]="{'reduced':  roleUser === 7, 'differences': true}">
+                  <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">account_balance</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.differences.incomes | currency }}
+                        <label>Ingresos</label>
+                      </p>
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="material-icons">receipt</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.differences.expenses | currency }}
+                        <label>Costes</label>
+                      </p>              
+                    </li>
+                    <li>
+                      <div class="icon">
+                        <i class="material-icons">wc</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.differences.employees | currency }}
+                        <label>Personal</label>
+                      </p>               
+                    </li>
+                    <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">timeline</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.differences.benefits | currency }}
+                        <label>Beneficios</label>
+                      </p>               
+                    </li>  
+                    <li *ngIf="roleUser !== 7">
+                      <div class="icon">
+                        <i class="material-icons">swap_horiz</i>
+                      </div>
+                      <p>
+                        {{this.totalAmounts.total.differences.margin | currency:false }} %
+                        <label>Margen</label>
+                      </p>                             
+                    </li> 
+              </ul>   
+            </div>       
+          </div>
+        </div>
+  </div>
+  <ng-template #choosen>
+    <div *ngIf="!choosenCompany; else loading">
+        <h2 class="title-loading">
+          Seleccione una empresa y año fiscal
+        </h2>
+    </div>    
+  </ng-template>
+  <ng-template #loading>
+      <h2 class="title-loading">
+        <div class="loader"></div>
+        Cargando el informe...
+      </h2>
+    </ng-template>

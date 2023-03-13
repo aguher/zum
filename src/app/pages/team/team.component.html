@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="header">
+    <i class="header material-icons">supervisor_account</i>
+    <h1>Equipos</h1>
+    <h3>Todos los equipos de tu empresa</h3>
+  </div>
+  <div class="edit">
+
+    <div class="input">
+      <span>Nombre del equipo</span>
+      <input type="text" [(ngModel)]="model.teamName" value="" placeholder="Introduce el nombre del equipo">
+    </div>
+    <div class="button">
+      <a (click)="addTeam()">
+        <i class="material-icons">add_box</i>
+        Añadir
+      </a>
+    </div>
+  </div>
+
+  <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables" [(value)]="teams"  [(selection)]="selectedTeam"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="team_name" header="Nombre" ></p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-team="rowData" pTemplate="body">
+            <a (click)="selectTeam(team)">              
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a (click)="deleteTeam(team)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del equipo" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true" [closeOnEscape]="false">
+     <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedTeam">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedTeam.team_name" /></div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="cancelEdition()" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="updateApi(selectedTeam)">              
+              Guardar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el equipo" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedTeam">
+        <div class="ui-grid-row">
+            <span class="title">¿Estás seguro de eliminar el equipo?</span>
+            <span class="info">{{selectedTeam.team_name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="deleteApi(selectedTeam)">              
+              Eliminar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>

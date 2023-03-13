@@ -1,0 +1,120 @@
+<div class="project-supervisor" *ngIf="choosenCompany; else choosen">
+  <h2>Listado de proyectos</h2>
+  <div class="add-campaign" *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6">
+    <a class="big-button export" (click)="exportExcel()">
+      <i alt="exportar" title="exportar" class="material-icons">get_app</i>
+      Exportar a EXCEL
+    </a>
+  </div>
+
+  <div class="filter-container">
+    <div class="filters">
+      <div class="filter">
+        <label>Código</label>
+        <p-dropdown [options]="combos.codes_campaign" placeholder="Selecciona un valor" [(ngModel)]="filter.code_campaign"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Proyecto</label>
+        <p-dropdown [options]="combos.projects" placeholder="Selecciona un valor" [(ngModel)]="filter.project"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Cliente</label>
+        <p-dropdown (onChange)="changeCustomer($event)" [options]="combos.customer" placeholder="Selecciona un valor" [(ngModel)]="filter.customer"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Grupo</label>
+        <p-dropdown (onChange)="changeGroup($event)" placeholder="Selecciona un valor" [(options)]="combos.group" [(ngModel)]="filter.group"></p-dropdown>
+      </div>
+      <div class="filter">
+        <label>Subgrupo</label>
+        <p-dropdown [(options)]="combos.subgroup" placeholder="Selecciona un valor" [(ngModel)]="filter.subgroup"></p-dropdown>
+      </div>
+    </div>
+    <div class="buttons">
+      <span>{{lenProjects}} proyectos encontrados</span>
+      <a (click)="filterValues()">filtrar proyectos</a>
+      <a (click)="clearValues()" class="green">limpiar valores</a>
+    </div>
+  </div>
+
+  <div class="container-titles" *ngIf="projects.length">
+
+    <div class="title">
+      <ul>
+        <li class="code">Código</li>
+        <li>Proyecto</li>
+        <li>Cliente</li>
+        <li>Grupo</li>
+        <li>Subgrupo</li>
+        <li class="code">&nbsp;</li>
+      </ul>
+    </div>
+    <div class="tabs-title">
+      <ul class="tab">
+        <li [ngClass]="{'active': estimatedTab}" (click)="clickTab('estimated')">Ingresos y Gastos</li>
+        <li [ngClass]="{'active': realTab}" (click)="clickTab('real')">Beneficio y Margen</li>
+      </ul>
+      <ul class="concepts" *ngIf="estimatedTab">
+        <li>Ingresos Pto</li>
+        <li>Ingresos Reales</li>
+        <li>Gastos Pto</li>
+        <li>Gastos Reales</li>
+      </ul>
+      <ul class="concepts" *ngIf="realTab">
+        <li>Beneficio Pto</li>
+        <li>Beneficio Reales</li>
+        <li>Margen Pto</li>
+        <li>Margen Reales</li>
+      </ul>
+    </div>
+
+  </div>
+  <div class="container">
+    <div class="info">
+      <ul *ngFor="let project of projects">
+        <li class="col code">{{project.info.projectCode}}</li>
+        <li class="col">{{project.info.projectName}}</li>
+        <li class="col">{{project.info.customer}}</li>
+        <li class="col">{{project.info.group}}</li>
+        <li class="col">{{project.info.subgroup}}</li>
+        <li class="col code">
+          <i (click)="breakdownProject(project.info)" class=" material-icons desglose">assessment</i>
+          <i (click)="summaryProject(project.info)" class="first material-icons edit-button">line_style</i>
+        </li>
+      </ul>
+    </div>
+    <div class="tabs">
+      <div id="container-tabs">
+        <div id="estimated" class="content-tab">
+          <ul *ngFor="let project of projects">
+            <li>{{project.estimated.incomes | currency:false }}</li>
+            <li>{{project.real.incomes | currency:false }}</li>
+            <li>{{project.estimated.expenses + project.estimated.employees | currency:false }}</li>
+            <li>{{project.real.expenses + project.real.employees | currency:false }}</li>
+          </ul>
+        </div>
+        <div id="real" class="content-tab">
+          <ul *ngFor="let project of projects">
+            <li>{{project.estimated.benefits | currency:false }}</li>
+            <li>{{project.real.benefits | currency:false }}</li>
+            <li>{{project.estimated.margin | currency:false }} %</li>
+            <li>{{project.real.margin | currency:false }} %</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #choosen>
+  <div *ngIf="!choosenCompany; else loading">
+    <h2 class="title-loading">
+      Seleccione una empresa y año fiscal
+    </h2>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el listado...
+  </h2>
+</ng-template>

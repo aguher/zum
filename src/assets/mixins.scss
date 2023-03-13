@@ -1,0 +1,25 @@
+@mixin transition($time) {
+  -webkit-transition: all $time cubic-bezier(.31,-.105,.43,1.4);
+     -moz-transition: all $time cubic-bezier(.31,-.105,.43,1.4);
+       -o-transition: all $time cubic-bezier(.31,-.105,.43,1.4);
+          transition: all $time cubic-bezier(.31,-.105,.43,1.4);                
+}
+@mixin transition-ease($time) {
+  -webkit-transition: all $time ease-out;
+     -moz-transition: all $time ease-out;
+       -o-transition: all $time ease-out;
+          transition: all $time ease-out;                
+}
+
+@mixin transition-effect($time, $effect) {
+  -webkit-transition: all $time $effect;
+     -moz-transition: all $time $effect;
+       -o-transition: all $time $effect;
+          transition: all $time $effect;                
+}
+
+@mixin box-shadow($f,$s,$t,$sh, $color) {
+    -webkit-box-shadow: $f $s $t $sh $color;
+       -moz-box-shadow: $f $s $t $sh $color;
+            box-shadow: $f $s $t $sh $color; 
+}

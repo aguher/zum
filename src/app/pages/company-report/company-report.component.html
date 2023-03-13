@@ -1,0 +1,258 @@
+<div class="report" *ngIf="loadValues && choosenCompany; else choosen">
+  <div class="filter-layer">
+    <h2>Resumen General de
+      <b>{{companySelected}}</b> para el
+      <b>{{yearSelected}}</b>
+    </h2>
+    <span class="note">
+      Los datos representados en la columna de <b>Presupuestado</b> es el total de los datos imputados a cada mes. Por tanto, si no hay distribución mensual, esta información estará incompleta
+    </span>
+    <div class="filters">
+      <div class="container-dates">
+        <label>Fecha de inicio</label>
+        <p-dropdown (onChange)="changeStartDate($event)" styleClass="select-dates" [options]="combos.startDate" placeholder="Selecciona un valor"
+          [(ngModel)]="filter.startDate"></p-dropdown>
+        <label>Fecha de fin</label>
+        <p-dropdown styleClass="select-dates" [options]="combos.endDate" placeholder="Selecciona un valor" [(ngModel)]="filter.endDate"></p-dropdown>
+      </div>
+
+    </div>
+    <div class="buttons">
+      <a (click)="filterValues()">filtrar fechas</a>
+      <a (click)="clearValues()" class="green">limpiar valores</a>
+    </div>
+  </div>
+
+
+  <div class="col-titles">
+    <div class="row">
+      ventas
+    </div>
+    <div class="row">
+      coste de ventas
+    </div>
+    <div class="row">
+      personal propio
+    </div>
+    <div class="row separator grey">
+      margen bruto
+    </div>
+    <div class="row fixed-cost grey separator">
+      gastos fijos
+    </div>
+    <ng-template ngFor let-fixed [ngForOf]="dataFixedCost" let-i="index">
+      <div class="row fixed-cost">
+        <span class="parent">{{fixed.name}}</span>
+      </div>
+      <ng-template ngFor let-children [ngForOf]="fixed.children" let-i="index">
+        <div class="row fixed-cost">
+          <span>{{children.name}}</span>
+        </div>
+      </ng-template>
+    </ng-template>
+    
+    <div *ngIf="dataFixedCost.length === 0" class="separator-header">
+      &nbsp;
+    </div>
+    <div class="row separator-upper separator grey">
+      EBITDA
+    </div>
+    <div class="row">
+      amortizaciones
+    </div>
+    <div class="row separator">
+      Gastos financieros
+    </div>
+    <div class="row separator grey">
+      EBIT
+    </div>
+    <div class="row">
+      Gastos extraordinarios
+    </div>
+    <div class="row separator-general grey">
+      Beneficio antes Imp. Sociedades
+    </div>
+    <div class="row">
+      Impuesto Sociedades
+    </div>
+    <div class="row final">
+      Resultado Anual
+    </div>
+  </div>
+  <div class="col-amounts">
+    <ul>
+      <li class="title red"> Presupuestado</li>
+      <li class="title blue"> Real</li>
+      <li class="title green"> Diferencias</li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalIncomes | currency }}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalIncomes | currency }}</span>
+      </li>
+      <li class='amount green'  [ngClass]="{'danger': data.differences.totalIncomes < 0}">
+        <span>{{data.differences.totalIncomes | currency }}</span>
+      </li>
+      <li class='amount red'>
+        <span>{{data.budget.totalExpenses | currency }}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalExpenses | currency }}</span>
+      </li>
+      <li class='amount green'  [ngClass]="{'danger': data.differences.totalExpenses < 0}">
+        <span>{{data.differences.totalExpenses | currency }}</span>
+      </li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalEmployees | currency }}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalEmployees | currency }}</span>
+      </li>
+      <li class='amount green' [ngClass]="{'danger': data.differences.totalEmployees < 0}">
+        <span>{{data.differences.totalEmployees | currency }}</span>
+      </li>
+
+      <li class='amount red separator grey'>
+        <span>{{data.budget.totalMargin | currency }}</span>
+      </li>
+      <li class='amount blue separator grey'>
+        <span>{{data.real.totalMargin | currency }}</span>
+      </li>
+      <li class='amount green separator grey'  [ngClass]="{'danger': data.differences.totalMargin < 0}">
+        <span>{{data.differences.totalMargin | currency }}</span>
+      </li>
+
+      <li class='amount red grey separator-general-both'>
+        <span>{{data.budget.totalFixedCost | currency }}</span>
+      </li>
+      <li class='amount blue grey separator-general-both'>
+        <span>{{data.real.totalFixedCost | currency }}</span>
+      </li>
+      <li class='amount green grey separator-general-both'  [ngClass]="{'danger': data.differences.totalFixedCost < 0}">
+        <span>{{data.differences.totalFixedCost | currency }}</span>
+      </li>
+    </ul>
+
+    <ng-template ngFor let-fixed [ngForOf]="dataFixedCost" let-i="index">
+      <ul>
+        <li class='amount red'>
+          <span>{{fixed.budget_total | currency }}</span>
+        </li>
+        <li class='amount blue'>
+          <span>{{fixed.real_total | currency }}</span>
+        </li>
+        <li class='amount green'  [ngClass]="{'danger': fixed.differences_total < 0}">
+          <span>{{fixed.differences_total | currency }}</span>
+        </li>
+        <ng-template ngFor let-children [ngForOf]="fixed.children" let-i="index">
+          <li class='amount red'>
+            <span>{{children.budget | currency }}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{children.real | currency }}</span>
+          </li>
+          <li class='amount green'  [ngClass]="{'danger': children.differences < 0}">
+            <span>{{children.differences | currency }}</span>
+          </li>
+        </ng-template>
+      </ul>
+    </ng-template>
+
+    <ul>
+      <li class='amount red separator-general-both grey'>
+        <span>{{data.budget.totalEbitda | currency }}</span>
+      </li>
+      <li class='amount blue separator-general-both grey'>
+        <span>{{data.real.totalEbitda | currency }}</span>
+      </li>
+      <li class='amount green separator-general-both grey'  [ngClass]="{'danger': data.differences.totalEbitda < 0}">
+        <span>{{data.differences.totalEbitda | currency }}</span>
+      </li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalAmortizacion | currency}}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalAmortizacion | currency}}</span>
+      </li>
+      <li class='amount green'  [ngClass]="{'danger': data.differences.totalAmortizacion < 0}">
+        <span>{{data.differences.totalAmortizacion | currency}}</span>
+      </li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalFinancieros | currency}}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalFinancieros | currency}}</span>
+      </li>
+      <li class='amount green'  [ngClass]="{'danger': data.differences.totalFinancieros < 0}">
+        <span>{{data.differences.totalFinancieros | currency}}</span>
+      </li>
+
+      <li class='amount red grey separator-general-both'>
+        <span>{{data.budget.totalEbit | currency }}</span>
+      </li>
+      <li class='amount blue grey separator-general-both'>
+        <span>{{data.real.totalEbit | currency }}</span>
+      </li>
+      <li class='amount green grey separator-general-both'  [ngClass]="{'danger': data.differences.totalEbit < 0}">
+        <span>{{data.differences.totalEbit | currency }}</span>
+      </li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalExtraordinarios | currency}}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalExtraordinarios | currency}}</span>
+      </li>
+      <li class='amount green'  [ngClass]="{'danger': data.differences.totalExtraordinarios < 0}">
+        <span>{{data.differences.totalExtraordinarios | currency}}</span>
+      </li>
+
+      <li class='amount red separator  separator-upper grey'>
+        <span>{{data.budget.totalBeneficios | currency }}</span>
+      </li>
+      <li class='amount blue separator grey'>
+        <span>{{data.real.totalBeneficios | currency }}</span>
+      </li>
+      <li class='amount green separator grey'  [ngClass]="{'danger': data.differences.totalBeneficios < 0}">
+        <span>{{data.differences.totalBeneficios | currency }}</span>
+      </li>
+
+      <li class='amount red'>
+        <span>{{data.budget.totalIs | currency }}</span>
+      </li>
+      <li class='amount blue'>
+        <span>{{data.real.totalIs | currency }}</span>
+      </li>
+      <li class='amount green' [ngClass]="{'danger': data.differences.totalIs < 0}">
+        <span>{{data.differences.totalIs | currency }}</span>
+      </li>
+
+      <li class='amount red final-row  separator-general'>
+        <span>{{data.budget.total | currency }}</span>
+      </li>
+      <li class='amount blue final-row  separator-general'>
+        <span>{{data.real.total | currency }}</span>
+      </li>
+      <li class='amount green final-row  separator-general'  [ngClass]="{'danger': data.differences.total < 0}">
+        <span>{{data.differences.total | currency }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
+<ng-template #choosen>
+  <div *ngIf="!choosenCompany; else loading">
+    <h2 class="title-loading">
+      Seleccione una empresa y año fiscal
+    </h2>
+  </div>
+</ng-template>
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el informe...
+  </h2>
+</ng-template>

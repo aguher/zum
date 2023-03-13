@@ -1,0 +1,103 @@
+<div class="container">
+  <div class="header">
+    <i class="header material-icons">low_priority</i>
+    <h1>Conceptos Variables</h1>
+    <h3>Todos los conceptos variables de tu empresa</h3>
+  </div>
+  <div class="edit">
+
+    <div class="input">
+      <span>Nombre</span>
+      <input type="text" value="" [(ngModel)]="model.variableConceptName" placeholder="Introduce el nombre del concepto">
+    </div>
+    <div class="input">
+      <span>Número de cuenta Gasto</span>
+      <p-inputMask mask="9999999" [(ngModel)]="model.accountNumber"  placeholder="Introduce el numero de cuenta contable gasto"></p-inputMask>
+    </div>
+    <div class="input">
+      <span>Número de cuenta Ingreso</span>
+      <p-inputMask mask="9999999" [(ngModel)]="model.accountContability" placeholder="Introduce el numero de cuenta contable ingreso"></p-inputMask>
+    </div>
+
+    <div class="button">
+      <a (click)="addVariableConcept()" >
+        <i class="material-icons">add_box</i>
+        Añadir
+      </a>
+    </div>
+  </div>
+
+  <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables settings" [(value)]="variableConcept"  [(selection)]="selectedVariableConcept"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="name" header="Nombre" ></p-column>
+        <p-column field="account_number" header="Cuenta Contable Gasto" ></p-column>
+        <p-column field="account_contability" header="Cuenta Contable Ingreso"></p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-variableConcept="rowData" pTemplate="body">
+            <a (click)="selectVariableConcept(variableConcept)">
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a (click)="deleteVariableConcept(variableConcept)">
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del concepto variable" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+     <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedVariableConcept">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedVariableConcept.name" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="account_number">Número cuenta Gasto</label></div>
+
+            <div class="ui-grid-col-12">
+              <p-inputMask id="account_number" mask="9999999" [(ngModel)]="selectedVariableConcept.account_number"></p-inputMask>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-12">
+            <label for="account_contability">Número cuenta Ingreso</label>
+          </div>
+
+          <div class="ui-grid-col-12">
+            <p-inputMask id="account_contability" mask="9999999" [(ngModel)]="selectedVariableConcept.account_contability"></p-inputMask>
+          </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="cancelDialog()" class="cancel">
+              cancelar
+            </a>
+          <a (click)="updateApi()">
+              Guardar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el concepto variable" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedVariableConcept">
+        <div class="ui-grid-row">
+            <span class="title">¿Estás seguro de eliminar el concepto variable?</span>
+            <span class="info">{{selectedVariableConcept.name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialogDelete = false" class="cancel">
+              cancelar
+            </a>
+          <a (click)="deleteApi(selectedVariableConcept)">
+              Eliminar
+            </a>
+        </div>
+    </p-footer>
+</p-dialog>

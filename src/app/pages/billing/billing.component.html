@@ -1,0 +1,538 @@
+<ng-template #choosenbilling>
+    <div *ngIf="!choosenCompany; else choosen">
+        <h2 class="title-loading">
+            Seleccione una empresa y año fiscal
+        </h2>
+    </div>
+</ng-template>
+<ng-template #choosen>
+    <div *ngIf="!noBilling; else createBilling">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando facturas...
+        </h2>
+    </div>
+</ng-template>
+
+<div class="upload-box-content" *ngIf="id_user == 83">
+    <div class="drop-container" ngFileDrop (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput">
+        <p>
+            Drag files here or
+            <label class="upload-button">
+          <input type="file" ngFileSelect (uploadOutput)="onUploadOutput($event)" [uploadInput]="uploadInput" multiple> browse
+        </label> to upload.
+        </p>
+    </div>
+    <div class="upload-item" *ngFor="let f of files; let i = index;">
+    </div>
+</div>
+
+<ng-template #createBilling>
+    <div class="container-billing no-billing" *ngIf="false">
+        <div class="container-title" *ngIf="roleUser <=5">
+            <span class="title">Añade la primera Factura</span>
+            <div class="add-bill">
+                <a class="big-button" (click)="showNewBill = true">
+                    <i class="material-icons">playlist_add</i> Nueva Factura
+                </a>
+            </div>
+        </div>
+        <div class="container-title" *ngIf="roleUser >5">
+            <span class="title">No hay ningún Factura añadido</span>
+        </div>
+    </div>
+</ng-template>
+
+<div class="container-billing" *ngIf="choosenCompany else choosenbilling">
+    <div class="container-title">
+        <div class="ui-grid-row" style="margin-bottom:5px">
+            <div class="ui-grid-col-3" style="margin-top:15px">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-success" (click)="tabSeleccionada=1;filtrar()" [ngClass]="{'active': 1 == tabSeleccionada}">Facturas</button>
+                    <button type="button" class="btn btn-outline-success" (click)="tabSeleccionada=2" [ngClass]="{'active': 2 == tabSeleccionada}">Exportación</button>
+                </div>
+            </div>
+
+            <div class="ui-grid-col-5" style="position:relative; top:15px">
+                <div class="ui-grid-row" *ngIf="tabSeleccionada==1">
+                    <div class="ui-grid-col-2" style="position:relative; top:6px">
+                        <small>Fecha desde: </small>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="start_date_calendar" (dateChanged)="onDateChanged($event,  'start_date')"></my-date-picker>
+                    </div>
+                    <div class="ui-grid-col-2" style="position:relative; top:6px">
+                        <small>&nbsp;Fecha hasta:</small>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="end_date_calendar" (dateChanged)="onDateChanged($event,  'end_date')"></my-date-picker>
+                    </div>
+                </div>
+                <div class="ui-grid-row" *ngIf="tabSeleccionada!=1">
+                    <div class="ui-grid-col-12">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="ui-grid-col-4 text-right" style="max-height: 70px">
+
+                <div class="add-bill" *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6">
+                    <a class="big-button export" (click)="exportExcel()" *ngIf="tabSeleccionada == 1">
+                        <i alt="excel" title="excel" class="material-icons">get_app</i> Exportar a EXCEL
+                    </a>
+                    <a class="big-button" (click)="showNewExport = true" *ngIf="tabSeleccionada == 2">
+                        <i alt="Crear Agenda de Exportación" title="Crear Agenda de Exportación" class="material-icons">assignment</i> Nueva Exportación
+                    </a>
+                    <a class="big-button" (click)="showNewBill = true" *ngIf="false">
+                        <i class="material-icons">playlist_add</i> Nueva Factura
+                    </a>
+                    <a *ngIf="choosenCompany && tabSeleccionada == 1" (click)="refresh(true)">
+                        <i class="material-icons refresh" title="recargar listado y estadísticas" style="color:#418EE5; cursor:pointer; position:relative; margin-right:20px; top:10px">refresh</i>
+                    </a>
+                </div>
+                <!--                 <div class="search-input-block" *ngIf="false" [ngClass]="{'hidden': !showInput}">
+                    <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
+                    <i class="material-icons">search</i>
+                </div> -->
+            </div>
+        </div>
+    </div>
+    <div class="list" *ngIf="tabSeleccionada == 1 && !cargandofacturas">
+
+        <table class="table table-sm" id="tablafacturas">
+            <thead>
+                <tr>
+                    <th width="7%" scope="col" al id="numbertext" style="cursor:pointer">Número<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='numbertext' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='numbertext' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="8%" scope="col" al id="ped_code" style="cursor:pointer">Pedido<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='ped_code' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='ped_code' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="6%" scope="col" al id="numcampana" style="cursor:pointer" class="text-right" *ngIf="id_company==412">Campaña<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='numcampana' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='numcampana' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" al id="issue_date" style="cursor:pointer">Fecha<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='issue_date' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='issue_date' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" al id="due_date" style="cursor:pointer">Vencimiento<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='due_date' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='due_date' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="18%" scope="col" al id="description" style="cursor:pointer">Descripción<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='description' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="14%" scope="col" al id="customer" style="cursor:pointer">Cliente<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='customer' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" class="text-right" al id="tax_base" style="cursor:pointer">Base Imp.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='tax_base' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='tax_base' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" class="text-right" al id="taxes" style="cursor:pointer">Iva<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='taxes' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='taxes' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" class="text-right" al id="total" style="cursor:pointer">Total<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" class="text-right" al id="charge_amount" style="cursor:pointer">Cobrado<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='charge_amount' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='charge_amount' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" class="text-right" al id="charge_date" style="cursor:pointer">Fecha cobr.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='charge_date' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='charge_date' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="6%"></th>
+                </tr>
+                <tr>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronumero" placeholder="Filtre número" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropedido" placeholder="Filtre pedido" /></th>
+                    <th *ngIf="id_company==412"></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofecha" placeholder="Filtre fecha" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrovencimiento" placeholder="Filtre vencimiento" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrodescripcion" placeholder="Filtre descripción" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocliente" placeholder="Filtre cliente" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrobaseimponible" placeholder="Filtre base imponible" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroiva" placeholder="Filtre iva" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrototal" placeholder="Filtre total" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocobrada" placeholder="Filtre cobro" /></th>
+                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofechacobrada" placeholder="Filtre fecha c." /></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (dblclick)="breakdownBill(factura)" style="cursor:pointer" *ngFor="let factura of facturasfiltradas | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
+                    <td>{{factura.numbertext}}</td>
+                    <td>{{factura.ped_code}}</td>
+                    <td *ngIf="id_company==412" class="text-right">{{factura.numcampana}}</td>
+                    <td>{{factura.issue_date}}</td>
+                    <td [ngStyle]="{'color':isVencida(factura.due_date_no_parsed) ? 'red' : '' }">{{factura.due_date}}</td>
+                    <td>{{factura.description}}</td>
+                    <td>{{factura.customer}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(factura.tax_base) ? 'red' : '' }">{{factura.tax_base | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(factura.taxes) ? 'red' : '' }">{{factura.taxes | currency:false}}</td>
+                    <td class="text-right" [ngStyle]="{'color':isNegative(factura.total) ? 'red' : '' }">{{factura.total | currency:false}}</td>
+                    <td class="text-right">{{factura.charge_amount | currency:false}}</td>
+                    <td class="text-right">{{factura.charge_date}}</td>
+                    <td>
+                        <div class="menu">
+                            <a title="Ver Cobros" [ngStyle]="{'color':getBgColor(factura)}" (click)="cobrarBill(factura)">
+                                <i class="material-icons">attach_money</i>
+                            </a>
+
+                            <a title="Eliminar" (click)="deleteBill(factura)" *ngIf="factura.id_export == 0">
+                                <i class="material-icons delete">delete</i>
+                            </a>
+                            <a title="Factura ya exportada, no se puede eliminar" *ngIf="factura.id_export != 0">
+                                <i class="material-icons" style="opacity: 0.3">delete</i>
+                            </a>
+                            <a title="Abonar" (click)="abonarBill(factura)">
+                                <i class="material-icons abono">remove_shopping_cart</i>
+                            </a>
+
+                            <!--                       <a title="Exportar Pdf" (click)="exportPDF(factura)">
+                            <i title="Exportar Pdf" class="material-icons pdf">picture_as_pdf</i>
+                        </a> -->
+                            <a title="Factura ya exportada, no se puede editar" *ngIf="factura.id_export != 0">
+                                <i class="material-icons" style="opacity: 0.3">mode_edit</i>
+                            </a>
+                            <a title="editar" (click)="selectBill(factura, rowIndex)" *ngIf="factura.id_export == 0">
+                                <i class="material-icons edit-button">mode_edit</i>
+                            </a>
+                            <a title="Desglose" (click)="breakdownBill(factura)">
+                                <i class="material-icons desglose">assessment</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalbasesimponibles) ? 'red' : '' }">{{totalbasesimponibles | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalivas) ? 'red' : '' }">{{totalivas | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totaltotales) ? 'red' : '' }">{{totaltotales | currency:false }}</th>
+                    <th scope="col" class="text-right" [ngStyle]="{'color':isNegative(totalcobrado) ? 'red' : '' }">{{totalcobrado | currency:false }}</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+        <hr>
+        <div *ngIf="arrpages.length != 0" style="height:50px">
+            <div class="paginator text-center">
+                <span (click)="irPagina(1)" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>
+                <span (click)="irPagina(numPage-2)" *ngIf="numPage>2" style="cursor:pointer;padding:15px">{{numPage-2}}</span>
+                <span (click)="irPagina(numPage-1)" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>
+                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span>
+                <span (click)="irPagina(numPage+1)" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>
+                <span (click)="irPagina(numPage+2)" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>
+                <span (click)="irPagina(arrpages.length)" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
+            </div>
+            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
+                <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{facturasfiltradas.length > [numPage]*[pagination] ? [numPage]*[pagination] : facturasfiltradas.length }} de {{facturasfiltradas.length}} facturas </i>
+            </div>
+        </div>
+
+        <div id="graficas" class="text-center">
+            <div style="display: inline-block;height:180px;width:500px;">
+                <canvas baseChart width="495" height="180" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
+            </div>
+            <div style="display: inline-block;height:180px;width:290px;">
+                <canvas baseChart width="285" height="180" [chartType]="'bar'" [datasets]="chartData" [labels]="labels" [colors]="colors" [options]="chartOptions" [legend]="true">
+                </canvas>
+
+            </div>
+            <div style="display: inline-block;height:180px;width:490px;">
+                <canvas baseChart width="485" height="180" [datasets]="chartDataHorizontal" [options]="chartOptionsHorizontal" [labels]="labelsHor" [colors]="colorsHor" [legend]="true" [chartType]="'horizontalBar'">
+                </canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="list" *ngIf="tabSeleccionada == 1 && cargandofacturas">
+        <h2 class="title-loading">
+            <div class="loader"></div>
+            Cargando el listado...
+        </h2>
+    </div>
+
+    <div class="export" *ngIf="tabSeleccionada == 2">
+
+        <table class="table table-sm" id="tablafacturas">
+            <thead>
+                <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Fecha Facturas Hasta</th>
+                    <th scope="col">Nº Facturas</th>
+                    <th scope="col">Archivo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr (dblclick)="openExportation(exportacion)" style="cursor:pointer" *ngFor="let exportacion of exportaciones">
+                    <td>{{exportacion.id}}</td>
+                    <td>{{exportacion.export_date}}</td>
+                    <td>{{exportacion.billings_date}}</td>
+                    <td>{{exportacion.billings_number}}</td>
+                    <td>{{exportacion.file}}</td>
+                    <td>
+                        <div class="menu">
+                            <a title="Eliminar" (click)="deleteExportation(exportacion)">
+                                <i class="material-icons delete">delete</i>
+                            </a>
+                            <a title="Ver Exportación" (click)="openExportation(exportacion)">
+                                <i class="material-icons description">description</i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <hr>
+        <div *ngIf="arrpagesExportation.length != 0">
+            <div class="text-center paginator" style="float:left">
+                <span (click)="numPageExportation=1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">|<</span>
+                <span (click)="numPageExportation=numPageExportation-2" *ngIf="numPageExportation>2" style="cursor:pointer;padding:15px">{{numPageExportation-2}}</span>
+                <span (click)="numPageExportation=numPageExportation-1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">{{numPageExportation-1}}</span>
+                <span style="font-weight: bold; color:white; background-color:gray; cursor:pointer;padding:15px">{{numPageExportation}}</span>
+                <span (click)="numPageExportation=numPageExportation+1" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">{{numPageExportation+1}}</span>
+                <span (click)="numPageExportation=numPageExportation+2" *ngIf="numPageExportation<arrpagesExportation.length-1" style="cursor:pointer;padding:15px">{{numPageExportation+2}}</span>
+                <span (click)="numPageExportation=arrpagesExportation.length" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">>|</span>
+            </div>
+            <div class="text-right" style="float:right">
+                <i>Mostrando {{([numPageExportation]-1)*[paginationExportation]+1}} - {{facturasfiltradas.length > [numPageExportation]*[paginationExportation] ? [numPageExportation]*[paginationExportation] : facturasfiltradas.length }} de {{facturasfiltradas.length}} facturas </i>
+            </div>
+        </div>
+
+    </div>
+
+
+    <p-dialog styleClass="dashboard-dialog" *ngIf="selectedBill" header="Detalles del Factura" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-12">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <label for="bill_name">Descripción</label>
+                        </div>
+                        <div class="ui-grid-col-12">
+                            <input type="text" pInputText id="bill_name" [(ngModel)]="selectedBill.bill_name" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-7">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <label for="name">PO</label>
+                        </div>
+                        <div class="ui-grid-col-12">
+                            <input type="text" pInputText id="po" [(ngModel)]="selectedBill.PO" />
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-col-1">
+                    <div class="ui-grid-row">&nbsp;</div>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <label for="end_date">Fecha de vencimiento</label>
+                        </div>
+                        <div class="ui-grid-col-12">
+                            <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedBill.due_date_model" required></my-date-picker>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <label for="team">Equipo</label>
+                        </div>
+                        <div class="ui-grid-col-12">
+                            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="selectedBill.id_team" placeholder="Selecciona un equipo"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-grid-col-6">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-12">
+                            <label for="customer">Cliente</label>
+                        </div>
+                        <div class="ui-grid-col-12">
+                            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="selectedBill.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="displayDialog = false" class="cancel">
+                cancelar
+            </a>
+                <a (click)="updateApi()">
+                Guardar
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <p-dialog styleClass="dashboard-dialog delete" header="Abonar la factura" [(visible)]="displayDialogAbono" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBill">
+            <div class="ui-grid-row">
+                <span class="title">¿Está seguro de abonar la Factura?</span>
+                <span class="info">{{selectedBill.numbertext}}</span>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="displayDialogAbono = false" class="cancel">              
+              cancelar
+            </a>
+                <a (click)="abonar(selectedBill)">              
+              Abonar
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+
+    <p-dialog styleClass="dashboard-dialog delete" header="Eliminar Exportación" [(visible)]="displayDialogDeleteExportation" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedExportation">
+            <div class="ui-grid-row">
+                <span class="title">¿Está seguro de eliminar la Exportación?</span>
+                <span class="info">{{selectedExportation.id}}</span>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="displayDialogDeleteExportation = false" class="cancel">              
+              cancelar
+            </a>
+                <a (click)="deleteExp(selectedExportation)">              
+              Eliminar
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+
+
+
+    <!-- <p-dialog styleClass="modal-minimal" [(visible)]="showNewBill" [closable]="false" [responsive]="true" showEffect="ease" [modal]="true"
+    [contentStyle]="{'overflow':'visible'}">
+    <div class="modal-header">
+        <a (click)="showNewBill = !showNewBill">
+            <svg viewBox="0 0 24 24" role="img" aria-label="Close" focusable="false" style="height: 16px; width: 16px; display: block; fill: rgb(118, 118, 118);">
+                <path fill-rule="evenodd" d="M23.25 24a.744.744 0 0 1-.53-.22L12 13.062 1.28 23.782a.75.75 0 0 1-1.06-1.06L10.94 12 .22 1.28A.75.75 0 1 1 1.28.22L12 10.94 22.72.22a.749.749 0 1 1 1.06 1.06L13.062 12l10.72 10.72a.749.749 0 0 1-.53 1.28"></path>
+            </svg>
+        </a>
+    </div>
+    <div class="modal">
+        <i alt="clonar los datos" title="clonar los datos" class="icon material-icons">layers</i>
+        <label for="name">Nueva factura</label>
+        <p>
+            Selecciona el proyecto que deseas facturar
+        </p>
+
+        <div class="sources" *ngIf="listProjects">
+            <div class="selector">
+                <p-dropdown [options]="listProjects" [(ngModel)]="selectedProject" styleClass="dropdown-dialog edit" filter="true" styleClass="dashboard-dropdown new"
+                    placeholder="Selecciona un proyecto">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="button">
+            <a (click)="createBill()">
+                <label>Crear Factura</label>
+                <i class="material-icons">keyboard_tab</i>
+            </a>
+        </div>
+    </div>
+</p-dialog> -->
+
+    <p-dialog styleClass="dashboard-dialog delete" header="Eliminar" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBill">
+            <div class="ui-grid-row">
+                <span class="title">¿Está seguro de eliminar la factura?</span>
+                <span class="info">{{selectedBill.numbertext}}</span>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>
+                <a (click)="deleteApi(selectedBill)">              
+              Eliminar
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <p-dialog styleClass="dashboard-dialog delete" header="Cobros" [(visible)]="displayDialogCobrar" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBill">
+            <div class="ui-grid-row">
+                <span class="title" *ngIf="selectedBill && selectedBill.charge_amount=='0'">¿Está seguro de cobrar la factura?
+                <div class="text-center"><label>Fecha cobro:&nbsp;</label><label style="max-width:250px"><my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="cobro_date"></my-date-picker></label></div>
+            </span>
+                <span class="title" *ngIf="selectedBill && selectedBill.charge_amount!='0'">¿Está seguro de descobrar la factura?</span>
+                <span class="info">{{selectedBill.numbertext}}</span>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="displayDialogCobrar = false" class="cancel">              
+              cancelar
+            </a>
+                <a (click)="cobrarBillApi(selectedBill,1)" *ngIf="selectedBill && selectedBill.charge_amount=='0'">              
+              Cobrar
+            </a>
+                <a (click)="cobrarBillApi(selectedBill,0)" *ngIf="selectedBill && selectedBill.charge_amount!='0'">              
+                Descobrar
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+
+    <p-dialog styleClass="dashboard-dialog pdf" header="Exportar" [(visible)]="showNewExport" [responsive]="true" showEffect="ease" [modal]="true">
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row text-center">
+                <div style="height:50px;margin-top:20px">
+                    <span class="title">Seleccione Fecha fin de la Exportación</span>
+                </div>
+                <div class="ui-grid-col-12 text-center">
+
+                    <div class="ui-grid-col-4">
+                        &nbsp;
+                    </div>
+                    <div class="ui-grid-col-4">
+                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="exportation_date">
+                        </my-date-picker>
+                    </div>
+                    <div class="ui-grid-col-4">
+                        &nbsp;
+                    </div>
+                </div>
+                <!-- <span class="info">{{selectedBill.numbertext}}</span> -->
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+                <a (click)="showNewExport = false" class="cancel">              
+              cancelar
+            </a>
+                <a (click)="createExportation()">              
+              Generar Exportación
+            </a>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <!-- 
+<p-dialog styleClass="dashboard-dialog" title="Generar Exportación" [(visible)]="" 
+>
+    <div class="ui-grid ui-grid-responsive ui-fluid" >
+        <div class="ui-grid-row">
+            <span class="title">¿Esta seguro de eliminar la factura?</span>
+            <span class="info">jalou</span>
+        </div>
+    </div>
+    <p-footer>
+
+    </p-footer>
+</p-dialog> -->

@@ -1,0 +1,400 @@
+@import "~assets/variables.scss";
+@import "~assets/mixins.scss";
+
+nav {
+    @include box-shadow(0px,2px, 11px, -6px, rgba(0, 0, 0, 0.75));                
+    height: 0;
+    width: 100%;
+    position: fixed;
+    margin: 0 auto;
+    top: 0;
+    z-index: 2;
+    @include transition(1s);  
+    &:before {
+        @include transition(1s);  
+        box-shadow:0px 2px 7px -2px rgba(0, 0, 0, 0.2);
+        content: '';
+        width: 100%;
+        position: absolute;
+        z-index: 3;
+        height: 0px;
+        background-color: $bgWhite;
+        display: block;
+    }
+    &.loaded {        
+        &:before {            
+            height: 75px;
+        }
+    }
+    .main-menu {
+        height: 0px;
+        margin-top: -20px;
+        @include transition(1s);  
+        &.loaded {
+            @include transition(1s);  
+            height: 75px;
+            margin-top: 0px;
+        }
+        ul {
+            margin:0 auto;
+            max-width: 1600px;
+            height: 100%;     
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            li {
+                float: left;
+                line-height: 50px;
+                &.logo {
+                    padding-left: 15px;
+                    width: 200px;
+                    z-index: 4;
+                    a {
+                        font-size: 20px;
+                        color: $mainColor;
+                        display: inline-block;
+                        em {
+                            font-style: normal;
+                            font-weight: 300;
+                            margin-right:-5px;
+                        }                        
+                    }    
+                    span {
+                        color: $lightColor;
+                        font-size: 10px;
+                        width: 100px;
+                        display: inline-block;
+                        line-height: 10px;      
+                        text-align: left;                  
+                        border-left: 1px solid $lightColor;
+                        padding-left: 4px;
+                        margin-left: 5px;
+                    }                                
+                }
+
+                &.user-info {
+                    color: $font-header-color;
+                    position: relative;
+                    float: right;
+                    padding-right: 15px;
+                    i.close {
+                        color: $fontDark;
+                        font-size: 23px;
+                        position: absolute;
+                        right: 15px;
+                        top: 10px;
+                    }
+                    .logout {
+                        background: $thirdColor;
+                        font-size: 14px;
+                        text-align: center;
+                        position: relative;
+                        i {
+                            color: white;
+                            left: 69px;
+                            font-size: 18px;
+                            top: 17px;
+                        }                    
+                        a {
+                            color: white;
+                            padding-left: 23px;
+                        }
+                    }
+                    .select-date {
+                        font-size: 12px;
+                        width: 100%;
+                        float: left;
+                        display: block;           
+                        p {
+                            color: $lightColor;
+                            font-size: 12px;
+                            display: block;
+                            margin: 0;
+                            padding: 0;
+                            line-height: 11px;
+                            margin-bottom: -5px;
+                            margin-top: 8px;
+                        }
+                    }      
+                    .refresh-btn {
+                        a {
+                            border:1px solid $mainColor;
+                            padding: 0 10px;
+                            border-radius: $radiusButton;
+                            text-align: center;
+                            margin: 7px auto 25px;
+                            display: block;
+                            line-height: 23px;
+                            font-size: 12px;
+                            max-width: 100px;
+                            &:hover {
+                                cursor: pointer;
+                                background: $mainColor;
+                                color: white;
+                            }
+                        }
+                    }
+                    .password-btn {
+                        a {
+                            border:1px solid $thirdColor;
+                            padding: 0 10px;
+                            border-radius: $radiusButton;
+                            text-align: center;
+                            margin: 7px auto 25px;
+                            display: block;
+                            line-height: 23px;
+                            font-size: 12px;
+                            max-width: 160px;
+                            &:hover {
+                                cursor: pointer;
+                                background: $thirdColor;
+                                color: white;
+                            }
+                        }
+                    }
+                    i {
+                        font-size: 30px;
+                        position: absolute;
+                        top: 12px;
+                        &:hover {
+                            cursor: pointer;
+                            
+                        }
+                    }
+                    span {
+                        color: $fontDark;
+                        font-size: 14px;
+                        padding-left: 40px;
+                        line-height: 28px;
+                        padding-right: 28px;
+                        z-index: 3;
+                        position: relative;
+                        &::after {
+                            @include transition(.8s);  
+                            font-family: 'Material Icons';
+                            content:'keyboard_arrow_down';
+                            font-size: 25px;
+                            position: absolute;
+                            top: -4px;     
+                            right: 0;                   
+                        }
+                        i.initials {
+                            background: #222222;
+                            color: white;
+                            font-size: 10px;
+                            font-style: normal;
+                            padding: 7px;
+                            text-transform: uppercase;
+                            border-radius: 50%;
+                            margin-right: 10px;
+                            position: relative;
+                            top: 0;
+                        }
+                        &.visible {
+                            &::after {
+                                content:'keyboard_arrow_up';
+                            }       
+                        }
+                    }
+                    .dropdown {
+                        border: 1px solid rgba(0,0,0,0.1);
+                        
+                        border-bottom: 0;
+                        z-index: 1;
+                        border-radius: 0 0 15px 15px;                    
+                        background: $bgWhite;
+                        font-size: 16px;
+                        width: 265px;
+                        right: 0px;
+                        padding: 27px 0 0 0;
+                        position: absolute;        
+                        @include box-shadow(0,5px, 10px, -1px, rgba(0, 0, 0, 0.25));                
+                        @include transition-effect(.5s, ease-in-out);    
+                        top:60px;                        
+                        pointer-events: auto;
+                        z-index: 2;
+                        .selectedCompany {
+                            color: $fontDark;
+                            .title {
+                                font-size: 12px;
+                                padding: 0;
+                                line-height: 10px;
+                                margin: 0;
+                                text-align: center;
+                                margin-top: 10px;
+                            }
+                            .subtitle {
+                                font-size: 12px;
+                                text-align: center;
+                                font-weight: 700;
+                                margin: 0;
+                                padding: 0;
+                                line-height: 20px;
+                            }
+                        }
+                        &.hide {
+                            top:-350px;    
+                            pointer-events: none;
+                        } 
+                        ul {
+                            li {
+                                width: 100%;
+                                > div {
+                                    box-sizing: border-box;
+                                    padding: 0 20px;
+                                    border-radius: 0 0 15px 15px;
+                                    display: block;
+                                    float: left;
+                                    width: 100%;
+                                    margin: 0 auto;
+                                }
+                            }
+                        }       
+                    }
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+                &.link-submenu {
+                    color: $mainColor;
+                    position: relative;
+                    z-index: 3;
+                    top: 8px;
+                    &:hover {
+                        cursor: pointer;
+                    }
+                    a i {
+                        color:$fontDark;
+                    }
+
+                }
+
+                &.search-input-block {
+                    width: 33%;
+                    max-width: 520px;
+                    margin: 0 auto;
+                    position: relative;
+                    z-index: 3;
+                    i {
+                        position: absolute;
+                        left: 13px;
+                        top: 15px;
+                        color: $lightColor;
+
+                    }
+                    input {
+                        color: $lightColor;
+                        background: #F7F8F9;
+                        border: 1px solid #ebebeb;
+                        border-radius: 5px;
+                        width: 100%;
+                        padding: 10px;
+                        font-size: 14px;
+                        padding-left: 42px;
+                        &:focus {
+                            outline: none;
+                        }
+                        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                            color: $lightColor;
+                            font-weight: 300;
+                        }
+                        &::-moz-placeholder { /* Firefox 19+ */
+                            color: $lightColor;
+                            font-weight: 300;
+                        }
+                        &:-ms-input-placeholder { /* IE 10+ */
+                            color: $lightColor;
+                            font-weight: 300;
+                        }
+                        &:-moz-placeholder { /* Firefox 18- */
+                            color: $lightColor;
+                            font-weight: 300;
+                        }                    
+                    }
+                }
+
+                &.inner-menu {
+                    position: relative;
+                    z-index: 3;
+                    .list-menu {
+                        margin:0 20px;
+                        font-weight: 400;
+                        a {
+                            color: $fontDark;
+                            @media (max-width: 1060px) {
+                                font-size: 14px;
+                            }
+                            @media (min-width: 1060px) {
+                                font-size: 16px;
+                            }
+                            padding-bottom: 25px;
+                            border-bottom:4px solid transparent;
+                            @include transition(.25s);                        
+                            &:hover,&.active {
+                                color: $font-header-color;
+                                cursor: pointer;
+                                border-bottom:4px solid $font-header-color;
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }            
+    }
+    
+    .secondary-menu {
+        position: absolute;
+        z-index:2;
+        top:-75px;
+        width: 100%;
+        height: 75px;
+        background: $softGrey;
+        text-align: center;
+        @include box-shadow(0px,2px, 12px, -6px, rgba(0, 0, 0, 0.75));        
+        @include transition-effect(.5s, ease-in-out);                        
+        &.visible {
+            top: 76px;
+        }        
+        ul {
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            height: 75px;
+            line-height: 75px;
+            li {
+                margin:0 25px;
+                a {
+                    font-size: 13px;
+                    display: inline-block;
+                    color: $fontDark;
+                    border-bottom:4px solid transparent;
+                    height: 79px;
+                    font-weight: 400;
+                    line-height: 80px;
+                    @include transition(.25s);                        
+                    &.active, &:hover {
+                        height: 75px;
+                        cursor: pointer;
+                        color: $darkColor;
+                        border-bottom:4px solid $font-header-color;
+                        i {
+                            color: $font-header-color;
+                            font-size: 18px;
+                        }
+                    }
+                    i {
+                        @include transition(0.25s);
+                        display: block;
+                        font-size: 16px;
+                        position: relative;
+                        top: 20px;
+                        line-height: 10px;    
+                        color: $greyColor;                    
+                    }
+                }
+            }
+        }
+        
+    }
+}

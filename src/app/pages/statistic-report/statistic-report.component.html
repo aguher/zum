@@ -1,0 +1,251 @@
+<div class="report"  *ngIf="loadValues && choosenCompany; else choosen">
+    <h2>Informe Estadístico de <b>{{companySelected}}</b> para el <b>{{yearSelected}}</b></h2>
+  
+    <div class="col-titles">
+      <div class="row">
+        ventas
+      </div>
+      <div class="row">
+        coste de ventas
+      </div>
+      <div class="row">
+        personal propio
+      </div>
+      <div class="row separator grey">
+        margen bruto
+      </div>
+      <div class="row fixed-cost grey separator">
+        gastos fijos
+      </div>
+      <div class="row fixed-cost" *ngFor="let fixed of fixedCost">
+        <span [ngClass]="{'parent': fixed.parent}" >{{fixed.name}}</span>
+      </div>
+      <div class="row separator-upper separator grey">
+        EBITDA
+      </div>
+      <div class="row">
+        amortizaciones
+      </div>
+      <div class="row separator">
+        Gastos financieros
+      </div>
+      <div class="row separator grey">
+        EBIT
+      </div>
+      <div class="row">
+        Gastos extraordinarios
+      </div>    
+      <div class="row separator separator-upper grey">
+        Beneficio antes Imp. Sociedades
+      </div>    
+      <div class="row">
+        Impuesto Sociedades
+      </div>    
+      <div class="row final">
+        Resultado Anual
+      </div>
+    </div>
+    <div class="col-amounts">
+      <ul>
+          <li class="title red"> Presupuesto Pesimista</li>
+          <li class="title blue"> Presupuesto Neutro</li>
+          <li class="title green"> Presupuesto Optimista</li>
+  
+          <li class='amount red'>
+            <span class="alone">{{totalIncomes.pessimist.colValue | currency }}</span>
+            
+          </li>
+          <li class='amount blue'>
+            <span class="alone">{{neutralValue | currency }}</span>
+            
+          </li>
+          <li class='amount green'>
+            <span class="alone">{{totalIncomes.optimist.colValue | currency }}</span>
+            
+          </li>
+  
+          <li class='amount red'>
+            <span>{{totalExpenses.pessimist.colValue  | currency }}</span>
+            <span>{{totalExpenses.pessimist.colPercent | currency:false }}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{totalExpenses.neutral.colValue  | currency }}</span>
+            <span>{{totalExpenses.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green'>
+            <span>{{totalExpenses.optimist.colValue  | currency }}</span>
+            <span>{{totalExpenses.optimist.colPercent  | currency:false}}</span>
+          </li>
+          
+          <li class='amount red'>
+            <span>{{totalEmployees.pessimist.colValue  | currency }}</span>
+            <span>{{totalEmployees.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{totalEmployees.neutral.colValue  | currency }}</span>
+            <span>{{totalEmployees.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green'>
+            <span>{{totalEmployees.optimist.colValue  | currency }}</span>
+            <span>{{totalEmployees.optimist.colPercent  | currency:false}}</span>
+          </li>
+          
+          <li class='amount red separator grey'>
+            <span>{{totalMargin.pessimist.colValue  | currency }}</span>
+            <span>{{totalMargin.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue separator grey'>
+            <span>{{totalMargin.neutral.colValue  | currency }}</span>
+            <span>{{totalMargin.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green separator grey'>
+            <span>{{totalMargin.optimist.colValue  | currency }}</span>
+            <span>{{totalMargin.optimist.colPercent  | currency:false}}</span>
+          </li>
+          
+          <li class='amount red grey separator'>
+            <span>{{this.totalFixedCost.pessimist.colValue  | currency }}</span>
+            <span>{{this.totalFixedCost.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue grey separator'>
+            <span>{{this.totalFixedCost.neutral.colValue  | currency }}</span>
+            <span>{{this.totalFixedCost.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green grey separator'>
+            <span>{{this.totalFixedCost.optimist.colValue  | currency }}</span>
+            <span>{{this.totalFixedCost.optimist.colPercent  | currency:false}}</span>
+          </li> 
+          <ng-template ngFor let-fixed [ngForOf]="fixedCost">
+            <li class='amount red'>
+              <span>{{fixed.pessimist.colValue  | currency }}</span>
+              <span>{{fixed.pessimist.colPercent  | currency:false}}</span>
+            </li>
+            <li class='amount blue'>
+              <span>{{fixed.neutral.colValue  | currency }}</span>
+              <span>{{fixed.neutral.colPercent  | currency:false}}</span>
+            </li>
+            <li class='amount green'>
+              <span>{{fixed.optimist.colValue  | currency }}</span>
+              <span>{{fixed.optimist.colPercent  | currency:false}}</span>
+            </li>   
+          </ng-template>     
+          
+          <li class='amount red separator-upper separator grey'>
+            <span>{{totalEbitda.pessimist.colValue  | currency }}</span>
+            <span>{{totalEbitda.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue separator-upper separator grey'>
+            <span>{{totalEbitda.neutral.colValue  | currency }}</span>
+            <span>{{totalEbitda.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green separator-upper separator grey'>
+            <span>{{totalEbitda.optimist.colValue  | currency }}</span>
+            <span>{{totalEbitda.optimist.colPercent  | currency:false}}</span>
+          </li>   
+          
+          <li class='amount red'>
+            <span>{{totalAmortizacion.pessimist.colValue  | currency }}</span>
+            <span>{{totalAmortizacion.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{totalAmortizacion.neutral.colValue | currency}}</span>
+            <span>{{totalAmortizacion.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green'>
+            <span>{{totalAmortizacion.optimist.colValue  | currency }}</span>
+            <span>{{totalAmortizacion.optimist.colPercent  | currency:false}}</span>
+          </li> 
+  
+          <li class='amount red'>
+            <span>{{totalFinancieros.pessimist.colValue  | currency }}</span>
+            <span>{{totalFinancieros.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue'>
+            <span>{{totalFinancieros.neutral.colValue  | currency}}</span>
+            <span>{{totalFinancieros.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green'>
+            <span>{{totalFinancieros.optimist.colValue  | currency }}</span>
+            <span>{{totalFinancieros.optimist.colPercent  | currency:false}}</span>
+          </li>         
+          
+          <li class='amount red grey separator separator-upper'>
+            <span>{{totalEbit.pessimist.colValue  | currency }}</span>
+            <span>{{totalEbit.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue grey separator separator-upper'>
+            <span>{{totalEbit.neutral.colValue  | currency }}</span>
+            <span>{{totalEbit.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green grey separator separator-upper'>
+            <span>{{totalEbit.optimist.colValue  | currency }}</span>
+            <span>{{totalEbit.optimist.colPercent  | currency:false}}</span>
+          </li>         
+          
+          <li class='amount red'>
+            <span>{{totalExtraordinarios.pessimist.colValue  | currency }}</span>
+            <span>{{totalExtraordinarios.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue'>            
+            <span>{{totalExtraordinarios.neutral.colValue  | currency}}</span>
+            <span>{{totalExtraordinarios.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green'>
+            <span>{{totalExtraordinarios.optimist.colValue  | currency }}</span>
+            <span>{{totalExtraordinarios.optimist.colPercent  | currency:false}}</span>
+          </li>  
+  
+          <li class='amount red separator  separator-upper grey'>
+            <span>{{totalBeneficios.pessimist.colValue  | currency }}</span>
+            <span>{{totalBeneficios.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue separator separator-upper grey'>
+            <span>{{totalBeneficios.neutral.colValue  | currency }}</span>
+            <span>{{totalBeneficios.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green separator separator-upper grey'>
+            <span>{{totalBeneficios.optimist.colValue  | currency }}</span>
+            <span>{{totalBeneficios.optimist.colPercent  | currency:false}}</span>
+          </li>      
+          
+          <li class='amount red'>
+            <span >{{totalIs.pessimist.colValue  | currency }}</span>
+            <span >{{totalIs.pessimist.colPercent  | currency:false }}</span>
+          </li>
+          <li class='amount blue'>
+            <span >{{totalIs.neutral.colValue  | currency }}</span>
+            <span >{{totalIs.neutral.colPercent  | currency:false }}</span>
+          </li>
+          <li class='amount green'>
+            <span >{{totalIs.optimist.colValue  | currency }}</span>
+            <span >{{totalIs.optimist.colPercent  | currency:false }}</span>
+          </li>              
+  
+          <li class='amount red final-row  separator separator-upper'>
+            <span>{{total.pessimist.colValue  | currency }}</span>
+            <span>{{total.pessimist.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount blue final-row  separator separator-upper'>
+            <span>{{total.neutral.colValue  | currency }}</span>
+            <span>{{total.neutral.colPercent  | currency:false}}</span>
+          </li>
+          <li class='amount green final-row  separator separator-upper'>
+            <span>{{total.optimist.colValue  | currency }}</span>
+            <span>{{total.optimist.colPercent  | currency:false}}</span>
+          </li>              
+      </ul>
+    </div>
+  </div>
+  <ng-template #choosen>
+    <div *ngIf="!choosenCompany; else loading">
+        <h2 class="title-loading">
+          Seleccione una empresa y año fiscal
+        </h2>
+    </div>    
+  </ng-template>
+  <ng-template #loading>
+      <h2 class="title-loading">
+        <div class="loader"></div>
+        Cargando el informe...
+      </h2>
+    </ng-template>

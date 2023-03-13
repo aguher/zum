@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="header">
+    <i class="header material-icons">toc</i>
+    <h1>Conceptos Fijos</h1>
+    <h3>Todos los conceptos fijos de tu empresa</h3>
+    <h4><b>Recuerde:</b> Para que los conceptos salgan ordenados, debe añadir en el nombre la numeración correcta (mínimo dos cifras). </h4> 
+    <h4>ejemplo: para el padre <b>01.00. Nombre del padre</b> y para el hijo <b>01.01 Nombre del primer hijo</b></h4>
+  </div>
+  <div class="edit">
+
+    <div class="input">
+      <span>Nombre</span>
+      <input type="text" value="" [(ngModel)]="model.fixedConceptName" placeholder="Introduce el nombre del concepto">
+    </div>
+    <div class="input half">
+      <span>Tipo de concepto</span>
+      <p-dropdown  styleClass="dashboard-dropdown" (onChange)="changeType($event)" [options]="types" [(ngModel)]="model.type" placeholder="Selecciona tipo"></p-dropdown>
+    </div>        
+    <div class="input " *ngIf="model.type===1">
+      <span>Cuenta</span>
+      <p-dropdown *ngIf="parentAccounts.length > 0"  styleClass="dashboard-dropdown"[options]="parentAccounts" [(ngModel)]="model.parent_account" placeholder="Selecciona una cuenta"  filter="filter"></p-dropdown>
+      <span *ngIf="parentAccounts.length === 0" class="msg-empty-accounts">Necesita añadir cuentas</span>
+    </div>    
+      
+    <div class="input half">
+      <span>Cuenta contable</span>
+      <p-inputMask [disabled]="!selectedType" [(ngModel)]="model.accountNumber" mask="{{maskSelected}}" placeholder="Número"></p-inputMask>
+    </div>
+    
+    <div class="button">
+      <a (click)="addFixedConcept()" >
+        <i class="material-icons">add_box</i>
+        Añadir
+      </a>
+    </div>
+  </div>
+
+  <div class="list">
+    <p-dataTable [emptyMessage]="emptyMsg" styleClass="dashboard-tables" [(value)]="fixedConcept"  [(selection)]="selectedFixedConcept"  [paginator]="displayPagination"  [rows]="pagination" [responsive]="true">
+        <p-column field="name" header="Nombre" >
+          <ng-template let-fixedConcept="rowData" pTemplate="body">
+            <span class="parent" *ngIf="fixedConcept.id_parent === '0'">{{fixedConcept.name}}</span>
+            <span class="children" *ngIf="fixedConcept.id_parent !== '0'">{{fixedConcept.name}}</span>
+          </ng-template>
+        </p-column>
+        <p-column field="account_number" header="Número de cuenta" [style]="{'text-align':'left'}">
+          <ng-template let-fixedConcept="rowData" pTemplate="body">
+            <span class="parent" *ngIf="fixedConcept.id_parent === '0'">{{fixedConcept.account_number}}</span>
+            <span class="children no-margin" *ngIf="fixedConcept.id_parent !== '0'">{{fixedConcept.account_number}}</span>
+          </ng-template>          
+        </p-column>
+        <p-column field="options" header="opciones" styleClass="col-options" >
+          <ng-template let-fixedConcept="rowData" pTemplate="body">
+            <a (click)="selectFixedConcept(fixedConcept)">              
+              <i class="material-icons edit-button">mode_edit</i>
+            </a>
+            <a *ngIf="fixedConcept.id_parent ==='0'" (click)="deleteParentConcept(fixedConcept)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+            <a *ngIf="fixedConcept.id_parent !=='0'" (click)="deleteChildrenConcept(fixedConcept)">              
+              <i class="material-icons delete">delete</i>
+            </a>
+        </ng-template>
+        </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<p-dialog styleClass="dashboard-dialog" header="Detalles del concepto fijo" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
+     <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedFixedConcept">
+        <div class="ui-grid-row" *ngIf="selectedFixedConcept.id_parent !=='0'">
+            <div class="ui-grid-col-12"><label for="account_number">Cuenta</label></div>
+            <p-dropdown  styleClass="dropdown-dialog"[options]="parentAccounts" [(ngModel)]="selectedFixedConcept.id_parent" placeholder="Selecciona cuenta"></p-dropdown>
+        </div>         
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="name">Nombre</label></div>
+            <div class="ui-grid-col-12"><input pInputText id="name" [(ngModel)]="selectedFixedConcept.name" /></div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-12"><label for="account_number">Número cuenta</label></div>
+            <div class="ui-grid-col-12"><p-inputMask [(ngModel)]="selectedFixedConcept.account_number" mask="9999999" placeholder="Número"></p-inputMask></div>
+        </div>      
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialog = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="updateApi()">              
+              Guardar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog styleClass="dashboard-dialog delete" header="Eliminar el concepto fijo" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedFixedConcept">
+        <div class="ui-grid-row">
+            <span class="title">{{msgDelete}}</span>
+            <span class="info">{{selectedFixedConcept.name}}</span>
+        </div>
+    </div>
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+          <a (click)="displayDialogDelete = false" class="cancel">              
+              cancelar
+            </a>  
+          <a (click)="deleteApi(selectedFixedConcept)">              
+              Eliminar
+            </a>            
+        </div>
+    </p-footer>
+</p-dialog>

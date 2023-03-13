@@ -1,0 +1,112 @@
+<div class="inner-container" *ngIf="info.campaign_code; else loading">
+  <div class="title">
+    <div class="label">
+      Resumen del Proyecto
+      <span class="campaign-code">{{info.campaign_code}}</span>
+      <span class="campaign-name">{{info.campaign_name}}</span>
+    </div>
+    <div class="return-projects">
+      <a class="big-button" routerLink="/proyectos">
+        <i class="material-icons">reply</i>
+        Volver al listado
+      </a>
+
+    </div>
+  </div>
+
+  <div class="info">
+    <span class="block">
+      <i class="material-icons">card_travel</i> Cliente
+      <em>{{info.customer.name}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">face</i> Responsable
+      <em>{{info.user}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">supervisor_account</i>Equipo
+      <em>{{info.team}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">copyright</i>Grupo
+      <em>{{info.group}}</em>
+    </span>
+    <span class="block">
+      <i class="material-icons">list</i>Subgrupo
+      <em>{{info.subgroup}}</em>
+    </span>
+    <span class="block">
+      <div class="status-date">
+        <span class="date">
+          <em>{{info.creation_date}}</em>
+          <em>{{info.end_date}}</em>
+        </span>
+        <div class="status" [ngClass]="{
+          'ended': info.status === 'Finalizado',
+          'budget': info.status === 'Presupuestado',
+          'passed': info.status === 'Aprobado'
+          }">
+          {{info.status}}
+        </div>
+      </div>
+    </span>
+  </div>
+
+  <div class="list">
+
+    <p-dataTable styleClass="dashboard-tables budgets" [emptyMessage]="emptyMsg" [value]="values" [paginator]="displayPagination"
+      [rows]="pagination" [rowStyleClass]="lookupRowStyleClass">
+      <p-column field="info.name" header="Concepto variable" [style]="{'width':'310px'}"></p-column>
+      <p-column field="incomes_estimated" header="Ingresos Pto" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="incomes_real" header="Ingresos Reales" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="expenses_estimated" header="Gastos Pto" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="expenses_real" header="Gastos Reales" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+
+      <p-column field="benefit_estimated" header="Beneficio Pto" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="benefit_real" header="Beneficio Real" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency) :(0 | currency)}}</span>
+        </ng-template>
+      </p-column>
+      <p-column field="margin_estimated" header="Margen Estimado" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency:false) :(0 | currency:false)}}%</span>
+        </ng-template>
+      </p-column>
+      <p-column field="margin_real" header="Margen Real" [style]="{'text-align':'right'}">
+        <ng-template let-col let-income="rowData" pTemplate="body">
+          <span>{{income[col.field] ? (income[col.field] | currency:false) :(0 | currency:false)}}%</span>
+        </ng-template>
+      </p-column>
+    </p-dataTable>
+
+  </div>
+</div>
+
+
+<ng-template #loading>
+  <h2 class="title-loading">
+    <div class="loader"></div>
+    Cargando el desglose...
+  </h2>
+</ng-template>
