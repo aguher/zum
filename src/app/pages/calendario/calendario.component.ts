@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CalendarEvent,DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarEvent,CalendarEventTimesChangedEvent,DAYS_OF_WEEK } from 'angular-calendar';
 import {WeekDay} from 'calendar-utils';  
+import { Subject } from 'rxjs';
 const colors: any = {
   red: {
     primary: '#ad2121',
@@ -22,13 +23,22 @@ const colors: any = {
 })
 export class CalendarioComponent {
   view: string = 'month';
+  refresh: Subject<any> = new Subject();
 
   viewDate: Date =new Date();
   activeDayIsOpen: boolean = false;
   locale: string = 'es';
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
 
-
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd
+  }: CalendarEventTimesChangedEvent): void {
+    event.start = newStart;
+    event.end = newEnd;
+    this.refresh.next();
+  }
   events: CalendarEvent[] = [
     {
       title: 'NG Consulting - 3 toallas',

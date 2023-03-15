@@ -262,9 +262,9 @@
           </div>
         </div>
       </div>
-
       <div class="ui-grid-row variable-concept-line" *ngFor="let subconcept of line.subconcepts; let id_inner = index">
         <div class="ui-grid-col-1  name-concept">
+          
             <p-autoComplete [inputStyle]="{'color':'black','font-weight':'400','text-align':'left'}" [readonly]="subconcept.readonly || readonlytotal" [disabled]="!isEditable" [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.code" (onBlur)="updateSubconcept(subconcept, $event, 'code', true)"
               (onDropdownClick)="updateSubconcept(subconcept, $event, 'code')" (onSelect)="updateSubconcept(subconcept, $event, 'code')"
               [suggestions]="codes_standard" (completeMethod)="searchCodesStandards($event)">
@@ -278,13 +278,13 @@
         <div class="ui-grid-col-4  name-concept">
           
 
-           <p-autoComplete [inputStyle]="{'color':'black','font-weight':'400','text-align':'left'}" [readonly]="subconcept.readonly || readonlytotal" *ngIf="id_company==412" [disabled]="!isEditable" [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name" (onBlur)="updateSubconcept(subconcept, $event, 'name', true)"
+           <p-autoComplete [inputStyle]="{'color':'black','font-weight':'400','text-align':'left'}" [readonly]="subconcept.readonly || readonlytotal" *ngIf="id_company==412 || id_company==416  " [disabled]="!isEditable" [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name" (onBlur)="updateSubconcept(subconcept, $event, 'name', true)"
             (onDropdownClick)="updateSubconcept(subconcept, $event, 'name')" (onSelect)="updateSubconcept(subconcept, $event, 'name')"
             [suggestions]="subconcepts_standard" (completeMethod)="searchSubconceptsStandards($event)">
 
           </p-autoComplete>   
           
-          <textarea *ngIf="id_company!=412" [readonly]="readonlytotal" style="width:100%" rows=3 [(ngModel)]="subconcept.name" (blur)="updateSubconcept(subconcept, $event, 'name', true)">
+          <textarea  *ngIf="id_company!=412 && id_company!=416" [readonly]="readonlytotal" style="width:100%" rows=3 [(ngModel)]="subconcept.name" (blur)="updateSubconcept(subconcept, $event, 'name', true)">
 
           </textarea>
 

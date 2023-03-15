@@ -1,4 +1,10 @@
-
+<ng-template #customCellTemplate let-day="day">
+  <div *ngIf="day.events">
+    <p  [ngStyle]="{background:event?.color.primary}" *ngFor="let event of day.events; let x = index" (click)="handleEvent('Clicked', day.events[x])">
+      <span class="text-white p-2 small">{{event?.title}}-{{event?.color.primary}}</span>
+    </p>
+  </div>
+  </ng-template>
 <div class="row text-center">
   <div class="col-md-4">
     <div class="btn-group">
@@ -37,8 +43,11 @@
   [activeDayIsOpen]="activeDayIsOpen"
   [locale]="locale"
   [weekStartsOn]="weekStartsOn"
-
+  [refresh]="refresh"
+  (eventTimesChanged)="eventTimesChanged($event)"
   (dayClicked)="dayClicked($event)"
   (eventClicked)="eventClicked($event)"
+  [cellTemplate]="customCellTemplate"
+
   >
 </mwl-calendar-month-view>
