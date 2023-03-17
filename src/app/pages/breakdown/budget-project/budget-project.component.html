@@ -278,7 +278,7 @@
         <div class="ui-grid-col-4  name-concept">
           
 
-           <p-autoComplete [inputStyle]="{'color':'black','font-weight':'400','text-align':'left'}" [readonly]="subconcept.readonly || readonlytotal" *ngIf="id_company==412 || id_company==416  " [disabled]="!isEditable" [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name" (onBlur)="updateSubconcept(subconcept, $event, 'name', true)"
+           <p-autoComplete [inputStyle]="{'color':'black','font-weight':'400','text-align':'left'}" [readonly]="subconcept.readonly || readonlytotal" *ngIf="id_company==412 || id_company==416  " [disabled]="!isEditable" [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name"
             (onDropdownClick)="updateSubconcept(subconcept, $event, 'name')" (onSelect)="updateSubconcept(subconcept, $event, 'name')"
             [suggestions]="subconcepts_standard" (completeMethod)="searchSubconceptsStandards($event)">
 

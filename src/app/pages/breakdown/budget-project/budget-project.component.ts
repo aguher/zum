@@ -618,7 +618,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
         description = "";
         code = this.originalCodesStandard.filter((element) => {
           const parsedItem =
-            value.split("-").length > 1 ? value.split("-")[1].trim() : value;
+            value.split("-").length > 1 ? value.split("-")[1] : value;
           return element.description === parsedItem;
         });
       } else {
