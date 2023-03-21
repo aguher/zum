@@ -1,5 +1,9 @@
 <?php
 header("Content-Type: text/html;charset=utf-8");
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -59,6 +63,10 @@ class Api extends Rest {
 		return true;
 	}
 
+	public function test(){
+		echo "entra en test";
+	} 
+
 
 
 	public function procesarLLamada() {
@@ -96,7 +104,6 @@ class Api extends Rest {
      }
      if (isset($this->datosPeticion['pwd'], $this->datosPeticion['email'])) {
 
-
        $pwd = $this->datosPeticion['pwd'];
        $email = $this->datosPeticion['email'];
        if (!empty($pwd) and !empty($email)) {
@@ -118,7 +125,8 @@ class Api extends Rest {
 						 on fiscal_year_bis.id = fiscal_year.id_fiscal_year
 						 WHERE
 	         		user.password='".$pwd."' AND user.email='".$email."' AND user.status=1");
-	         $query->execute();
+			 $query->execute();
+			;
 	         if ($fila = $query->fetch(PDO::FETCH_ASSOC)) {
 	           $respuesta['status'] = 'ok';
 	           $respuesta['role'] = $fila['id_role'];
@@ -129,7 +137,7 @@ class Api extends Rest {
 						 $respuesta['company']['address'] = $fila['address'];
 						 $respuesta['company']['address_bis'] = $fila['address_bis'];
 						 $respuesta['company']['cif'] = $fila['cif'];
-						 $respuesta['company']['phone'] = $fila['phone'];
+						// $respuesta['company']['phone'] = $fila['phone'];
 						 $respuesta['company']['credits'] = $fila['credits'];	
 						 $respuesta['company']['rgpd'] = $fila['rgpd'];						 						 
 						 $respuesta['company']['logo'] = $fila['logo'];
@@ -329,7 +337,7 @@ class Api extends Rest {
 		company.logo as logoCompany, billing.id, billing.number, billing.description, 
 		billing.issue_date, billing.due_date, billing.PO, customer.logo,
 		customer.customer_name, customer.cif, customer.address, customer.address_bis, 
-		customer.postal_code, customer.city, customer.country, campaign.ped_code, billing.id_address,
+		customer.Postal_Code, customer.city, customer.country, campaign.ped_code, billing.id_address,
 		billing.id_rect, case when billing.id_rect <> 0 then (select numbertext from tt_billing where id=billing.id_rect) else 0 end as numbertext_rect,
 		billing.id_export,
 		(select valuechar from tt_valuesbvsfields where idtable = campaign.id and freefieldsvscompanyid = 1) as numcampana							
@@ -5788,9 +5796,9 @@ class Api extends Rest {
 
 
 				$query = $this->_conn->prepare("update tt_subconcepts_project set ".$field."='".$value."'".$tmp." where id='".$id."'");
-
 				$query->execute();
 				$filasActualizadas = $query->rowCount();
+				
 				if ($filasActualizadas == 1) {
 
 					//borro la posible fila de petición que hubiera asociada a este subconcepto
@@ -5824,8 +5832,9 @@ class Api extends Rest {
 							$query->execute();
 
 							//compruebo que tengo disponibles en el almacén
-							$query = $this->_conn->prepare("select tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
+							$query = $this->_conn->prepare("select tt_articles_families.familyname as family, tt_subconcepts_standards.id_family, tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
 							from tt_subconcepts_project, tt_subconcepts_standards
+							INNER JOIN tt_articles_families ON tt_subconcepts_standards.id_family = tt_articles_families.id
 							where tt_subconcepts_project.id = ".$id."
 							and tt_subconcepts_project.code = tt_subconcepts_standards.code");
 
@@ -5857,7 +5866,7 @@ class Api extends Rest {
 					}
 
 
-					$resp = array('status' => "ok", "msg" => "Subconcepto actualizado correctamente.", "solicitadas" => $stock['solicitadas'], "disponibles" => $stock['disponibles'], "pedidasaqui" => $stock['pedidasaqui'], "descripcion" => $filas['description'], "bstockable" => $filas['bstockable']);
+					$resp = array('status' => "ok", "msg" => "Subconcepto actualizado correctamente.", "solicitadas" => $stock['solicitadas'], "disponibles" => $stock['disponibles'], "pedidasaqui" => $stock['pedidasaqui'], "descripcion" =>$filas['family'].'-'.$filas['description'], "bstockable" => $filas['bstockable']);
 					$this->mostrarRespuesta($resp, 200);
 				}
 			}
@@ -5951,8 +5960,9 @@ class Api extends Rest {
 			$text = $this->datosPeticion['text'];
 			$id_customer = $this->datosPeticion['id_customer'];
 
-			//$response = $this->operationApi("SELECT description as name, s_v.unit_price FROM tt_subconcepts_standards s_s, tt_subconcepts_std_vs_client s_v where s_s.id = s_v.id_subconcept and s_s.id_company='".$id_company."' and s_s.description LIKE '%".$text."%' union  ALL SELECT description as name, unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name ASC", 'GET');//
-			$response = $this->operationApi("SELECT description as name, CASE WHEN (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') IS NULL THEN unit_price ELSE (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') END AS unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name", 'GET');
+			//$response = $this->operationApi("SELECT description as name,s_s.brand as family, s_v.unit_price FROM tt_subconcepts_standards s_s, tt_subconcepts_std_vs_client s_v where s_s.id = s_v.id_subconcept and s_s.id_company='".$id_company."' and s_s.description LIKE '%".$text."%' union  ALL SELECT description as name, unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name ASC", 'GET');//
+			$response = $this->operationApi("SELECT code, brand as family,  description as name, CASE WHEN (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') IS NULL THEN unit_price ELSE (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') END AS unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name", 'GET');
+			
 			$jsonResponse['data'] = $response;
 			$this->mostrarRespuesta($jsonResponse, 200);
 
@@ -6368,7 +6378,7 @@ class Api extends Rest {
 		$this->mostrarRespuesta(HandleErrors::sendError(3), 204);
 	}
 
-/* 	private function deleteCustomer() {
+ 	private function deleteCustomer() {
 		$query = $this->_conn->prepare("select * from tt_campaign where id_customer=".$this->datosPeticion['id']);
 		$query->execute();
 		$filasActualizadas = $query->rowCount();
@@ -6385,8 +6395,8 @@ class Api extends Rest {
 			else {
 				$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
 			}
-    }
-	} */
+   		}
+	} 
 
 	private function updateCustomer() {
 		if ($_SERVER['REQUEST_METHOD'] != "PUT") {

@@ -1326,7 +1326,7 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
   drawHeaderDurbanityBill(doc) {
     let dataCompany = JSON.parse(localStorage.getItem("selectedCompany")).value;
     let inicio_cuadro = 11;
-
+    console.log(this.infoBilling);
     doc.setFillColor(227, 15, 95);
 
     doc.rect(0.6, 0.5, 0.6, 4.1, "F");
@@ -1352,8 +1352,12 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
     //cabecera de número de factura
     doc.setFontSize(18);
     doc.setTextColor(227, 15, 95);
-    doc.text(2, 6.1, "FACTURA");
-
+    doc.text(1.5, 6, "FACTURA");
+    if (this.infoBilling.contact !== "") {
+      doc.setFontSize(12);
+      doc.setTextColor(68, 84, 106);
+      doc.text(1.5, 6.7, "A la att. de " + this.infoBilling.contact);
+    }
     doc.setDrawColor(227, 15, 95);
 
     doc.setLineWidth(0.01);
@@ -1430,11 +1434,9 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
     let altura_texto = inicio_cuadro + 1.6;
     let sumaysiguederecha = 21 - margen_dch - ancho_importes - 0.2;
     let importeparcial = 0;
-    //    ("https://static.wixstatic.com/media/7c4130_130c55a8f58b47e0b9a5471db59e0aa5~mv2.png/v1/fill/w_150,h_128,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/durbanity.png");
     let urlCompany =
-      dataCompany.logo != "undefined"
-        ? URL_UPLOAD_LOGO + dataCompany.logo
-        : URL_UPLOAD_LOGO + "placeholder.jpg";
+      "https://static.wixstatic.com/media/7c4130_130c55a8f58b47e0b9a5471db59e0aa5~mv2.png/v1/fill/w_150,h_128,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/durbanity.png";
+    //let urlCompany =      dataCompany.logo != "undefined" ? URL_UPLOAD_LOGO + dataCompany.logo   : URL_UPLOAD_LOGO + "placeholder.jpg";
     console.log(urlCompany);
 
     let doc = new jsPDF("p", "cm");
