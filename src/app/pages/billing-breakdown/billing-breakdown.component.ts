@@ -1434,9 +1434,12 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
     let altura_texto = inicio_cuadro + 1.6;
     let sumaysiguederecha = 21 - margen_dch - ancho_importes - 0.2;
     let importeparcial = 0;
+    // let urlCompany =
+    //  "https://static.wixstatic.com/media/7c4130_130c55a8f58b47e0b9a5471db59e0aa5~mv2.png/v1/fill/w_150,h_128,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/durbanity.png";
     let urlCompany =
-      "https://static.wixstatic.com/media/7c4130_130c55a8f58b47e0b9a5471db59e0aa5~mv2.png/v1/fill/w_150,h_128,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/durbanity.png";
-    //let urlCompany =      dataCompany.logo != "undefined" ? URL_UPLOAD_LOGO + dataCompany.logo   : URL_UPLOAD_LOGO + "placeholder.jpg";
+      dataCompany.logo != "undefined"
+        ? URL_UPLOAD_LOGO + dataCompany.logo
+        : URL_UPLOAD_LOGO + "placeholder.jpg";
     console.log(urlCompany);
 
     let doc = new jsPDF("p", "cm");
@@ -1664,522 +1667,375 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
       default:
     }
 
-    base64Img.requestBase64(urlCompany, (err, res, body) => {
-      imgDataCompany = body;
-      doc.addImage(urlCompany, "JPEG", 2.3, 1, anchoimagen, 3.36);
-      doc.setLineWidth(borde_lineas);
+    imageToBase64Browser(urlCompany) // Path to the image
+      .then((imgDataCompany) => {
+        doc.addImage(imgDataCompany, "JPEG", 2.3, 1, anchoimagen, 3.36);
+        doc.setLineWidth(borde_lineas);
 
-      this.pintarComunesPaginas(
-        doc,
-        margen_izq,
-        margen_dch,
-        inicio_cuadro,
-        altura_cuadro,
-        ancho_importes,
-        borde_lineas
-      );
+        this.pintarComunesPaginas(
+          doc,
+          margen_izq,
+          margen_dch,
+          inicio_cuadro,
+          altura_cuadro,
+          ancho_importes,
+          borde_lineas
+        );
 
-      doc.setFontType("normal");
-      doc.setFontSize(9);
+        doc.setFontType("normal");
+        doc.setFontSize(9);
 
-      let altura_texto = inicio_cuadro + 1.6;
-      let importeparcial = 0;
-      //escribo las líneas
+        let altura_texto = inicio_cuadro + 1.6;
+        let importeparcial = 0;
+        //escribo las líneas
 
-      this.lines.forEach((line, idx) => {
-        line.subconcepts.forEach((sub, otroidx) => {
-          let texto = sub.name.split("\n");
-          let texto_lineas = [];
-          let linea = "";
-          texto.forEach((txt, j) => {
-            let frase = txt.split(" ");
-            let cuentaletras = 0;
-            frase.forEach((palabra: string, i) => {
-              cuentaletras += palabra.length + 1;
-              if (cuentaletras > maximo_linea) {
-                texto_lineas.push(linea);
-                cuentaletras = palabra.length + 1;
-                linea = "";
-              }
-              linea += palabra + " ";
+        this.lines.forEach((line, idx) => {
+          line.subconcepts.forEach((sub, otroidx) => {
+            let texto = sub.name.split("\n");
+            let texto_lineas = [];
+            let linea = "";
+            texto.forEach((txt, j) => {
+              let frase = txt.split(" ");
+              let cuentaletras = 0;
+              frase.forEach((palabra: string, i) => {
+                cuentaletras += palabra.length + 1;
+                if (cuentaletras > maximo_linea) {
+                  texto_lineas.push(linea);
+                  cuentaletras = palabra.length + 1;
+                  linea = "";
+                }
+                linea += palabra + " ";
+              });
+              if (linea != "") texto_lineas.push(linea);
+              linea = "";
+              cuentaletras = 0;
             });
-            if (linea != "") texto_lineas.push(linea);
-            linea = "";
-            cuentaletras = 0;
-          });
 
-          //        if (parseInt(sub.budget.total) != 0){
-          let pintaunidades = true;
-          texto_lineas.forEach((line) => {
-            if (altura_texto > inicio_cuadro + altura_cuadro - 2) {
-              doc.setFontType("italic");
-              doc.textEx(
-                "Suma y sigue en página siguiente >>",
-                sumaysiguederecha,
-                inicio_cuadro + altura_cuadro - 0.5,
-                "right",
-                "bottom"
-              );
-              doc.textEx(
-                this._common.currencyFormatES(importeparcial, false),
-                18.8,
-                inicio_cuadro + altura_cuadro - 0.5,
-                "right",
-                "bottom"
-              );
-
-              doc.addPage();
-
-              altura_texto = inicio_cuadro + 1.6;
-              doc.textEx(
-                "<< Suma y sigue de página anterior",
-                sumaysiguederecha,
-                altura_texto,
-                "right",
-                "bottom"
-              );
-              doc.textEx(
-                this._common.currencyFormatES(importeparcial, false),
-                18.8,
-                altura_texto,
-                "right",
-                "bottom"
-              );
-
-              doc.setFontType("normal");
-
-              altura_texto = altura_texto + 1;
-
-              doc.addImage(imgDataCompany, "JPEG", 2.3, 1, anchoimagen, 3.36);
-              this.pintarComunesPaginas(
-                doc,
-                margen_izq,
-                margen_dch,
-                inicio_cuadro,
-                altura_cuadro,
-                ancho_importes,
-                borde_lineas
-              );
-              doc.setFontType("normal");
-              doc.setFontSize(9);
-            }
-
-            switch (dataCompany.id) {
-              case "410":
-                if (pintaunidades)
-                  doc.textEx(
-                    sub.budget.amount,
-                    16.3,
-                    altura_texto + 0.06,
-                    "right",
-                    "bottom"
-                  );
-                doc.text(margen_izq + 0.2, altura_texto, line);
-                if (pintaunidades)
-                  doc.textEx(
-                    this._common.currencyFormatES(sub.budget.total, false),
-                    18.8,
-                    altura_texto + 0.06,
-                    "right",
-                    "bottom"
-                  );
-                break;
-              case "411":
-                doc.text(margen_izq + 0.2, altura_texto, line);
-                if (pintaunidades)
-                  doc.textEx(
-                    this._common.currencyFormatES(sub.budget.total, false),
-                    18.8,
-                    altura_texto + 0.06,
-                    "right",
-                    "bottom"
-                  );
-                break;
-              case "408":
-              default:
-                if (pintaunidades)
-                  doc.textEx(
-                    sub.budget.amount,
-                    3.45,
-                    altura_texto + 0.06,
-                    "right",
-                    "bottom"
-                  );
-                doc.text(margen_izq + 1.7, altura_texto, line);
-                if (pintaunidades)
-                  doc.textEx(
-                    this._common.currencyFormatES(sub.budget.total, false),
-                    18.8,
-                    altura_texto + 0.06,
-                    "right",
-                    "bottom"
-                  );
-            }
-            altura_texto += 0.4;
-            if (pintaunidades) {
-              //quitar cuando tenga tiempo
-              if (typeof sub.budget.total == "number") {
-                importeparcial += sub.budget.total;
-              } else {
-                importeparcial += parseFloat(
-                  sub.budget.total.toString().replace(".", "").replace(",", ".")
+            //        if (parseInt(sub.budget.total) != 0){
+            let pintaunidades = true;
+            texto_lineas.forEach((line) => {
+              if (altura_texto > inicio_cuadro + altura_cuadro - 2) {
+                doc.setFontType("italic");
+                doc.textEx(
+                  "Suma y sigue en página siguiente >>",
+                  sumaysiguederecha,
+                  inicio_cuadro + altura_cuadro - 0.5,
+                  "right",
+                  "bottom"
                 );
+                doc.textEx(
+                  this._common.currencyFormatES(importeparcial, false),
+                  18.8,
+                  inicio_cuadro + altura_cuadro - 0.5,
+                  "right",
+                  "bottom"
+                );
+
+                doc.addPage();
+
+                altura_texto = inicio_cuadro + 1.6;
+                doc.textEx(
+                  "<< Suma y sigue de página anterior",
+                  sumaysiguederecha,
+                  altura_texto,
+                  "right",
+                  "bottom"
+                );
+                doc.textEx(
+                  this._common.currencyFormatES(importeparcial, false),
+                  18.8,
+                  altura_texto,
+                  "right",
+                  "bottom"
+                );
+
+                doc.setFontType("normal");
+
+                altura_texto = altura_texto + 1;
+
+                doc.addImage(imgDataCompany, "JPEG", 2.3, 1, anchoimagen, 3.36);
+                this.pintarComunesPaginas(
+                  doc,
+                  margen_izq,
+                  margen_dch,
+                  inicio_cuadro,
+                  altura_cuadro,
+                  ancho_importes,
+                  borde_lineas
+                );
+                doc.setFontType("normal");
+                doc.setFontSize(9);
               }
-              //importeparcial += parseFloat(sub.budget.total.replace(".","").replace(",","."));
-              pintaunidades = false;
-            }
+
+              switch (dataCompany.id) {
+                case "410":
+                  if (pintaunidades)
+                    doc.textEx(
+                      sub.budget.amount,
+                      16.3,
+                      altura_texto + 0.06,
+                      "right",
+                      "bottom"
+                    );
+                  doc.text(margen_izq + 0.2, altura_texto, line);
+                  if (pintaunidades)
+                    doc.textEx(
+                      this._common.currencyFormatES(sub.budget.total, false),
+                      18.8,
+                      altura_texto + 0.06,
+                      "right",
+                      "bottom"
+                    );
+                  break;
+                case "411":
+                  doc.text(margen_izq + 0.2, altura_texto, line);
+                  if (pintaunidades)
+                    doc.textEx(
+                      this._common.currencyFormatES(sub.budget.total, false),
+                      18.8,
+                      altura_texto + 0.06,
+                      "right",
+                      "bottom"
+                    );
+                  break;
+                case "408":
+                default:
+                  if (pintaunidades)
+                    doc.textEx(
+                      sub.budget.amount,
+                      3.45,
+                      altura_texto + 0.06,
+                      "right",
+                      "bottom"
+                    );
+                  doc.text(margen_izq + 1.7, altura_texto, line);
+                  if (pintaunidades)
+                    doc.textEx(
+                      this._common.currencyFormatES(sub.budget.total, false),
+                      18.8,
+                      altura_texto + 0.06,
+                      "right",
+                      "bottom"
+                    );
+              }
+              altura_texto += 0.4;
+              if (pintaunidades) {
+                //quitar cuando tenga tiempo
+                if (typeof sub.budget.total == "number") {
+                  importeparcial += sub.budget.total;
+                } else {
+                  importeparcial += parseFloat(
+                    sub.budget.total
+                      .toString()
+                      .replace(".", "")
+                      .replace(",", ".")
+                  );
+                }
+                //importeparcial += parseFloat(sub.budget.total.replace(".","").replace(",","."));
+                pintaunidades = false;
+              }
+            });
+            //        }
+            altura_texto += 0.7;
           });
-          //        }
-          altura_texto += 0.7;
         });
-      });
 
-      //parte no homogeneizada: por cada empresa un if
+        //parte no homogeneizada: por cada empresa un if
 
-      if (dataCompany.id == 410) {
-        //cuadro principal
+        if (dataCompany.id == 410) {
+          //cuadro principal
 
-        //resumen factura y sus líneas verticales
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3,
-          margen_izq,
-          margen_dch,
-          0.6,
-          2
-        );
-        doc.line(
-          14.3,
-          inicio_cuadro + altura_cuadro + 0.3,
-          14.3,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
-        doc.line(
-          7.3,
-          inicio_cuadro + altura_cuadro + 0.3,
-          7.3,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
-        doc.line(
-          9.7,
-          inicio_cuadro + altura_cuadro + 0.3,
-          9.7,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
+          //resumen factura y sus líneas verticales
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3,
+            margen_izq,
+            margen_dch,
+            0.6,
+            2
+          );
+          doc.line(
+            14.3,
+            inicio_cuadro + altura_cuadro + 0.3,
+            14.3,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
+          doc.line(
+            7.3,
+            inicio_cuadro + altura_cuadro + 0.3,
+            7.3,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
+          doc.line(
+            9.7,
+            inicio_cuadro + altura_cuadro + 0.3,
+            9.7,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
 
-        //forma de pago
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3 + 2.5,
-          margen_izq,
-          margen_dch,
-          0.6,
-          2.6
-        );
+          //forma de pago
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3 + 2.5,
+            margen_izq,
+            margen_dch,
+            0.6,
+            2.6
+          );
 
-        doc.setFontType("normal");
+          doc.setFontType("normal");
 
-        //resumen factura
-        doc.setTextColor(255);
-        doc.text(3.6, inicio_cuadro + altura_cuadro + 0.7, "TOTAL BASE");
-        doc.text(7.6, inicio_cuadro + altura_cuadro + 0.7, "% I.V.A.");
-        doc.text(11, inicio_cuadro + altura_cuadro + 0.7, "CUOTA I.V.A.");
-        doc.text(15.4, inicio_cuadro + altura_cuadro + 0.7, "TOTAL FACTURA");
-        doc.setTextColor(0);
+          //resumen factura
+          doc.setTextColor(255);
+          doc.text(3.6, inicio_cuadro + altura_cuadro + 0.7, "TOTAL BASE");
+          doc.text(7.6, inicio_cuadro + altura_cuadro + 0.7, "% I.V.A.");
+          doc.text(11, inicio_cuadro + altura_cuadro + 0.7, "CUOTA I.V.A.");
+          doc.text(15.4, inicio_cuadro + altura_cuadro + 0.7, "TOTAL FACTURA");
+          doc.setTextColor(0);
 
-        let base = this.tax_base;
-        let tax = base * (parseFloat(this.selectedTax) / 100);
+          let base = this.tax_base;
+          let tax = base * (parseFloat(this.selectedTax) / 100);
 
-        doc.text(
-          4,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(base)
-        );
-        doc.text(
-          7.8,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(this.selectedTax, false) + "%"
-        );
-        doc.text(
-          11.5,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(tax)
-        );
-        doc.textEx(
-          this._common.currencyFormatES(this.total.budget_total),
-          17.8,
-          inicio_cuadro + altura_cuadro + 1.3,
-          "right",
-          "middle"
-        );
+          doc.text(
+            4,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(base)
+          );
+          doc.text(
+            7.8,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(this.selectedTax, false) + "%"
+          );
+          doc.text(
+            11.5,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(tax)
+          );
+          doc.textEx(
+            this._common.currencyFormatES(this.total.budget_total),
+            17.8,
+            inicio_cuadro + altura_cuadro + 1.3,
+            "right",
+            "middle"
+          );
 
-        //texto de la forma de pago
-        doc.setTextColor(255);
-        doc.setFontType("bold");
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 3.2,
-          "FORMA DE PAGO: Contado, Talón Bancario o Transferencia"
-        );
-        doc.setFontType("normal");
-        //doc.setFontType("italic");
+          //texto de la forma de pago
+          doc.setTextColor(255);
+          doc.setFontType("bold");
+          doc.text(
+            margen_izq + 0.2,
+            inicio_cuadro + altura_cuadro + 3.2,
+            "FORMA DE PAGO: Contado, Talón Bancario o Transferencia"
+          );
+          doc.setFontType("normal");
+          //doc.setFontType("italic");
 
-        doc.setTextColor(0);
+          doc.setTextColor(0);
 
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "Banco Popular:"
-        );
-        doc.text(
-          margen_izq + 2.8,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "0075-0125-49-0601693526"
-        );
-        doc.text(
-          margen_izq + 9.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "IBAN: ES38-0075-0125-4906-0169-3526"
-        );
+          doc.text(
+            margen_izq + 0.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "Banco Popular:"
+          );
+          doc.text(
+            margen_izq + 2.8,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "0075-0125-49-0601693526"
+          );
+          doc.text(
+            margen_izq + 9.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "IBAN: ES38-0075-0125-4906-0169-3526"
+          );
 
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 5.0,
-          "Caixabank:"
-        );
-        doc.text(
-          margen_izq + 2.8,
-          inicio_cuadro + altura_cuadro + 5.0,
-          "2100-1663-72-0200311635"
-        );
-        doc.text(
-          margen_izq + 9.2,
-          inicio_cuadro + altura_cuadro + 5.0,
-          "IBAN: ES83-2100-1663-7202-0031-1635"
-        );
-      } else if (dataCompany.id == 411) {
-        //resumen factura y sus líneas verticales
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3,
-          margen_izq,
-          margen_dch,
-          0.6,
-          2
-        );
+          doc.text(
+            margen_izq + 0.2,
+            inicio_cuadro + altura_cuadro + 5.0,
+            "Caixabank:"
+          );
+          doc.text(
+            margen_izq + 2.8,
+            inicio_cuadro + altura_cuadro + 5.0,
+            "2100-1663-72-0200311635"
+          );
+          doc.text(
+            margen_izq + 9.2,
+            inicio_cuadro + altura_cuadro + 5.0,
+            "IBAN: ES83-2100-1663-7202-0031-1635"
+          );
+        } else if (dataCompany.id == 411) {
+          //resumen factura y sus líneas verticales
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3,
+            margen_izq,
+            margen_dch,
+            0.6,
+            2
+          );
 
-        //resumen factura
-        doc.setTextColor(255);
-        doc.text(3.6, inicio_cuadro + altura_cuadro + 0.7, "TOTAL BASE");
-        doc.text(7.6, inicio_cuadro + altura_cuadro + 0.7, "% I.V.A.");
-        doc.text(11, inicio_cuadro + altura_cuadro + 0.7, "CUOTA I.V.A.");
-        doc.text(15.4, inicio_cuadro + altura_cuadro + 0.7, "TOTAL FACTURA");
-        doc.setTextColor(0);
+          //resumen factura
+          doc.setTextColor(255);
+          doc.text(3.6, inicio_cuadro + altura_cuadro + 0.7, "TOTAL BASE");
+          doc.text(7.6, inicio_cuadro + altura_cuadro + 0.7, "% I.V.A.");
+          doc.text(11, inicio_cuadro + altura_cuadro + 0.7, "CUOTA I.V.A.");
+          doc.text(15.4, inicio_cuadro + altura_cuadro + 0.7, "TOTAL FACTURA");
+          doc.setTextColor(0);
 
-        let base = this.tax_base;
-        let tax = base * (parseFloat(this.selectedTax) / 100);
+          let base = this.tax_base;
+          let tax = base * (parseFloat(this.selectedTax) / 100);
 
-        doc.text(
-          4,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(base)
-        );
-        doc.text(
-          7.8,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(this.selectedTax, false) + "%"
-        );
-        doc.text(
-          11.5,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(tax)
-        );
-        doc.textEx(
-          this._common.currencyFormatES(this.total.budget_total),
-          17.8,
-          inicio_cuadro + altura_cuadro + 1.3,
-          "right",
-          "middle"
-        );
+          doc.text(
+            4,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(base)
+          );
+          doc.text(
+            7.8,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(this.selectedTax, false) + "%"
+          );
+          doc.text(
+            11.5,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(tax)
+          );
+          doc.textEx(
+            this._common.currencyFormatES(this.total.budget_total),
+            17.8,
+            inicio_cuadro + altura_cuadro + 1.3,
+            "right",
+            "middle"
+          );
 
-        doc.setFontType("bold");
+          doc.setFontType("bold");
 
-        //forma de pago
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3 + 3.5,
-          margen_izq,
-          margen_dch,
-          0.6,
-          4.1
-        );
+          //forma de pago
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3 + 3.5,
+            margen_izq,
+            margen_dch,
+            0.6,
+            4.1
+          );
 
-        doc.setTextColor(255);
-        //texto de la forma de pago
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "Forma de pago:"
-        );
-        doc.setFontType("normal");
-        doc.text(
-          margen_izq + 3.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "Pago por transferencia"
-        );
-        doc.setFontType("italic");
-        doc.setTextColor(0);
+          doc.setTextColor(255);
+          //texto de la forma de pago
+          doc.text(
+            margen_izq + 0.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "Forma de pago:"
+          );
+          doc.setFontType("normal");
+          doc.text(
+            margen_izq + 3.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "Pago por transferencia"
+          );
+          doc.setFontType("italic");
+          doc.setTextColor(0);
 
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 5.2,
-          "Cheque o Transferencia:"
-        );
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 6.0,
-          "BANKINTER - IBAN ES47 0128 0064 3101 0005 7637"
-        );
-      } else {
-        //resumen factura y sus líneas verticales
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3,
-          margen_izq,
-          margen_dch,
-          0.6,
-          2
-        );
-        doc.line(
-          14.3,
-          inicio_cuadro + altura_cuadro + 0.3,
-          14.3,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
-        doc.line(
-          7.3,
-          inicio_cuadro + altura_cuadro + 0.3,
-          7.3,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
-        doc.line(
-          9.7,
-          inicio_cuadro + altura_cuadro + 0.3,
-          9.7,
-          inicio_cuadro + altura_cuadro + 2.3
-        );
-
-        //rectángulos inferiores de resumen factura
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 2.32,
-          4.7,
-          13.7,
-          0,
-          0.5
-        );
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 2.31,
-          11.2,
-          6.7,
-          0,
-          0.5
-        );
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 2.3,
-          16,
-          margen_dch,
-          0,
-          0.5
-        );
-
-        //resumen factura
-        doc.text(3.6, inicio_cuadro + altura_cuadro + 0.8, "TOTAL BASE");
-        doc.text(7.6, inicio_cuadro + altura_cuadro + 0.8, "% I.V.A.");
-        doc.text(11, inicio_cuadro + altura_cuadro + 0.8, "CUOTA I.V.A.");
-        doc.text(15.4, inicio_cuadro + altura_cuadro + 0.8, "TOTAL FACTURA");
-
-        let base = this.tax_base;
-        let tax = base * (parseFloat(this.selectedTax) / 100);
-
-        doc.text(
-          4,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(base)
-        );
-        doc.text(
-          7.8,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(this.selectedTax, false) + "%"
-        );
-        doc.text(
-          11.5,
-          inicio_cuadro + altura_cuadro + 1.5,
-          this._common.currencyFormatES(tax)
-        );
-        doc.textEx(
-          this._common.currencyFormatES(this.total.budget_total),
-          17.8,
-          inicio_cuadro + altura_cuadro + 1.3,
-          "right",
-          "middle"
-        );
-
-        doc.setFontType("bold");
-        doc.text(2.2, inicio_cuadro + altura_cuadro + 2.7, "TOTAL BASE");
-        doc.text(9.1, inicio_cuadro + altura_cuadro + 2.7, "TOTAL IVA");
-        doc.text(14.5, inicio_cuadro + altura_cuadro + 2.7, "TOTAL");
-
-        //inferior resumen factura
-        doc.textEx(
-          this._common.currencyFormatES(base),
-          7,
-          inicio_cuadro + altura_cuadro + 2.56,
-          "right",
-          "middle"
-        );
-        doc.textEx(
-          this._common.currencyFormatES(tax),
-          14,
-          inicio_cuadro + altura_cuadro + 2.56,
-          "right",
-          "middle"
-        );
-        doc.textEx(
-          this._common.currencyFormatES(this.total.budget_total),
-          18.7,
-          inicio_cuadro + altura_cuadro + 2.56,
-          "right",
-          "middle"
-        );
-
-        //forma de pago
-        this.pintarRectanguloFactura(
-          doc,
-          inicio_cuadro + altura_cuadro + 0.3 + 3.5,
-          margen_izq,
-          margen_dch,
-          0.6,
-          4.1
-        );
-
-        //texto de la forma de pago
-        doc.text(
-          margen_izq + 0.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "Forma de pago:"
-        );
-        doc.setFontType("normal");
-        doc.text(
-          margen_izq + 3.2,
-          inicio_cuadro + altura_cuadro + 4.2,
-          "Pago por transferencia"
-        );
-        doc.setFontType("italic");
-
-        if (dataCompany.id == 408) {
           doc.text(
             margen_izq + 0.2,
             inicio_cuadro + altura_cuadro + 5.2,
@@ -2188,36 +2044,189 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
           doc.text(
             margen_izq + 0.2,
             inicio_cuadro + altura_cuadro + 6.0,
-            "CAIXABANK - IBAN ES12 2100 3780 5122 0004 3857"
+            "BANKINTER - IBAN ES47 0128 0064 3101 0005 7637"
           );
-          /*         doc.text(margen_izq+0.2, inicio_cuadro+altura_cuadro+6.8, "OPEN BANK - IBAN ES06 0073 0100 5104 3611 1140");
+        } else {
+          //resumen factura y sus líneas verticales
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3,
+            margen_izq,
+            margen_dch,
+            0.6,
+            2
+          );
+          doc.line(
+            14.3,
+            inicio_cuadro + altura_cuadro + 0.3,
+            14.3,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
+          doc.line(
+            7.3,
+            inicio_cuadro + altura_cuadro + 0.3,
+            7.3,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
+          doc.line(
+            9.7,
+            inicio_cuadro + altura_cuadro + 0.3,
+            9.7,
+            inicio_cuadro + altura_cuadro + 2.3
+          );
+
+          //rectángulos inferiores de resumen factura
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 2.32,
+            4.7,
+            13.7,
+            0,
+            0.5
+          );
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 2.31,
+            11.2,
+            6.7,
+            0,
+            0.5
+          );
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 2.3,
+            16,
+            margen_dch,
+            0,
+            0.5
+          );
+
+          //resumen factura
+          doc.text(3.6, inicio_cuadro + altura_cuadro + 0.8, "TOTAL BASE");
+          doc.text(7.6, inicio_cuadro + altura_cuadro + 0.8, "% I.V.A.");
+          doc.text(11, inicio_cuadro + altura_cuadro + 0.8, "CUOTA I.V.A.");
+          doc.text(15.4, inicio_cuadro + altura_cuadro + 0.8, "TOTAL FACTURA");
+
+          let base = this.tax_base;
+          let tax = base * (parseFloat(this.selectedTax) / 100);
+
+          doc.text(
+            4,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(base)
+          );
+          doc.text(
+            7.8,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(this.selectedTax, false) + "%"
+          );
+          doc.text(
+            11.5,
+            inicio_cuadro + altura_cuadro + 1.5,
+            this._common.currencyFormatES(tax)
+          );
+          doc.textEx(
+            this._common.currencyFormatES(this.total.budget_total),
+            17.8,
+            inicio_cuadro + altura_cuadro + 1.3,
+            "right",
+            "middle"
+          );
+
+          doc.setFontType("bold");
+          doc.text(2.2, inicio_cuadro + altura_cuadro + 2.7, "TOTAL BASE");
+          doc.text(9.1, inicio_cuadro + altura_cuadro + 2.7, "TOTAL IVA");
+          doc.text(14.5, inicio_cuadro + altura_cuadro + 2.7, "TOTAL");
+
+          //inferior resumen factura
+          doc.textEx(
+            this._common.currencyFormatES(base),
+            7,
+            inicio_cuadro + altura_cuadro + 2.56,
+            "right",
+            "middle"
+          );
+          doc.textEx(
+            this._common.currencyFormatES(tax),
+            14,
+            inicio_cuadro + altura_cuadro + 2.56,
+            "right",
+            "middle"
+          );
+          doc.textEx(
+            this._common.currencyFormatES(this.total.budget_total),
+            18.7,
+            inicio_cuadro + altura_cuadro + 2.56,
+            "right",
+            "middle"
+          );
+
+          //forma de pago
+          this.pintarRectanguloFactura(
+            doc,
+            inicio_cuadro + altura_cuadro + 0.3 + 3.5,
+            margen_izq,
+            margen_dch,
+            0.6,
+            4.1
+          );
+
+          //texto de la forma de pago
+          doc.text(
+            margen_izq + 0.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "Forma de pago:"
+          );
+          doc.setFontType("normal");
+          doc.text(
+            margen_izq + 3.2,
+            inicio_cuadro + altura_cuadro + 4.2,
+            "Pago por transferencia"
+          );
+          doc.setFontType("italic");
+
+          if (dataCompany.id == 408) {
+            doc.text(
+              margen_izq + 0.2,
+              inicio_cuadro + altura_cuadro + 5.2,
+              "Cheque o Transferencia:"
+            );
+            doc.text(
+              margen_izq + 0.2,
+              inicio_cuadro + altura_cuadro + 6.0,
+              "CAIXABANK - IBAN ES12 2100 3780 5122 0004 3857"
+            );
+            /*         doc.text(margen_izq+0.2, inicio_cuadro+altura_cuadro+6.8, "OPEN BANK - IBAN ES06 0073 0100 5104 3611 1140");
         doc.text(margen_izq+0.2, inicio_cuadro+altura_cuadro+7.6, "BANKINTER - IBAN ES79 0128 0064 33 0500005423"); */
-        } else if (dataCompany.id == 413) {
-          doc.text(
-            margen_izq + 0.2,
-            inicio_cuadro + altura_cuadro + 5.2,
-            "Términos de pago: Pago por transferencia 30 días fecha factura"
-          );
-          doc.text(
-            margen_izq + 0.2,
-            inicio_cuadro + altura_cuadro + 6.0,
-            "Cuenta Banco de Santander GOBERCOMPLIANCE S.L."
-          );
-          doc.text(
-            margen_izq + 0.2,
-            inicio_cuadro + altura_cuadro + 6.8,
-            "IBAN ES24 0049 6208 5829 1605 7470"
-          );
+          } else if (dataCompany.id == 413) {
+            doc.text(
+              margen_izq + 0.2,
+              inicio_cuadro + altura_cuadro + 5.2,
+              "Términos de pago: Pago por transferencia 30 días fecha factura"
+            );
+            doc.text(
+              margen_izq + 0.2,
+              inicio_cuadro + altura_cuadro + 6.0,
+              "Cuenta Banco de Santander GOBERCOMPLIANCE S.L."
+            );
+            doc.text(
+              margen_izq + 0.2,
+              inicio_cuadro + altura_cuadro + 6.8,
+              "IBAN ES24 0049 6208 5829 1605 7470"
+            );
+          }
         }
-      }
 
-      if (dataCompany.rgpd) {
-        doc.setFontSize(7);
-        doc.text(2, 27.7, dataCompany.rgpd);
-      }
+        if (dataCompany.rgpd) {
+          doc.setFontSize(7);
+          doc.text(2, 27.7, dataCompany.rgpd);
+        }
 
-      doc.save(`factura-${String(this.infoBilling.number).trim()}.pdf`);
-      this._notification.success("Exportación", "Se ha creado el archivo PDF.");
-    }); // fin de la imagen
+        doc.save(`factura-${String(this.infoBilling.number).trim()}.pdf`);
+        this._notification.success(
+          "Exportación",
+          "Se ha creado el archivo PDF."
+        );
+      }); // fin de la imagen
   }
 }

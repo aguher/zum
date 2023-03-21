@@ -34,10 +34,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -55,10 +55,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -78,10 +78,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -104,10 +104,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -125,10 +125,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -151,10 +151,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -173,10 +173,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -184,10 +184,12 @@ export class ApiService {
       let token = localStorage.getItem("token");
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_company_year=${dataSelected.year}`;
-      queryString += `&anyo=${anyo}`; 
+      queryString += `&anyo=${anyo}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getCompanyReportNew + queryString)
+        .get(
+          this._config.Server + this._config.getCompanyReportNew + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -196,10 +198,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -220,10 +222,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -242,10 +244,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -254,11 +256,7 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
 
       return this.http
-        .get(
-          this._config.Server +
-            this._config.isAutoNumbered +
-            queryString
-        )
+        .get(this._config.Server + this._config.isAutoNumbered + queryString)
         .map((response: Response) => response.json());
     }
   }
@@ -266,10 +264,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -292,10 +290,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -315,10 +313,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -341,10 +339,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -354,11 +352,7 @@ export class ApiService {
       queryString += `&token=${token}`;
       queryString += `&${body}`;
       return this.http
-        .get(
-          this._config.Server +
-            this._config.getCodesStandards +
-            queryString
-        )
+        .get(this._config.Server + this._config.getCodesStandards + queryString)
         .map((response: Response) => response.json());
     }
   }
@@ -367,10 +361,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -391,10 +385,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -415,10 +409,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -440,10 +434,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -463,10 +457,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -484,10 +478,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -507,10 +501,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -527,10 +521,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -553,10 +547,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -581,10 +575,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -602,14 +596,14 @@ export class ApiService {
         .map((response: Response) => response.json());
     }
   }
-  updateInfoBudget(field,  value, valueId) {
+  updateInfoBudget(field, value, valueId) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -633,10 +627,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -674,10 +668,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -700,10 +694,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -727,10 +721,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -749,10 +743,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -775,10 +769,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -800,10 +794,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -827,10 +821,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -854,10 +848,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -880,10 +874,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -902,10 +896,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -929,10 +923,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -952,10 +946,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -977,10 +971,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -999,10 +993,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1012,7 +1006,9 @@ export class ApiService {
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getDataCombosStorage + queryString)
+        .get(
+          this._config.Server + this._config.getDataCombosStorage + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1061,10 +1057,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1082,10 +1078,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1103,10 +1099,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1115,7 +1111,7 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&start_date=${start_date.date.year}-${start_date.date.month}-${start_date.date.day}`;
-      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`; 
+      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;
       queryString += `&token=${token}`;
       return this.http
         .get(this._config.Server + this._config.getCampaigns + queryString)
@@ -1127,17 +1123,17 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
     } else {
       let token = localStorage.getItem("token");
       let queryString = `&id_company=${dataSelected.company}`;
-      queryString += `&id_fiscal_year=${dataSelected.year}`;    
+      queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
         .get(this._config.Server + this._config.getCountries + queryString)
@@ -1149,10 +1145,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1160,10 +1156,12 @@ export class ApiService {
       let token = localStorage.getItem("token");
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_fiscal_year=${dataSelected.year}`;
-      queryString += `&id_customer=${idCustomer}`;      
+      queryString += `&id_customer=${idCustomer}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getCustomerAddresses + queryString)
+        .get(
+          this._config.Server + this._config.getCustomerAddresses + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1172,10 +1170,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1185,7 +1183,9 @@ export class ApiService {
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getStadisticsBilling + queryString)
+        .get(
+          this._config.Server + this._config.getStadisticsBilling + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1194,10 +1194,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1208,7 +1208,11 @@ export class ApiService {
       queryString += `&estado=${filtroestado}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getStadisticsCampaigns + queryString)
+        .get(
+          this._config.Server +
+            this._config.getStadisticsCampaigns +
+            queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1217,10 +1221,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1230,7 +1234,11 @@ export class ApiService {
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getExportationsBilling + queryString)
+        .get(
+          this._config.Server +
+            this._config.getExportationsBilling +
+            queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1239,10 +1247,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1252,7 +1260,11 @@ export class ApiService {
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getExportationsExpenses + queryString)
+        .get(
+          this._config.Server +
+            this._config.getExportationsExpenses +
+            queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1261,10 +1273,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1273,19 +1285,21 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getArticlesLocation + queryString)
+        .get(
+          this._config.Server + this._config.getArticlesLocation + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
 
-  getArticlesMovement(start_date,end_date) {
+  getArticlesMovement(start_date, end_date) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1294,10 +1308,12 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&start_date=${start_date.date.year}-${start_date.date.month}-${start_date.date.day}`;
-      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;      
+      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getArticlesMovement + queryString)
+        .get(
+          this._config.Server + this._config.getArticlesMovement + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1306,17 +1322,17 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
     } else {
       let token = localStorage.getItem("token");
       let queryString = `&id_company=${dataSelected.company}`;
-      queryString += `&id_fiscal_year=${dataSelected.year}`;    
+      queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
         .get(this._config.Server + this._config.getArticlesStock + queryString)
@@ -1328,32 +1344,34 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
     } else {
       let token = localStorage.getItem("token");
       let queryString = `&id_company=${dataSelected.company}`;
-      queryString += `&id_fiscal_year=${dataSelected.year}`;    
+      queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getArticlesNewStock + queryString)
+        .get(
+          this._config.Server + this._config.getArticlesNewStock + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
 
-  getBills(start_date,end_date) {
+  getBills(start_date, end_date) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1362,7 +1380,7 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&start_date=${start_date.date.year}-${start_date.date.month}-${start_date.date.day}`;
-      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;      
+      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;
       queryString += `&token=${token}`;
       return this.http
         .get(this._config.Server + this._config.getBills + queryString)
@@ -1370,14 +1388,14 @@ export class ApiService {
     }
   }
 
-  getBills4Exportation(start_date,end_date) {
+  getBills4Exportation(start_date, end_date) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1386,10 +1404,12 @@ export class ApiService {
       let queryString = `&id_company=${dataSelected.company}`;
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&start_date=${start_date.date.year}-${start_date.date.month}-${start_date.date.day}`;
-      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;      
+      queryString += `&end_date=${end_date.date.year}-${end_date.date.month}-${end_date.date.day}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getBills4Exportation + queryString)
+        .get(
+          this._config.Server + this._config.getBills4Exportation + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1398,10 +1418,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1420,10 +1440,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1433,46 +1453,50 @@ export class ApiService {
       queryString += `&id_fiscal_year=${dataSelected.year}`;
       queryString += `&token=${token}`;
       return this.http
-        .get(this._config.Server + this._config.getExpenses4Exportation + queryString)
+        .get(
+          this._config.Server +
+            this._config.getExpenses4Exportation +
+            queryString
+        )
         .map((response: Response) => response.json());
     }
   }
 
   createExportationBilling(fechafin) {
-      let dataSelected = this._common.getIdCompanyYearSelected();
-      if (!dataSelected) {
-        let data: Observable<any>;
-        data = new Observable(observer => {
-          observer.next({
-            status: "error",
-            msg: "Debes seleccionar una empresa desde el menu de selección."
-          });
+    let dataSelected = this._common.getIdCompanyYearSelected();
+    if (!dataSelected) {
+      let data: Observable<any>;
+      data = new Observable((observer) => {
+        observer.next({
+          status: "error",
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
-        return data;
-      } else {
-        let token = localStorage.getItem("token");
-        let queryString = `&id_company=${dataSelected.company}`;
-        queryString += `&id_fiscal_year=${dataSelected.year}`;
-        queryString += `&fechafin=${fechafin}`;
-        queryString += `&token=${token}`;
-        return this.http
-          .post(
-            this._config.Server + this._config.createExportationBilling,
-            this.addToken(queryString),
-            this.jwt()
-          )
-          .map((response: Response) => response.json());
-      }      
+      });
+      return data;
+    } else {
+      let token = localStorage.getItem("token");
+      let queryString = `&id_company=${dataSelected.company}`;
+      queryString += `&id_fiscal_year=${dataSelected.year}`;
+      queryString += `&fechafin=${fechafin}`;
+      queryString += `&token=${token}`;
+      return this.http
+        .post(
+          this._config.Server + this._config.createExportationBilling,
+          this.addToken(queryString),
+          this.jwt()
+        )
+        .map((response: Response) => response.json());
+    }
   }
 
   createExportationExpenses(fechafin) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1489,17 +1513,17 @@ export class ApiService {
           this.jwt()
         )
         .map((response: Response) => response.json());
-    }      
-}
+    }
+  }
 
   createBill(id_project: string) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1523,10 +1547,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1546,14 +1570,14 @@ export class ApiService {
     }
   }
 
-  tramitarpedido(tramitedeseado: string, idcampaign: string ) {
+  tramitarpedido(tramitedeseado: string, idcampaign: string) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1578,10 +1602,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1603,10 +1627,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1627,10 +1651,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1649,22 +1673,22 @@ export class ApiService {
 
   deleteStorage(body) {
     return this.http
-    .put(
-      this._config.Server + this._config.deleteStorage,
-      this.addToken(body),
-      this.jwt()
-    )
-    .map((response: Response) => response.json());
+      .put(
+        this._config.Server + this._config.deleteStorage,
+        this.addToken(body),
+        this.jwt()
+      )
+      .map((response: Response) => response.json());
   }
 
   exitStorage(body) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1685,10 +1709,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1709,10 +1733,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1733,10 +1757,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1757,10 +1781,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1781,10 +1805,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1805,10 +1829,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1829,10 +1853,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1873,13 +1897,19 @@ export class ApiService {
 
   deleteExportationBilling(id: number) {
     return this.http
-      .delete(this._config.Server + this._config.deleteExportationBilling, this.jwt(id))
+      .delete(
+        this._config.Server + this._config.deleteExportationBilling,
+        this.jwt(id)
+      )
       .map((response: Response) => response.json());
   }
 
   deleteExportationExpenses(id: number) {
     return this.http
-      .delete(this._config.Server + this._config.deleteExportationExpenses, this.jwt(id))
+      .delete(
+        this._config.Server + this._config.deleteExportationExpenses,
+        this.jwt(id)
+      )
       .map((response: Response) => response.json());
   }
   deleteTax(valueTax) {
@@ -1892,10 +1922,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1916,10 +1946,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1930,7 +1960,9 @@ export class ApiService {
       queryString += `&token=${token}`;
       queryString += `&type=${type}`;
       return this.http
-        .get(this._config.Server + this._config.getExpensesVariable + queryString)
+        .get(
+          this._config.Server + this._config.getExpensesVariable + queryString
+        )
         .map((response: Response) => response.json());
     }
   }
@@ -1940,10 +1972,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1963,10 +1995,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -1987,10 +2019,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2011,10 +2043,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2045,40 +2077,40 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
-  cobrarBill(id: number,numero:number,fecha_cobro:any) {
-      let dataSelected = this._common.getIdCompanyYearSelected();
-      if (!dataSelected) {
-        let data: Observable<any>;
-        data = new Observable(observer => {
-          observer.next({
-            status: "error",
-            msg: "Debes seleccionar una empresa desde el menu de selección."
-          });
+  cobrarBill(id: number, numero: number, fecha_cobro: any) {
+    let dataSelected = this._common.getIdCompanyYearSelected();
+    if (!dataSelected) {
+      let data: Observable<any>;
+      data = new Observable((observer) => {
+        observer.next({
+          status: "error",
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
-        return data;
-      } else {
-        let body = `id_company=${dataSelected.company}`;
-        body += `&id=${id}`;
-        body += `&numero=${numero}`;  
-        body += `&fecha_cobro=${fecha_cobro.date.year}-${fecha_cobro.date.month}-${fecha_cobro.date.day}`;
-        return this.http
-          .put(
-            this._config.Server + this._config.cobrarBill,
-            this.addToken(body),
-            this.jwt()
-          )
-          .map((response: Response) => response.json());
-      }
+      });
+      return data;
+    } else {
+      let body = `id_company=${dataSelected.company}`;
+      body += `&id=${id}`;
+      body += `&numero=${numero}`;
+      body += `&fecha_cobro=${fecha_cobro.date.year}-${fecha_cobro.date.month}-${fecha_cobro.date.day}`;
+      return this.http
+        .put(
+          this._config.Server + this._config.cobrarBill,
+          this.addToken(body),
+          this.jwt()
+        )
+        .map((response: Response) => response.json());
+    }
   }
 
   updateSubconceptStandard(body) {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2095,7 +2127,6 @@ export class ApiService {
     }
   }
   updateSubconceptBilling(id, type, value, parsedPrice, idBill) {
-
     let token = localStorage.getItem("token");
     let queryString = `id=${id}`;
     queryString += `&field=${type}`;
@@ -2106,7 +2137,7 @@ export class ApiService {
     }
     let body = queryString;
 
-    body = body; 
+    body = body;
     return this.http
       .put(
         this._config.Server + this._config.updateSubconceptBilling,
@@ -2116,7 +2147,15 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
-  updateSubconcept(id, type, value, parsedPrice, parsedDescription, parsedCode) {
+  updateSubconcept(
+    id,
+    type,
+    value,
+    parsedPrice,
+    parsedDescription,
+    parsedCode,
+    idCompany
+  ) {
     let token = localStorage.getItem("token");
     let queryString = `id=${id}`;
     queryString += `&field=${type}`;
@@ -2126,9 +2165,12 @@ export class ApiService {
     }
     if (parsedDescription) {
       queryString += `&name=${encodeURIComponent(parsedDescription)}`;
-    }    
-    if (parsedCode){
+    }
+    if (parsedCode) {
       queryString += `&code=${encodeURIComponent(parsedCode)}`;
+    }
+    if (idCompany) {
+      queryString += `&id_company=${idCompany}`;
     }
     let body = queryString;
     return this.http
@@ -2140,7 +2182,7 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
-  updateObservations(observ_cli, observ_int, id){
+  updateObservations(observ_cli, observ_int, id) {
     let token = localStorage.getItem("token");
     let queryString = `id=${id}`;
     queryString += `&observ_cli=${observ_cli}`;
@@ -2155,7 +2197,6 @@ export class ApiService {
       )
       .map((response: Response) => response.json());
   }
-
 
   removeSubconcept(id: string) {
     let body = `id=${id}`;
@@ -2200,7 +2241,7 @@ export class ApiService {
   }
 
   addAddress(body: string) {
-      return this.http
+    return this.http
       .post(
         this._config.Server + this._config.addAddressCustomer,
         this.addToken(body),
@@ -2211,13 +2252,13 @@ export class ApiService {
 
   updateAddress(body: string) {
     return this.http
-    .post(
-      this._config.Server + this._config.updateAddressCustomer,
-      this.addToken(body),
-      this.jwt()
-    )
-    .map((response: Response) => response.json());
-}
+      .post(
+        this._config.Server + this._config.updateAddressCustomer,
+        this.addToken(body),
+        this.jwt()
+      )
+      .map((response: Response) => response.json());
+  }
 
   addSubconcept(valueId: string, idVariableConcept: string) {
     let body = `${valueId}&id_variable_concept=${idVariableConcept}`;
@@ -2234,10 +2275,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2256,10 +2297,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2279,10 +2320,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2306,10 +2347,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2330,10 +2371,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2362,10 +2403,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2397,10 +2438,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2418,10 +2459,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2448,10 +2489,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2492,10 +2533,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2513,10 +2554,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2542,10 +2583,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2567,10 +2608,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2596,23 +2637,30 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
     } else {
       body += `&id_company=${idCompany}`;
       return this.http
-        .put(this._config.Server + this._config.updateCustomerPrice, body, this.jwt())
+        .put(
+          this._config.Server + this._config.updateCustomerPrice,
+          body,
+          this.jwt()
+        )
         .map((response: Response) => response.json());
     }
   }
   deletecustomerPrice(id: number) {
     return this.http
-      .post(this._config.Server + this._config.deleteCustomerPrice, this.jwt(id))
+      .post(
+        this._config.Server + this._config.deleteCustomerPrice,
+        this.jwt(id)
+      )
       .map((response: Response) => response.json());
   }
 
@@ -2621,10 +2669,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2643,10 +2691,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2668,10 +2716,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2697,10 +2745,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2722,10 +2770,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2747,10 +2795,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2776,10 +2824,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2801,10 +2849,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2841,10 +2889,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2896,19 +2944,17 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
     } else {
       let token = localStorage.getItem("token");
 
-      body += `&id_company=${dataSelected.company}&id_fiscal_year=${
-        dataSelected.year
-      }`;
+      body += `&id_company=${dataSelected.company}&id_fiscal_year=${dataSelected.year}`;
       body += `&token=${token}`;
       return this.http
         .put(
@@ -2923,10 +2969,10 @@ export class ApiService {
     let dataSelected = this._common.getIdCompanyYearSelected();
     if (!dataSelected) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa/año desde el menu de selección."
+          msg: "Debes seleccionar una empresa/año desde el menu de selección.",
         });
       });
       return data;
@@ -2944,10 +2990,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2967,10 +3013,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -2986,10 +3032,10 @@ export class ApiService {
     let idCompany = this._common.getIdCompanySelected();
     if (!idCompany) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -3009,10 +3055,10 @@ export class ApiService {
     let idFiscalYear = this._common.getIdCompanyYearSelected();
     if (!idFiscalYear) {
       let data: Observable<any>;
-      data = new Observable(observer => {
+      data = new Observable((observer) => {
         observer.next({
           status: "error",
-          msg: "Debes seleccionar una empresa desde el menu de selección."
+          msg: "Debes seleccionar una empresa desde el menu de selección.",
         });
       });
       return data;
@@ -3101,7 +3147,7 @@ export class ApiService {
   private jwt(id?) {
     // create authorization header with jwt token
     let headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     });
     let token = localStorage.getItem("token");
     let body = "";
@@ -3110,7 +3156,7 @@ export class ApiService {
         body = "id=" + id + "&token=" + token;
       }
       let headers = new Headers({
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
       });
       if (body !== "") {
         return new RequestOptions({ headers: headers, body: body });
@@ -3123,7 +3169,7 @@ export class ApiService {
   private addBodyHeader(id?) {
     // create authorization header with jwt token
     let headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     });
     let token = localStorage.getItem("token");
     let body = "";
@@ -3132,7 +3178,7 @@ export class ApiService {
         body = id + "&token=" + token;
       }
       let headers = new Headers({
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
       });
       if (body !== "") {
         return new RequestOptions({ headers: headers, body: body });

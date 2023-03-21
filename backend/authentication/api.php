@@ -5771,6 +5771,7 @@ class Api extends Rest {
 		if (isset($this->datosPeticion['id'],$this->datosPeticion['field'], $this->datosPeticion['value'])) {
 
 			$id = (int) $this->datosPeticion['id'];
+			$idCompany = $this->datosPeticion['id_company'];
 			$field = $this->datosPeticion['field'];
 			$price = $this->datosPeticion['price'];
 			$name = html_entity_decode($this->datosPeticion['name']);
@@ -5832,14 +5833,25 @@ class Api extends Rest {
 							$query->execute();
 
 							//compruebo que tengo disponibles en el almacén
-							$query = $this->_conn->prepare("select tt_articles_families.familyname as family, tt_subconcepts_standards.id_family, tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
+							$queryWithFamilies = "select tt_articles_families.familyname as family, tt_subconcepts_standards.id_family, tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
 							from tt_subconcepts_project, tt_subconcepts_standards
 							INNER JOIN tt_articles_families ON tt_subconcepts_standards.id_family = tt_articles_families.id
 							where tt_subconcepts_project.id = ".$id."
-							and tt_subconcepts_project.code = tt_subconcepts_standards.code");
+							and tt_subconcepts_project.code = tt_subconcepts_standards.code";
+							$queryWithoutFamilies = "select tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
+							from tt_subconcepts_project, tt_subconcepts_standards
+							where tt_subconcepts_project.id = ".$id."
+							and tt_subconcepts_project.code = tt_subconcepts_standards.code";
+							if($idCompany == "416") {
+								$query = $this->_conn->prepare($queryWithFamilies);
+							} else {
+								$query = $this->_conn->prepare($queryWithoutFamilies);
+
+							}
 
 							$query->execute();
 							$filas = $query->fetch(PDO::FETCH_ASSOC);
+
 
 							if (isset($filas['id'])){
 
@@ -5864,9 +5876,16 @@ class Api extends Rest {
 						}
 
 					}
+					if($idCompany == "416") {
+						$description = $filas['family'].'-'.$filas['description'];
 
+					}else {
+						$description = $filas['description'];
 
-					$resp = array('status' => "ok", "msg" => "Subconcepto actualizado correctamente.", "solicitadas" => $stock['solicitadas'], "disponibles" => $stock['disponibles'], "pedidasaqui" => $stock['pedidasaqui'], "descripcion" =>$filas['family'].'-'.$filas['description'], "bstockable" => $filas['bstockable']);
+					}
+					
+
+					$resp = array('status' => "ok", "msg" => "Subconcepto actualizado correctamente.", "solicitadas" => $stock['solicitadas'], "disponibles" => $stock['disponibles'], "pedidasaqui" => $stock['pedidasaqui'], "descripcion" =>$description, "bstockable" => $filas['bstockable']);
 					$this->mostrarRespuesta($resp, 200);
 				}
 			}

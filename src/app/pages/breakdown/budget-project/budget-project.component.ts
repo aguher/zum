@@ -373,7 +373,11 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     this._api.getSubconceptsStandards(body).subscribe((response) => {
       let array_values = [];
       response.data.forEach((element) => {
-        array_values.push(element.family + "-" + element.name);
+        if (this.id_company === "416") {
+          array_values.push(element.family + "-" + element.name);
+        } else {
+          array_values.push(element.name);
+        }
       });
 
       this.subconcepts_standard = array_values;
@@ -617,8 +621,11 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
         price = "";
         description = "";
         code = this.originalCodesStandard.filter((element) => {
-          const parsedItem =
-            value.split("-").length > 1 ? value.split("-")[1] : value;
+          let parsedItem = value;
+          if (this.id_company === "416") {
+            parsedItem =
+              value.split("-").length > 1 ? value.split("-")[1] : value;
+          }
           return element.description === parsedItem;
         });
       } else {
@@ -676,16 +683,22 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
             parsed,
             parsedPrice,
             parsedDescription,
-            parsedCode
+            parsedCode,
+            this.id_company
           )
           .subscribe((response) => {
             if (response.status == "ok") {
-              if (field === "name") {
-                subconcept[field] = response["descripcion"];
+              if (this.id_company === "416") {
+                if (field === "name") {
+                  subconcept[field] = response["descripcion"];
+                } else {
+                  subconcept[field] = value;
+                }
+                console.log(subconcept[field]);
               } else {
                 subconcept[field] = value;
               }
-              console.log(subconcept[field]);
+
               subconcept["name"] = parsedDescription
                 ? parsedDescription
                 : subconcept["name"];
