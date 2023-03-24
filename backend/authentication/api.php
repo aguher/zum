@@ -137,7 +137,7 @@ class Api extends Rest {
 						 $respuesta['company']['address'] = $fila['address'];
 						 $respuesta['company']['address_bis'] = $fila['address_bis'];
 						 $respuesta['company']['cif'] = $fila['cif'];
-						// $respuesta['company']['phone'] = $fila['phone'];
+						 $respuesta['company']['phone'] = $fila['phone'];
 						 $respuesta['company']['credits'] = $fila['credits'];	
 						 $respuesta['company']['rgpd'] = $fila['rgpd'];						 						 
 						 $respuesta['company']['logo'] = $fila['logo'];

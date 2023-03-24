@@ -13,116 +13,116 @@ export class Common {
 
   getDateParsed(date) {
     let arrayDate = date.split("-");
-    arrayDate = _.map(arrayDate, function(element) {
+    arrayDate = _.map(arrayDate, function (element) {
       return parseInt(element);
     });
 
     return arrayDate;
   }
 
-  getFecha(fecha:Date){
-    let d= fecha;
+  getFecha(fecha: Date) {
+    let d = fecha;
     let month = String(d.getMonth() + 1);
     let day = String(d.getDate());
     const year = String(d.getFullYear());
-  
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-  
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
     return `${day}/${month}/${year}`;
   }
 
-  getNumber(Numero:string):number{
-    if (Numero){
-      return parseFloat(Numero.replace(".","").replace(".","").replace(",","."));
-    }else{
+  getNumber(Numero: string): number {
+    if (Numero) {
+      return parseFloat(
+        Numero.replace(".", "").replace(".", "").replace(",", ".")
+      );
+    } else {
       return 0;
     }
-
   }
 
-  getDecimals(Numero, Decimales, SepararMiles=true):string {
-
+  getDecimals(Numero, Decimales, SepararMiles = true): string {
     //    //Ver redondeo del último decimal
     //    pot = Math.pow(10,Decimales + 1);
     //    ultimodc = parseInt(numero * pot);
 
     let pot = Math.pow(10, Decimales);
     let num = parseInt(Math.round(Numero * pot).toString()) / pot;
-    let nume = num.toString().split('.');
+    let nume = num.toString().split(".");
 
     let entero = nume[0];
     let decima = nume[1];
     let fin;
 
     if (decima != undefined) {
-        fin = Decimales - decima.length;
-    }
-    else {
-        decima = '';
-        fin = Decimales;
+      fin = Decimales - decima.length;
+    } else {
+      decima = "";
+      fin = Decimales;
     }
 
-    for (let i = 0; i < fin; i++)
-        decima += String.fromCharCode(48);
+    for (let i = 0; i < fin; i++) decima += String.fromCharCode(48);
 
     //poner los puntos cada tres decimales
 
-    let miles = entero
-    let residuo = '';
+    let miles = entero;
+    let residuo = "";
 
     if (miles.length > 3) {
-        entero = '';
+      entero = "";
 
-        while (miles.length > 3) {
-            if (SepararMiles == true && !(miles.length == 4 && miles.indexOf('-')!=-1)) {
-                residuo = '.' + miles.substring(miles.length - 3) + residuo;
-            }
-            else {
-                residuo = miles.substring(miles.length - 3) + residuo;
-            }
-            miles = miles.substring(0, miles.length - 3);
-            entero = miles + residuo;
+      while (miles.length > 3) {
+        if (
+          SepararMiles == true &&
+          !(miles.length == 4 && miles.indexOf("-") != -1)
+        ) {
+          residuo = "." + miles.substring(miles.length - 3) + residuo;
+        } else {
+          residuo = miles.substring(miles.length - 3) + residuo;
         }
+        miles = miles.substring(0, miles.length - 3);
+        entero = miles + residuo;
+      }
     }
-    let devolver:string;
+    let devolver: string;
     if (Decimales > 0) {
-        devolver = entero + ',' + decima;
+      devolver = entero + "," + decima;
     } else {
-        devolver = entero;
+      devolver = entero;
     }
-    return devolver.replace('NaN','0');
-}
+    return devolver.replace("NaN", "0");
+  }
 
-  getCleanedString(cadena){
+  getCleanedString(cadena) {
     // Definimos los caracteres que queremos eliminar
     //comentado por no ser necesario y porque tarda la vida
-/*     var specialChars = "!@#$^&%*()+=-[]\/{}|:<>?,.";
+    /*     var specialChars = "!@#$^&%*()+=-[]\/{}|:<>?,.";
  
     // Los eliminamos todos
     for (var i = 0; i < specialChars.length; i++) {
         cadena= cadena.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
     }    */
- 
+
     // Lo queremos devolver limpio en minusculas
-    if (cadena == null){
+    if (cadena == null) {
       return "";
-    }else {
-    cadena = cadena.toLowerCase();
- 
-    // Quitamos espacios y los sustituimos por _ porque nos gusta mas asi
-    cadena = cadena.replace(/ /g,"_");
- 
-    // Quitamos acentos y "ñ". Fijate en que va sin comillas el primer parametro
-    cadena = cadena.replace(/á/gi,"a");
-    cadena = cadena.replace(/é/gi,"e");
-    cadena = cadena.replace(/í/gi,"i");
-    cadena = cadena.replace(/ó/gi,"o");
-    cadena = cadena.replace(/ú/gi,"u");
-    cadena = cadena.replace(/ñ/gi,"n");
-    return cadena;
-  } 
-}
+    } else {
+      cadena = cadena.toLowerCase();
+
+      // Quitamos espacios y los sustituimos por _ porque nos gusta mas asi
+      cadena = cadena.replace(/ /g, "_");
+
+      // Quitamos acentos y "ñ". Fijate en que va sin comillas el primer parametro
+      cadena = cadena.replace(/á/gi, "a");
+      cadena = cadena.replace(/é/gi, "e");
+      cadena = cadena.replace(/í/gi, "i");
+      cadena = cadena.replace(/ó/gi, "o");
+      cadena = cadena.replace(/ú/gi, "u");
+      cadena = cadena.replace(/ñ/gi, "n");
+      return cadena;
+    }
+  }
 
   updateDataCompany(company = null, fiscalYear = null) {
     if (company) {
@@ -156,8 +156,7 @@ export class Common {
   }
 
   parseDatefromDate(date): String {
-
-     if (date !== "") {
+    if (date !== "") {
       let parsedDate: String = "",
         dated = new Date(date);
       parsedDate = String(dated.getDate());
@@ -296,8 +295,8 @@ export class Common {
   marginCalculate(income, expense) {
     if (this.checkNumber(income) !== 0) {
       return Number(
-        (this.checkNumber(income) - this.checkNumber(expense)) /
-          this.checkNumber(income) *
+        ((this.checkNumber(income) - this.checkNumber(expense)) /
+          this.checkNumber(income)) *
           100
       ).toFixed(2);
     } else {
@@ -309,19 +308,10 @@ export class Common {
     // if hay puntos y comas, significa que ya ha sido parseado
     if (String(num).indexOf(",") > -1 && String(num).indexOf(".") > -1) {
       num = parseFloat(
-        String(num)
-          .replace("€", "")
-          .replace(/\./g, "")
-          .replace(",", ".")
-          .trim()
+        String(num).replace("€", "").replace(/\./g, "").replace(",", ".").trim()
       );
     } else {
-      num = parseFloat(
-        String(num)
-          .replace("€", "")
-          .replace(",", ".")
-          .trim()
-      );
+      num = parseFloat(String(num).replace("€", "").replace(",", ".").trim());
     }
 
     num = num
@@ -348,7 +338,7 @@ export class Common {
   }
 
   completeNumber(number: any) {
-    if(number < 10) {
+    if (number < 10) {
       return `00${number}`;
     } else if (number < 100) {
       return `0${number}`;
