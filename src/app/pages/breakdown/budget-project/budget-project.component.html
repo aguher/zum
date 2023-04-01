@@ -227,23 +227,25 @@
           <div class="ui-grid-col-4 label">Total</div>
         </div>
       </div>
-      <div class="ui-grid-col-4">
-        <div class="ui-grid-row" *ngIf="showReservationLogic">
+      <div *ngIf="showReservationLogic" class="ui-grid-col-4">
+        <div class="ui-grid-row">
           <div class="ui-grid-col-6 label">Fecha de Inicio</div>
           <div class="ui-grid-col-6 label">Fecha de Fin</div>
         </div>
       </div>
 
-      <div *ngIf="!showReservationLogic">
-        <div class="ui-grid-col-2">
-          <div class="ui-grid-row">
-            <div class="ui-grid-col-6 label">Coste Unitario</div>
-            <div class="ui-grid-col-6 label">Total</div>
+      <div *ngIf="!showReservationLogic" class="ui-grid-col-4">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-6">
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-6 label">Coste Unitario</div>
+              <div class="ui-grid-col-6 label">Total</div>
+            </div>
           </div>
-        </div>
-        <div class="ui-grid-col-2">
-          <div class="ui-grid-col-6 label">Beneficio</div>
-          <div class="ui-grid-col-6 label">Margen</div>
+          <div class="ui-grid-col-6">
+            <div class="ui-grid-col-6 label">Beneficio</div>
+            <div class="ui-grid-col-6 label">Margen</div>
+          </div>
         </div>
       </div>
     </div>
@@ -271,31 +273,22 @@
         </div>
         <div class="ui-grid-col-3">
           <div class="ui-grid-row budget-lines">
-            <div class="ui-grid-col-4 label">
-              <!--               {{line.budget.amount | currency:false}} -->
-            </div>
-            <!--             <div class="ui-grid-col-3 label">
-              {{line.budget.units | currency:false}}
-            </div> -->
-            <div class="ui-grid-col-4 label">
-              <!--               {{line.budget.price | currency}} -->
-            </div>
+            <div class="ui-grid-col-4 label"></div>
+            <div class="ui-grid-col-4 label"></div>
             <div class="ui-grid-col-4 label">
               {{ line.budget.total | currency }}
             </div>
           </div>
         </div>
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-col-2" *ngIf="!showReservationLogic">
           <div class="ui-grid-row real-lines">
-            <div class="ui-grid-col-6 label">
-              <!--               {{line.real.units | currency}} -->
-            </div>
+            <div class="ui-grid-col-6 label"></div>
             <div class="ui-grid-col-6 label">
               {{ line.real.total | currency }}
             </div>
           </div>
         </div>
-        <div class="ui-grid-col-2">
+        <div class="ui-grid-col-2" *ngIf="!showReservationLogic">
           <div class="ui-grid-row margin-lines">
             <div class="ui-grid-col-6 label">
               {{ line.others.benefits | currency }}
@@ -419,36 +412,73 @@
             </div>
           </div>
         </div>
-        <div class="ui-grid-col-2">
-          <div class="ui-grid-row real-lines">
-            <div class="ui-grid-col-6 label">
-              <input
-                [disabled]="!isEditable"
-                (blur)="blurred($event, old, subconcept, 'real', 'units')"
-                myCurrencyFormatter
-                type="text"
-                pInputText
-                [(ngModel)]="subconcept['real']['units']"
-                (focus)="
-                  old = subconcept.real.units; $event.target.className = ''
-                "
-                (keydown)="
-                  resetClass($event);
-                  changeInput(subconcept, $event, 'unit_real')
-                "
-              />
-            </div>
-            <div class="ui-grid-col-6 label">
-              {{ subconcept.real.total | currency }}
-            </div>
-          </div>
+        <!-- Este DIV mostrará los campos de fecha de inicio y fin de evento, solo para Durbanity -->
+        <div
+          *ngIf="showReservationLogic"
+          class="ui-grid-col-2"
+          [ngStyle]="{ padding: '10px' }"
+        >
+          <my-date-picker
+            name="startDateEvent"
+            [options]="myDatePickerOptions"
+            [(ngModel)]="subconcept.startDateEvent"
+            (dateChanged)="
+              onDateEventChanged($event, subconcept, 'start_date_event')
+            "
+            required
+          ></my-date-picker>
         </div>
-        <div class="ui-grid-col-2">
-          <div class="ui-grid-col-6 label">
-            {{ subconcept.others.benefits | currency }}
-          </div>
-          <div class="ui-grid-col-6 label">
-            {{ subconcept.others.margin | margin }} %
+        <div
+          *ngIf="showReservationLogic"
+          class="ui-grid-col-2"
+          [ngStyle]="{ padding: '10px' }"
+        >
+          <my-date-picker
+            name="endDateEvent"
+            [options]="myDatePickerOptions"
+            [(ngModel)]="subconcept.endDateEvent"
+            (dateChanged)="
+              onDateEventChanged($event, subconcept, 'end_date_event')
+            "
+            required
+          ></my-date-picker>
+        </div>
+        <!-- FIN DIV para mostrar los campos de fecha inicio y fin de evento para Durbanity-->
+
+        <div *ngIf="!showReservationLogic" class="ui-grid-col-4">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-6">
+              <div class="ui-grid-row real-lines">
+                <div class="ui-grid-col-6 label">
+                  <input
+                    [disabled]="!isEditable"
+                    (blur)="blurred($event, old, subconcept, 'real', 'units')"
+                    myCurrencyFormatter
+                    type="text"
+                    pInputText
+                    [(ngModel)]="subconcept['real']['units']"
+                    (focus)="
+                      old = subconcept.real.units; $event.target.className = ''
+                    "
+                    (keydown)="
+                      resetClass($event);
+                      changeInput(subconcept, $event, 'unit_real')
+                    "
+                  />
+                </div>
+                <div class="ui-grid-col-6 label">
+                  {{ subconcept.real.total | currency }}
+                </div>
+              </div>
+            </div>
+            <div class="ui-grid-col-6">
+              <div class="ui-grid-col-6 label">
+                {{ subconcept.others.benefits | currency }}
+              </div>
+              <div class="ui-grid-col-6 label">
+                {{ subconcept.others.margin | margin }} %
+              </div>
+            </div>
           </div>
         </div>
       </div>

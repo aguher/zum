@@ -107,6 +107,8 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
       this._api.getInfoCampaign(body).subscribe((response) => {
         if (response !== null) {
+          this.info.raw_start_date_event = response.info.start_date_event;
+          this.info.raw_end_date_event = response.info.end_date_event;
           this.info.start_date_event =
             response.info.start_date_event !== "0000-00-00"
               ? this._common.parseDatefromDate(response.info.start_date_event)

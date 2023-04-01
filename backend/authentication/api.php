@@ -5292,9 +5292,23 @@ class Api extends Rest {
 			$id_variable_concept = $this->datosPeticion['id_variable_concept'];
 
 			if (!empty($id_value)) {
-				$query = $this->_conn->prepare("INSERT INTO tt_subconcepts_project(".$valueId.", id_variable_concept)values(:id_value, :id_variable_concept)");
-				$query->bindValue(":id_value", $id_value);
-				$query->bindValue(":id_variable_concept", $id_variable_concept);
+				$query = $this->_conn->query("SELECT * FROM tt_campaign where id='".$id_value."'");
+				$filas = $query->fetch(PDO::FETCH_ASSOC);
+				$isPedido = $filas['id_status'] == 2;
+				
+				if($isPedido && $this->datosPeticion['id_company'] == 416) {					
+					$query = $this->_conn->prepare("INSERT INTO tt_subconcepts_project(".$valueId.", id_variable_concept, start_date_event, end_date_event)values(:id_value, :id_variable_concept,:start_date_event,:end_date_event)");
+					$query->bindValue(":id_value", $id_value);
+					$query->bindValue(":id_variable_concept", $id_variable_concept);
+					$query->bindValue(":start_date_event", $filas['start_date_event']);
+					$query->bindValue(":end_date_event", $filas['end_date_event']);
+				}else {
+					$query = $this->_conn->prepare("INSERT INTO tt_subconcepts_project(".$valueId.", id_variable_concept)values(:id_value, :id_variable_concept)");
+					$query->bindValue(":id_value", $id_value);
+					$query->bindValue(":id_variable_concept", $id_variable_concept);
+				}
+				
+
 
 				$query->execute();
 
@@ -5767,6 +5781,27 @@ class Api extends Rest {
 		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
 	}
 
+	private function updateEventDateSubconcept() {
+		if ($_SERVER['REQUEST_METHOD'] != "PUT") {
+			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
+		}
+		if (isset($this->datosPeticion['id'],$this->datosPeticion['field'], $this->datosPeticion['value'])) {
+			$id = (int) $this->datosPeticion['id'];
+			$field = $this->datosPeticion['field'];
+			$value = $this->datosPeticion['value'];
+
+			$query = $this->_conn->prepare("update tt_subconcepts_project set ".$field."='".$value."' where id='".$id."'");
+			
+			$query->execute();
+			$filasActualizadas = $query->rowCount();
+			if ($filasActualizadas == 1) {
+				$resp = array('status' => "ok", "msg" => "Fecha actualizada correctamente.");
+				$this->mostrarRespuesta($resp, 200);
+			}
+		}
+		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
+	}
+
 	private function updateSubconcept() {
 		if ($_SERVER['REQUEST_METHOD'] != "PUT") {
 			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
@@ -6082,6 +6117,7 @@ class Api extends Rest {
 
 				$response = $this->operationApi("select id, id_variable_concept, amount, 
 				unit_budget, price, unit_real, id_project, name, id_budget, code,
+				start_date_event,end_date_event,
 				(select max(bstockable) from tt_subconcepts_standards where tt_subconcepts_standards.code = tt_subconcepts_project.code and id_company = ".$id_company.") as bstockable
 				from tt_subconcepts_project
 				where ".$id, 'GET');

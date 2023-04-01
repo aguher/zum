@@ -191,7 +191,7 @@ export class Configuration {
   public updateSubconcept: string = "updateSubconcept";
   public updateObservations: string = "updateObservations";
   public updateSubconceptStandard: string = "updateSubconceptStandard";
-
+  public updateEventDateSubconcept: string = "updateEventDateSubconcept";
   public updateFee: string = "updateFee";
   public updateInfoBudget: string = "updateInfoBudget";
   public updateInfoPersonalFieldBudget: string =

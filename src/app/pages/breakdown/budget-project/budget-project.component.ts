@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { NotificationsService } from "angular2-notifications";
-import { IMyDpOptions, IMyDateModel } from "mydatepicker";
+import { IMyDateModel } from "mydatepicker";
 
 import { utils, write, WorkBook } from "xlsx";
 import { saveAs } from "file-saver";
@@ -16,8 +16,6 @@ import { Configuration } from "../../../api/configuration";
 
 import { Common } from "../../../api/common";
 import * as _ from "lodash";
-import { timeout } from "q";
-import { UpperCasePipe } from "@angular/common";
 
 const URL_UPLOAD_LOGO = environment.urlLogoUpload;
 @Component({
@@ -293,6 +291,48 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
       });
   }
 
+  onDateEventChanged(event: IMyDateModel, subconcept, field) {
+    let updateDate = new Date(
+      `${event.date.year}-${
+        event.date.month <= 9 ? "0" + event.date.month : event.date.month
+      }-${event.date.day <= 9 ? "0" + event.date.day : event.date.day}`
+    );
+
+    const startDateEventCampaign = new Date(
+      this.infoCustomer.raw_start_date_event
+    );
+    const endDateEventCampaign = new Date(this.infoCustomer.raw_end_date_event);
+
+    if (
+      updateDate < startDateEventCampaign ||
+      updateDate > endDateEventCampaign
+    ) {
+      this._notification.error(
+        "Error al guardar",
+        `La fecha de reserva debe estar entre ${this.infoCustomer.start_date_event} y ${this.infoCustomer.end_date_event}`,
+        {
+          timeOut: 6000,
+          showProgressBar: true,
+        }
+      );
+      return false;
+    }
+    this._api
+      .updateEventDateSubconcept(subconcept.id, field, updateDate)
+      .subscribe((response) => {
+        if (response.status === "ok") {
+          this._notification.success(
+            "Fecha de reserva",
+            "Se ha guardado satisfactoriamente."
+          );
+        } else {
+          this._notification.error(
+            "Fecha de reserva",
+            "No se ha guardado satisfactoriamente."
+          );
+        }
+      });
+  }
   changeInfoContact(event, field) {
     if (event.which === 13 || event.which === 9) {
       event.currentTarget.className = "entertabeado";
@@ -493,6 +533,40 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
               : this._common.toFloat(
                   (varConcept.others.benefits / varConcept.budget.total) * 100
                 );
+
+          const parsedStartEvent =
+            element.start_date_event === "0000-00-00"
+              ? `${new Date(
+                  this.infoCustomer.raw_start_date_event
+                ).getFullYear()}-${
+                  new Date(this.infoCustomer.raw_start_date_event).getMonth() +
+                  1
+                }-${new Date(this.infoCustomer.raw_start_date_event).getDate()}`
+              : element.start_date_event;
+          const parsedEndEvent =
+            element.end_date_event === "0000-00-00"
+              ? `${new Date(
+                  this.infoCustomer.raw_end_date_event
+                ).getFullYear()}-${
+                  new Date(this.infoCustomer.raw_end_date_event).getMonth() + 1
+                }-${new Date(this.infoCustomer.raw_end_date_event).getDate()}`
+              : element.end_date_event;
+          const startDateEvent = {
+            date: {
+              year: new Date(parsedStartEvent).getFullYear(),
+              month: new Date(parsedStartEvent).getMonth() + 1,
+              day: new Date(parsedStartEvent).getDate(),
+            },
+          };
+
+          const endDateEvent = {
+            date: {
+              year: new Date(parsedEndEvent).getFullYear(),
+              month: new Date(parsedEndEvent).getMonth() + 1,
+              day: new Date(parsedEndEvent).getDate(),
+            },
+          };
+
           varConcept.subconcepts.push({
             bstockable: this.id_company == 412 ? element.bstockable : 1,
             id: element.id,
@@ -513,6 +587,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
               benefits: benefit,
               margin: margin,
             },
+            startDateEvent,
+            endDateEvent,
           });
         });
       }
@@ -531,6 +607,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
           benefits: 0,
           margin: 0,
         },
+        startDateEvent: "",
+        endDateEvent: "",
       };
       if (response.fee && response.fee.length) {
         tmp.budget.amount = response.fee[0].amount;
@@ -806,15 +884,15 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
 
     let idVariableConcept = this.lines[index].id;
     this._api
-      .addSubconcept(this.valueId, idVariableConcept)
+      .addSubconcept(this.valueId, idVariableConcept, this.id_company)
       .subscribe((response) => {
         this.lines[index].subconcepts.push({
           id: response.items.id,
           name: "",
           code: "",
           budget: {
-            amount: 1,
-            units: 1,
+            amount: 0,
+            units: 0,
             price: 0,
             total: 0,
           },
@@ -826,6 +904,20 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
           others: {
             benefits: 0,
             margin: 0,
+          },
+          startDateEvent: {
+            date: {
+              year: parseInt(response.items.start_date_event.split("-")[0]),
+              month: parseInt(response.items.start_date_event.split("-")[1]),
+              day: parseInt(response.items.start_date_event.split("-")[2]),
+            },
+          },
+          endDateEvent: {
+            date: {
+              year: parseInt(response.items.end_date_event.split("-")[0]),
+              month: parseInt(response.items.end_date_event.split("-")[1]),
+              day: parseInt(response.items.end_date_event.split("-")[2]),
+            },
           },
         });
       });

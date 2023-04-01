@@ -2147,6 +2147,26 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
+  updateEventDateSubconcept(subconcept_id, field, date) {
+    const parsedDate = new Date(date);
+    const valueDate = `${parsedDate.getFullYear()}-${
+      parsedDate.getMonth() + 1
+    }-${parsedDate.getDate()}`;
+    let token = localStorage.getItem("token");
+    let queryString = `id=${subconcept_id}`;
+    queryString += `&field=${field}`;
+    queryString += `&value=${valueDate}`;
+
+    let body = queryString;
+    return this.http
+      .put(
+        this._config.Server + this._config.updateEventDateSubconcept,
+        body,
+        this.jwt()
+      )
+      .map((response: Response) => response.json());
+  }
+
   updateSubconcept(
     id,
     type,
@@ -2268,8 +2288,8 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
-  addSubconcept(valueId: string, idVariableConcept: string) {
-    let body = `${valueId}&id_variable_concept=${idVariableConcept}`;
+  addSubconcept(valueId: string, idVariableConcept: string, idCompany: string) {
+    let body = `${valueId}&id_variable_concept=${idVariableConcept}&id_company=${idCompany}`;
     return this.http
       .post(
         this._config.Server + this._config.addSubconcept,
