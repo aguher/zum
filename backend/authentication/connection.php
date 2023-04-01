@@ -9,7 +9,7 @@ class Connection
         define("servidor","localhost");//"db659023894.db.1and1.com";//
         define("usuario_db","root");//"dbo659023894";
         define("pwd_db","");//"Tango2017$";
-        define("nombre_db","prueba");//db659023894";
+        define("nombre_db","gesad");//db659023894";
 /*
         define("servidor","localhost");//"db659023894.db.1and1.com";//
         define("usuario_db","nitsuga");//"dbo659023894";

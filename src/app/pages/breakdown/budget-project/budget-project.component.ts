@@ -32,6 +32,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
   @Input() noCheckDates;
   @Input() typeTable;
 
+  showReservationLogic: boolean = false;
   old = null;
   originalSubconceptsStandard = [];
   subconcepts_standard: string[] = [];
@@ -139,6 +140,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     window.removeEventListener("scroll", this.onScroll);
   }
   ngOnInit() {
+    this.showReservationLogic =
+      this.id_company === "416" && this.infoCustomer.status === "Pedido";
     this.contact_field = this.infoCustomer.contact;
     this.phone_field = this.infoCustomer.phone;
     this.solicitant_field = this.infoCustomer.solicitant_data;

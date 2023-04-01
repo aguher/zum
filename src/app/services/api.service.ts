@@ -2321,7 +2321,9 @@ export class ApiService {
         .get(
           this._config.Server + this._config.getSubconceptStandard + queryString
         )
-        .map((response: Response) => response.json());
+        .map((response: Response) => {
+          return response.json();
+        });
     }
   }
   getSubconceptsBillings(idValue: string) {
