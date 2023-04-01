@@ -42,6 +42,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
   solicitant_field = null;
   delivery_date = null;
   project_field = null;
+  shipping_method = null;
+  shipping_method_return = null;
   readonlytotal = false;
   isModalOpen = false;
 
@@ -142,7 +144,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     this.solicitant_field = this.infoCustomer.solicitant_data;
     this.delivery_date = this.infoCustomer.delivery_date;
     this.project_field = this.infoCustomer.project;
-
+    this.shipping_method = this.infoCustomer.shipping_method;
+    this.shipping_method_return = this.infoCustomer.shipping_method_return;
     if (
       this.infoCustomer.customer.btramite != 0 ||
       this.infoCustomer.customer.salidas != 0 ||
@@ -1921,6 +1924,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     var izqUnidades = 2.7;
     let anchoimagen = 4.64;
     let pintarObservaciones = false;
+    let pintarObservacionesInternas = false;
     let textoEnunciadoBlanco = false;
     let altura_texto_obs = 3;
     let bPintarCodigo = false;
@@ -1945,6 +1949,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
       case "410":
         textoEnunciadoBlanco = true;
         break;
+      case "416":
+        pintarObservacionesInternas = true;
       case "408":
       default:
     }
@@ -1969,8 +1975,11 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
         altura_texto = 0;
 
         let texto;
-
-        if (bImprimirTodo) {
+        if (pintarObservacionesInternas) {
+          texto =
+            "\n Observaciones internas \n " + this.infoCustomer.observ_int;
+          texto = texto.split("\n");
+        } else if (bImprimirTodo) {
           texto =
             "Observaciones cliente \n" +
             this.infoCustomer.observ_cli +
@@ -2351,6 +2360,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
 
   fillExcelData() {
     let exportData = [];
+
     this.lines.forEach((line) => {
       exportData.push({
         Concepto: line.name,
@@ -2519,6 +2529,35 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
       Beneficio: "Válidez",
       Margen: `${this.budget_validity} días`,
     });
+
+    if (this.infoCustomer.status === "Pedido") {
+      exportData.push({
+        Concepto: "",
+        Subconcepto: "",
+        Cantidad: "",
+        "Precio Unitario": "",
+        Total: "",
+        "": "",
+        "Coste Unitario Real": "",
+        "Total Real": "Método de envío",
+        "  ": this.shipping_method,
+        Beneficio: "",
+        Margen: "",
+      });
+      exportData.push({
+        Concepto: "",
+        Subconcepto: "",
+        Cantidad: "",
+        "Precio Unitario": "",
+        Total: "",
+        "": "",
+        "Coste Unitario Real": "",
+        "Total Real": "Método de recepción",
+        "  ": this.shipping_method_return,
+        Beneficio: "",
+        Margen: "",
+      });
+    }
 
     return exportData;
   }
