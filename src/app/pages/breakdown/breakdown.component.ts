@@ -18,7 +18,7 @@ import * as _ from "lodash";
 @Component({
   selector: "app-breakdown",
   templateUrl: "./breakdown.component.html",
-  styleUrls: ["./breakdown.component.scss"]
+  styleUrls: ["./breakdown.component.scss"],
 })
 export class BreakdownComponent implements OnInit, OnDestroy {
   id: number;
@@ -37,9 +37,14 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
   fechahoy = new Date();
 
-  hoy = this.fechahoy.getDate() + '/' + (this.fechahoy.getMonth() +1) + '/' + this.fechahoy.getFullYear();
+  hoy =
+    this.fechahoy.getDate() +
+    "/" +
+    (this.fechahoy.getMonth() + 1) +
+    "/" +
+    this.fechahoy.getFullYear();
   fechafactura = this.hoy;
-
+  id_company;
 
   benefitsReal = new dateMonth();
   marginReal = new dateMonth();
@@ -68,7 +73,10 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     private _token: TokenService,
     private _config: Configuration,
     private _router: Router
-  ) {}
+  ) {
+    let dataCompany = JSON.parse(localStorage.getItem("selectedCompany")).value;
+    this.id_company = dataCompany.id;
+  }
 
   onScroll() {
     var nav = document.getElementById("header-cloned-real");
@@ -92,14 +100,16 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
     this.myDatePickerOptions = this._config.myDatePickerOptions;
 
-    this.sub = this.route.params.subscribe(params => {
-
+    this.sub = this.route.params.subscribe((params) => {
       this.id = +params["id"]; // (+) converts string 'id' to a number
       let body = `id=${this.id}&type=1`;
       let type = 1;
 
-      this._api.getInfoCampaign(body).subscribe(response => {
+      this._api.getInfoCampaign(body).subscribe((response) => {
         if (response !== null) {
+          this.info.shipping_method = response.info.shipping_method;
+          this.info.shipping_method_return =
+            response.info.shipping_method_return;
           this.info.campaign_code = response.info.campaign_code;
           this.info.campaign_name = response.info.campaign_name;
           this.info.project = response.info.project;
@@ -107,7 +117,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
           this.info.phone = response.info.phone;
           this.info.solicitant_data = response.info.solicitant_data;
 
-          if (response.info.btramite == 1){
+          if (response.info.btramite == 1) {
             this.readonly_obs = true;
           }
 
@@ -128,10 +138,10 @@ export class BreakdownComponent implements OnInit, OnDestroy {
             postal_code: response.customer.customer_postal_code,
             city: response.customer.customer_city,
             email: response.customer.email,
-            phone: response.customer.phone2, 
+            phone: response.customer.phone2,
             btramite: response.customer.btramite,
             salidas: response.customer.salidas,
-            numfacturas: response.customer.numfacturas
+            numfacturas: response.customer.numfacturas,
           };
           this.info.team = response.info.team;
           this.info.user = response.info.user;
@@ -143,18 +153,18 @@ export class BreakdownComponent implements OnInit, OnDestroy {
           this.info.observ_cli = response.info.observ_cli;
           this.info.observ_int = response.info.observ_int;
           this.info.id_address = response.info.id_address;
-          this.info.contact = response.info.contact;          
+          this.info.contact = response.info.contact;
           this.checkEditableRows(response.info.id_status);
 
           this.idFee = response.idFee;
           this.fillFeeIncome(response.feeIncomes, response.totalFeeIncome);
-/*           this.fillIncomes(response.variable_concepts); */
+          /*           this.fillIncomes(response.variable_concepts); */
           this.fillEmployeeCost(
             response.employees_cost_no_filtered,
             response.employees_cost_estimated,
             response.employees_cost_real
           );
-/*           this.fillExpenses(response.variable_concepts); */
+          /*           this.fillExpenses(response.variable_concepts); */
         }
       });
     });
@@ -175,7 +185,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       let newValue = parseFloat(value.currentTarget.value.replace(",", "."));
 
       if (this._common.toFloat(previous) !== newValue) {
-        this._api.updateFeeIncome(body).subscribe(response => {
+        this._api.updateFeeIncome(body).subscribe((response) => {
           if (response && response.status === "ok") {
             let total = 0;
 
@@ -215,7 +225,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       let newValue = parseFloat(value.currentTarget.value.replace(",", "."));
 
       if (this._common.toFloat(previous) !== newValue) {
-        this._api.updateIncomeVariableConcept(body).subscribe(response => {
+        this._api.updateIncomeVariableConcept(body).subscribe((response) => {
           if (response && response.status === "ok") {
             let total = 0;
             _.forOwn(variable_concept.incomes_real, (element, key) => {
@@ -257,7 +267,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     this.totalIncome = new dateMonthStr();
     // recorremos el objeto de incomes, que contiene para cada concepto variable
     // un objeto con los incomes 'presupuestados'
-    this.incomes.forEach(element => {
+    this.incomes.forEach((element) => {
       _.forOwn(element.incomes_real, (element, key) => {
         if (key !== "total") {
           total += this._common.checkNumber(element);
@@ -267,7 +277,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         }
       });
     });
-    if(this.feeIncome) {
+    if (this.feeIncome) {
       _.forOwn(this.feeIncome, (element, key) => {
         if (key !== "total") {
           totalFee += this._common.checkNumber(element);
@@ -278,7 +288,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       });
       this.feeIncome.total = totalFee;
     }
-    
+
     this.totalIncome.total = total + totalFee;
     this.wrong_income = false;
     if (total !== this.totalIncome.total) {
@@ -291,37 +301,41 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     this.showDialogCrearFactura = false;
     if (!this.id) {
       this._notification.error("Error", "Debe seleccionar un pedido.");
-    } else if (!this.info.customer.cif || this.info.customer.cif.toString().length < 4 || this.info.customer.cif == "undefined"){
+    } else if (
+      !this.info.customer.cif ||
+      this.info.customer.cif.toString().length < 4 ||
+      this.info.customer.cif == "undefined"
+    ) {
       this._notification.error("Error", "El cliente no tiene el CIF correcto");
-    }
-    else {
-
+    } else {
       //body += `&creation_date=${this.newCampaign.creation_date_model.date.year}-${this.newCampaign.creation_date_model.date.month}-${this.newCampaign.creation_date_model.date.day}`;
-      let splfechafac = this.fechafactura.split('/');
-      let fechafactura = splfechafac[2] + '-' +  splfechafac[1] + '-' + splfechafac[0];
-      this._api.createBill(`id_project=${this.id}&date_bill=${fechafactura}`).subscribe(response => {
-        const idBill = response.id_bill;
-        this._router.navigate(["/factura", idBill]);
-      });
+      let splfechafac = this.fechafactura.split("/");
+      let fechafactura =
+        splfechafac[2] + "-" + splfechafac[1] + "-" + splfechafac[0];
+      this._api
+        .createBill(`id_project=${this.id}&date_bill=${fechafactura}`)
+        .subscribe((response) => {
+          const idBill = response.id_bill;
+          this._router.navigate(["/factura", idBill]);
+        });
     }
   }
 
   createPedido() {
     this.showDialogCrearPedido = false;
 
-    let body = 'id=' + this.id;
+    let body = "id=" + this.id;
 
-    this
-    ._api
-    .updatePresupuesto2Pedido(body)
-    .subscribe(() => this.parseupdatePresupuesto2Pedido());
+    this._api
+      .updatePresupuesto2Pedido(body)
+      .subscribe(() => this.parseupdatePresupuesto2Pedido());
   }
 
-  parseupdatePresupuesto2Pedido(){
+  parseupdatePresupuesto2Pedido() {
     //lo mismo que al principio, se podía resumir
     let body = `id=${this.id}&type=1`;
 
-    this._api.getInfoCampaign(body).subscribe(response => {
+    this._api.getInfoCampaign(body).subscribe((response) => {
       if (response !== null) {
         this.info.campaign_code = response.info.campaign_code;
         this.info.campaign_name = response.info.campaign_name;
@@ -330,7 +344,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         this.info.phone = response.info.phone;
         this.info.solicitant_data = response.info.solicitant_data;
 
-        if (response.info.btramite == 1){
+        if (response.info.btramite == 1) {
           this.readonly_obs = true;
         }
 
@@ -351,10 +365,10 @@ export class BreakdownComponent implements OnInit, OnDestroy {
           postal_code: response.customer.customer_postal_code,
           city: response.customer.customer_city,
           email: response.customer.email,
-          phone: response.customer.phone2, 
+          phone: response.customer.phone2,
           btramite: response.customer.btramite,
           salidas: response.customer.salidas,
-          numfacturas: response.customer.numfacturas
+          numfacturas: response.customer.numfacturas,
         };
         this.info.team = response.info.team;
         this.info.user = response.info.user;
@@ -363,21 +377,23 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         this.info.status = response.info.status;
         this.info.id_status = response.info.id_status;
         this.info.ped_code = response.info.ped_code;
+        this.info.shipping_method = response.info.shipping_method;
+        this.info.shipping_method_return = response.info.shipping_method_return;
         this.info.observ_cli = response.info.observ_cli;
         this.info.observ_int = response.info.observ_int;
         this.info.id_address = response.info.id_address;
-        this.info.contact = response.info.contact;          
+        this.info.contact = response.info.contact;
         this.checkEditableRows(response.info.id_status);
 
         this.idFee = response.idFee;
         this.fillFeeIncome(response.feeIncomes, response.totalFeeIncome);
-/*           this.fillIncomes(response.variable_concepts); */
+        /*           this.fillIncomes(response.variable_concepts); */
         this.fillEmployeeCost(
           response.employees_cost_no_filtered,
           response.employees_cost_estimated,
           response.employees_cost_real
         );
-/*           this.fillExpenses(response.variable_concepts); */
+        /*           this.fillExpenses(response.variable_concepts); */
       }
     });
   }
@@ -388,7 +404,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     // Si nos dirigimos a la pestaña de presupuesto mensual, la recargamos de nuevo por si se han cambiado datos en Presupuesto cliente
     if (index === 1) {
       this.reloadTab = false;
-      setTimeout(_ => {
+      setTimeout((_) => {
         this.reloadTab = true;
       }, 100);
     }
@@ -398,16 +414,16 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     this.isEditable = false;
     this.isEditableReal = false;
 
-    if ((status === '1' || status === '2') && this.role === 3 ){
+    if ((status === "1" || status === "2") && this.role === 3) {
       this.isEditableReal = true;
     }
   }
 
   fillFeeIncome(fees, total_fee) {
-    if(fees) {
+    if (fees) {
       let total_acc = 0;
       this.feeIncome = new dateMonthStr();
-      fees.forEach(inner => {
+      fees.forEach((inner) => {
         this.feeIncome[inner.id_month] = this._common.currencyFormatES(
           inner.amount,
           false
@@ -418,10 +434,10 @@ export class BreakdownComponent implements OnInit, OnDestroy {
   }
   fillIncomes(incomes) {
     let total_acc = 0;
-    incomes.forEach(element => {
+    incomes.forEach((element) => {
       _.extend(element, { incomes_real: {} });
     });
-    incomes.forEach(element => {
+    incomes.forEach((element) => {
       _.extend(element.incomes_real, { january: "0.00" });
       _.extend(element.incomes_real, { february: "0.00" });
       _.extend(element.incomes_real, { march: "0.00" });
@@ -435,7 +451,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       _.extend(element.incomes_real, { november: "0.00" });
       _.extend(element.incomes_real, { december: "0.00" });
 
-      element.real_incomes.forEach(inner => {
+      element.real_incomes.forEach((inner) => {
         element.incomes_real[inner.id_month] = this._common.currencyFormatES(
           inner.amount,
           false
@@ -468,11 +484,11 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     let total_acc = 0,
       calendar_items_estimated = new dateMonth(),
       calendar_items_real = new dateMonth();
-    expenses.forEach(element => {
+    expenses.forEach((element) => {
       _.extend(element, { filtered_estimated: {} });
       _.extend(element, { filtered_real: {} });
     });
-    expenses.forEach(element => {
+    expenses.forEach((element) => {
       _.extend(element.filtered_estimated, { january: "0.00" });
       _.extend(element.filtered_estimated, { february: "0.00" });
       _.extend(element.filtered_estimated, { march: "0.00" });
@@ -486,10 +502,9 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       _.extend(element.filtered_estimated, { november: "0.00" });
       _.extend(element.filtered_estimated, { december: "0.00" });
 
-      element.estimated_expenses.forEach(inner => {
-        element.filtered_estimated[
-          inner.id_month
-        ] = this._common.currencyFormatES(inner.amount, false);
+      element.estimated_expenses.forEach((inner) => {
+        element.filtered_estimated[inner.id_month] =
+          this._common.currencyFormatES(inner.amount, false);
       });
 
       _.extend(element.filtered_real, { january: "0.00" });
@@ -505,7 +520,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       _.extend(element.filtered_real, { november: "0.00" });
       _.extend(element.filtered_real, { december: "0.00" });
 
-      element.real_expenses.forEach(inner => {
+      element.real_expenses.forEach((inner) => {
         element.filtered_real[inner.id_month] = this._common.currencyFormatES(
           inner.amount,
           false
@@ -533,9 +548,8 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         element.filtered_estimated.december
       );
 
-      element.filtered_estimated.total = this._common.currencyFormatES(
-        total_acc
-      );
+      element.filtered_estimated.total =
+        this._common.currencyFormatES(total_acc);
       total_acc = 0;
       total_acc = this._common.checkNumber(element.filtered_real.january);
       total_acc += this._common.checkNumber(element.filtered_real.february);
@@ -563,7 +577,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     let sumValue = 0,
       totalMonths = new dateMonth();
 
-    costs.forEach(element => {
+    costs.forEach((element) => {
       sumValue = parseFloat(element.cost.toFixed(2));
       switch (element.date.split("-")[1]) {
         case "01":
@@ -653,10 +667,9 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       }
     });
 
-    cost_employee_estimated.forEach(element => {
-      this.employeesCostEstimated[
-        element.id_month
-      ] = this._common.currencyFormatES(element.amount, false);
+    cost_employee_estimated.forEach((element) => {
+      this.employeesCostEstimated[element.id_month] =
+        this._common.currencyFormatES(element.amount, false);
     });
 
     let totalCost =
@@ -672,11 +685,10 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       this._common.checkNumber(this.employeesCostEstimated.october) +
       this._common.checkNumber(this.employeesCostEstimated.november) +
       this._common.checkNumber(this.employeesCostEstimated.december);
-    this.employeesCostEstimated.total = this._common.currencyFormatES(
-      totalCost
-    );
+    this.employeesCostEstimated.total =
+      this._common.currencyFormatES(totalCost);
 
-    cost_employee_real.forEach(element => {
+    cost_employee_real.forEach((element) => {
       this.employeesCostReal[element.id_month] = this._common.currencyFormatES(
         element.amount,
         false
@@ -746,9 +758,8 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         this.expenses[idx].filtered_estimated.december
       );
 
-      this.expenses[
-        idx
-      ].filtered_estimated.total = this._common.currencyFormatES(total_acc);
+      this.expenses[idx].filtered_estimated.total =
+        this._common.currencyFormatES(total_acc);
       this.setTotalByMonth(this.expenses, 0);
     }
     if (type === "real") {
@@ -791,9 +802,8 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         this.expenses[idx].filtered_real.december
       );
 
-      this.expenses[idx].filtered_real.total = this._common.currencyFormatES(
-        total_acc
-      );
+      this.expenses[idx].filtered_real.total =
+        this._common.currencyFormatES(total_acc);
       this.setTotalByMonth(this.expenses, 1);
     }
 
@@ -803,7 +813,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     body += `&amount=${this._common.checkNumber(val)}`;
     body += type === "estimated" ? `&type=0` : `&type=1`;
 
-    this._api.updateVariableCost(body).subscribe(response => {
+    this._api.updateVariableCost(body).subscribe((response) => {
       if (response.status === "ok") {
         this._notification.success(
           "Exito",
@@ -827,7 +837,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       let newValue = parseFloat(value.currentTarget.value.replace(",", "."));
 
       if (this._common.toFloat(previous) !== newValue) {
-        this._api.updateRealEmployeeCost(body).subscribe(response => {
+        this._api.updateRealEmployeeCost(body).subscribe((response) => {
           if (response && response.status === "ok" && newValue === -1) {
             this._notification.success(
               "Correcto",
@@ -896,7 +906,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       let newValue = parseFloat(value.currentTarget.value.replace(",", "."));
 
       if (parseFloat(previous) !== newValue) {
-        this._api.updateEstimatedIncomes(body).subscribe(response => {
+        this._api.updateEstimatedIncomes(body).subscribe((response) => {
           if (response && response.status === "ok") {
             this._notification.success(
               "Correcto",
@@ -1095,7 +1105,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     this.accumulateMonths[idx].december = 0;
     this.accumulateMonths[idx].total = 0;
 
-    _.forEach(items, element => {
+    _.forEach(items, (element) => {
       total = 0;
       type = idx === 0 ? element.filtered_estimated : element.filtered_real;
       this.accumulateMonths[idx].january += this._common.checkNumber(
@@ -1165,7 +1175,6 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
   calculateBenefitsMargin() {
     _.forOwn(this.benefitsReal, (value, key) => {
-
       this.benefitsReal[key] = this._common.currencyFormatES(
         this._common.checkNumber(this.totalIncome[key]) -
           this._common.checkNumber(this.totalExpensesReal[key]),
@@ -1208,63 +1217,174 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     ) {
       this.incomes.forEach((element, key) => {
         // ingresos
-        exportData.push(
-          {
-            '': `${element.name_variable_concept}(${element.account_contability})`,
-            Total: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.total), false),
-            Enero: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.january), false),
-            Febrero: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.february), false),
-            Marzo: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.march), false),
-            Abril: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.april), false),
-            Mayo: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.may), false),
-            Junio: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.june), false),
-            Julio: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.july), false),
-            Agosto: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.august), false),
-            Septiembre: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.september), false),
-            Octubre: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.october), false),
-            Noviembre: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.november), false),
-            Diciembre: this._common.currencyFormatES(this._common.toFloat(element.incomes_real.december), false)
-          }
-        );
+        exportData.push({
+          "": `${element.name_variable_concept}(${element.account_contability})`,
+          Total: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.total),
+            false
+          ),
+          Enero: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.january),
+            false
+          ),
+          Febrero: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.february),
+            false
+          ),
+          Marzo: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.march),
+            false
+          ),
+          Abril: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.april),
+            false
+          ),
+          Mayo: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.may),
+            false
+          ),
+          Junio: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.june),
+            false
+          ),
+          Julio: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.july),
+            false
+          ),
+          Agosto: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.august),
+            false
+          ),
+          Septiembre: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.september),
+            false
+          ),
+          Octubre: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.october),
+            false
+          ),
+          Noviembre: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.november),
+            false
+          ),
+          Diciembre: this._common.currencyFormatES(
+            this._common.toFloat(element.incomes_real.december),
+            false
+          ),
+        });
       });
       // fee de empresa
-      exportData.push(
-        {
-          '': `Fee de empresa`,
-          Total: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.total), false),
-          Enero: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.january), false),
-          Febrero: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.february), false),
-          Marzo: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.march), false),
-          Abril: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.april), false),
-          Mayo: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.may), false),
-          Junio: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.june), false),
-          Julio: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.july), false),
-          Agosto: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.august), false),
-          Septiembre: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.september), false),
-          Octubre: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.october), false),
-          Noviembre: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.november), false),
-          Diciembre: this._common.currencyFormatES(this._common.toFloat(this.feeIncome.december), false)
-        }
-      );
+      exportData.push({
+        "": `Fee de empresa`,
+        Total: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.total),
+          false
+        ),
+        Enero: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.january),
+          false
+        ),
+        Febrero: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.february),
+          false
+        ),
+        Marzo: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.march),
+          false
+        ),
+        Abril: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.april),
+          false
+        ),
+        Mayo: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.may),
+          false
+        ),
+        Junio: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.june),
+          false
+        ),
+        Julio: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.july),
+          false
+        ),
+        Agosto: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.august),
+          false
+        ),
+        Septiembre: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.september),
+          false
+        ),
+        Octubre: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.october),
+          false
+        ),
+        Noviembre: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.november),
+          false
+        ),
+        Diciembre: this._common.currencyFormatES(
+          this._common.toFloat(this.feeIncome.december),
+          false
+        ),
+      });
       // Total de ingresos
-      exportData.push(
-        {
-          '': `INGRESOS`,
-          Total: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.total), false),
-          Enero: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.january), false),
-          Febrero: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.february), false),
-          Marzo: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.march), false),
-          Abril: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.april), false),
-          Mayo: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.may), false),
-          Junio: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.june), false),
-          Julio: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.july), false),
-          Agosto: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.august), false),
-          Septiembre: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.september), false),
-          Octubre: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.october), false),
-          Noviembre: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.november), false),
-          Diciembre: this._common.currencyFormatES(this._common.toFloat(this.totalIncome.december), false)
-        }
-      );
+      exportData.push({
+        "": `INGRESOS`,
+        Total: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.total),
+          false
+        ),
+        Enero: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.january),
+          false
+        ),
+        Febrero: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.february),
+          false
+        ),
+        Marzo: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.march),
+          false
+        ),
+        Abril: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.april),
+          false
+        ),
+        Mayo: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.may),
+          false
+        ),
+        Junio: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.june),
+          false
+        ),
+        Julio: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.july),
+          false
+        ),
+        Agosto: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.august),
+          false
+        ),
+        Septiembre: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.september),
+          false
+        ),
+        Octubre: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.october),
+          false
+        ),
+        Noviembre: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.november),
+          false
+        ),
+        Diciembre: this._common.currencyFormatES(
+          this._common.toFloat(this.totalIncome.december),
+          false
+        ),
+      });
     }
     //space between last row
     exportData.push({
@@ -1280,13 +1400,11 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       Septiembre: "",
       Octubre: "",
       Noviembre: "",
-      Diciembre: ""
+      Diciembre: "",
     });
     expenses.forEach((element, key) => {
       exportData.push({
-        "": `${expenses_info[key].name_variable_concept}(${
-          expenses_info[key].account_number
-        })`,
+        "": `${expenses_info[key].name_variable_concept}(${expenses_info[key].account_number})`,
         Total: this._common.currencyFormatES(
           this._common.toFloat(element.total),
           false
@@ -1338,7 +1456,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         Diciembre: this._common.currencyFormatES(
           this._common.toFloat(element.december),
           false
-        )
+        ),
       });
     });
 
@@ -1356,7 +1474,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       Septiembre: accumulate.september,
       Octubre: accumulate.october,
       Noviembre: accumulate.november,
-      Diciembre: accumulate.december
+      Diciembre: accumulate.december,
     });
 
     exportData.push({
@@ -1373,7 +1491,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       Septiembre: employees.september,
       Octubre: employees.october,
       Noviembre: employees.november,
-      Diciembre: employees.december
+      Diciembre: employees.december,
     });
 
     exportData.push({
@@ -1390,7 +1508,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       Septiembre: totalExpenses.september,
       Octubre: totalExpenses.october,
       Noviembre: totalExpenses.november,
-      Diciembre: totalExpenses.december
+      Diciembre: totalExpenses.december,
     });
 
     //space between last row
@@ -1407,7 +1525,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
       Septiembre: "",
       Octubre: "",
       Noviembre: "",
-      Diciembre: ""
+      Diciembre: "",
     });
     if (
       this.role === 3 ||
@@ -1429,7 +1547,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         Septiembre: benefits.september,
         Octubre: benefits.october,
         Noviembre: benefits.november,
-        Diciembre: benefits.december
+        Diciembre: benefits.december,
       });
 
       exportData.push({
@@ -1446,26 +1564,30 @@ export class BreakdownComponent implements OnInit, OnDestroy {
         Septiembre: margins.september,
         Octubre: margins.october,
         Noviembre: margins.november,
-        Diciembre: margins.december
+        Diciembre: margins.december,
       });
     }
 
     return exportData;
   }
 
-  actualizarobs(){
-    this
-    ._api
-    .updateObservations(this.info.observ_cli, this.info.observ_int, this.id)
-    .subscribe((response) => {
-      if (response.status === 'ok') {
-        this
-          ._notification
-          .success('Observaciones', 'Se han guardado satisfactoriamente.');
-      }
-    });
-
-
+  actualizarobs() {
+    this._api
+      .updateObservations(
+        this.info.observ_cli,
+        this.info.observ_int,
+        this.id,
+        this.info.shipping_method,
+        this.info.shipping_method_return
+      )
+      .subscribe((response) => {
+        if (response.status === "ok") {
+          this._notification.success(
+            "Observaciones",
+            "Se han guardado satisfactoriamente."
+          );
+        }
+      });
   }
 
   exportExcel(): void {
@@ -1497,7 +1619,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
     const wbout = write(wb, {
       bookType: "xlsx",
       bookSST: true,
-      type: "binary"
+      type: "binary",
     });
 
     function s2ab(s) {
@@ -1511,9 +1633,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
     saveAs(
       new Blob([s2ab(wbout)], { type: "application/octet-stream" }),
-      `desglose-proyecto-${this.info.campaign_code}-${
-        this.info.campaign_name
-      }.xlsx`
+      `desglose-proyecto-${this.info.campaign_code}-${this.info.campaign_name}.xlsx`
     );
   }
 

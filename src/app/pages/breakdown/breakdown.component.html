@@ -68,6 +68,20 @@
     <budget-project idProject="{{id}}" [infoCustomer]="info" [typeTable]="'project'"></budget-project>
 
     <div>
+      <div *ngIf="id_company==416 && info.status==='Pedido'">
+        Método de envío:
+        <select  (change)="actualizarobs()" style="height:40px" [(ngModel)]="info.shipping_method" placeholder="Seleccione un método de envio">
+          <option value="Por agencia">Por agencia</option>
+          <option value="Recogida por el cliente">Recogida por el cliente</option>
+          <option value="Enviado por Durbanity">Enviado por Durbanity</option>
+        </select>  
+        Método de recepción:
+        <select  (change)="actualizarobs()" style="height:40px" [(ngModel)]="info.shipping_method_return" placeholder="Seleccione un método de recepción">
+          <option value="Por agencia">Por agencia</option>
+          <option value="Recogida por el cliente">Recogida por el cliente</option>
+          <option value="Enviado por Durbanity">Enviado por Durbanity</option>
+        </select>   
+      </div>
         <div style="width:100%; height:20px"></div>
         <div style="float:left; width:50%; padding-right:5px">
           Observaciones para el cliente:

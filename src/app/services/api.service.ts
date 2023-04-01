@@ -2182,11 +2182,19 @@ export class ApiService {
       .map((response: Response) => response.json());
   }
 
-  updateObservations(observ_cli, observ_int, id) {
+  updateObservations(
+    observ_cli,
+    observ_int,
+    id,
+    shipping_method,
+    shipping_method_return
+  ) {
     let token = localStorage.getItem("token");
     let queryString = `id=${id}`;
     queryString += `&observ_cli=${observ_cli}`;
     queryString += `&observ_int=${observ_int}`;
+    queryString += `&shipping_method=${shipping_method}`;
+    queryString += `&shipping_method_return=${shipping_method_return}`;
 
     let body = queryString;
     return this.http
