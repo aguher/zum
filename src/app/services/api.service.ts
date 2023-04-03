@@ -2174,7 +2174,13 @@ export class ApiService {
     parsedPrice,
     parsedDescription,
     parsedCode,
-    idCompany
+    idCompany,
+    status,
+    customerId,
+    startDateEvent,
+    endDateEvent,
+    amountToReserve,
+    articleCode
   ) {
     let token = localStorage.getItem("token");
     let queryString = `id=${id}`;
@@ -2192,6 +2198,12 @@ export class ApiService {
     if (idCompany) {
       queryString += `&id_company=${idCompany}`;
     }
+    queryString += `&isPedido=${status == "2"}`;
+    queryString += `&customerId=${customerId}`;
+    queryString += `&startDateEvent=${startDateEvent}`;
+    queryString += `&endDateEvent=${endDateEvent}`;
+    queryString += `&amountToReserve=${amountToReserve}`;
+    queryString += `&articleCode=${articleCode}`;
     let body = queryString;
     return this.http
       .put(

@@ -328,7 +328,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
         } else {
           this._notification.error(
             "Fecha de reserva",
-            "No se ha guardado satisfactoriamente."
+            response.msg || "No se ha guardado satisfactoriamente."
           );
         }
       });
@@ -759,6 +759,13 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
         } else {
           parsed = value;
         }
+        let amount = 0;
+
+        if (field === "amount") {
+          amount = parsed;
+        } else {
+          amount = subconcept.budget.amount;
+        }
 
         this._api
           .updateSubconcept(
@@ -768,7 +775,13 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
             parsedPrice,
             parsedDescription,
             parsedCode,
-            this.id_company
+            this.id_company,
+            this.info.id_status,
+            this.infoCustomer.customer.id_customer,
+            `${subconcept.startDateEvent.date.year}-${subconcept.startDateEvent.date.month}-${subconcept.startDateEvent.date.day}`,
+            `${subconcept.endDateEvent.date.year}-${subconcept.endDateEvent.date.month}-${subconcept.endDateEvent.date.day}`,
+            amount,
+            subconcept.code
           )
           .subscribe((response) => {
             if (response.status == "ok") {
@@ -829,6 +842,10 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
                   //this.isModalOpen = true;
                 }
               }
+            } else {
+              this._notification.error("Error al guardar", response.msg, {
+                timeOut: 6000,
+              });
             }
           });
       });

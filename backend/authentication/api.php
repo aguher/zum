@@ -5155,6 +5155,10 @@ class Api extends Rest {
 					$respuesta['msg'] = 'El subconcepto ha sido eliminado.';
 					$query = $this->_conn->prepare("DELETE FROM tt_lines_subconcept where id_subconcept='".$id."'");
 					$query->execute();
+
+					// Eliminamos posibles reservas de articulos
+					$query = $this->_conn->prepare("DELETE FROM article_reservation where subconcept_project_id='".$id."'");
+					$query->execute();
 					$this->mostrarRespuesta($respuesta, 200);
 				} else {
 					$respuesta['status'] = 'error';
@@ -5790,13 +5794,73 @@ class Api extends Rest {
 			$field = $this->datosPeticion['field'];
 			$value = $this->datosPeticion['value'];
 
-			$query = $this->_conn->prepare("update tt_subconcepts_project set ".$field."='".$value."' where id='".$id."'");
-			
+			// Comprobamos antes de modificar la fecha, si hay disponibilidad en esa fecha
+			$isPossibleUpdate = false;
+			$query = $this->_conn->prepare("SELECT id, amount, article_id,start_date_reservation,end_date_reservation from article_reservation where subconcept_project_id ='".$id."'");
 			$query->execute();
-			$filasActualizadas = $query->rowCount();
-			if ($filasActualizadas == 1) {
-				$resp = array('status' => "ok", "msg" => "Fecha actualizada correctamente.");
-				$this->mostrarRespuesta($resp, 200);
+			$reservationLine = $query->rowCount();
+			$reservations = $query->fetch(PDO::FETCH_ASSOC);	
+			$amountAlreadyReserved = $reservations['amount'];
+
+			if($field === 'start_date_event') {
+				$parsedField = "start_date_reservation";
+				$startDateEvent = $value;
+				$endDateEvent = $reservations['end_date_reservation'];
+			} elseif($field === 'end_date_event') {
+				$parsedField = "end_date_reservation";
+				$endDateEvent = $value;
+				$startDateEvent = $reservations['start_date_reservation'];
+			} 
+		
+			// obtenemos el stock real del articulo
+			
+			$query = $this->_conn->prepare("SELECT id from tt_subconcepts_standards where code ='".$reservations['article_id']."'");
+			$query->execute();
+			$articles = $query->fetch(PDO::FETCH_ASSOC);	
+			$idArticle = $articles['id'];
+			
+			$query = $this->_conn->prepare("SELECT SUM(units) as stock FROM `tt_articlesvslocation` where article_id=".$idArticle." and borrado=0");
+			$query->execute();
+			$stockage = $query->fetch(PDO::FETCH_ASSOC);	
+			$stockAvailable = $stockage['stock'];
+			
+			
+			// Hacemos el checkeo de la gestion de reserva. Miramos en la tabla article_reservation, la sumatoria de unidades reservadas entre
+			// las fechas seleccionadas, si es mayor, no podemos meter la linea y si es menor, añadimos nuevo valor a la tabla de reservas
+			$query = $this->_conn->prepare("SELECT SUM( amount ) as reserved FROM `article_reservation` WHERE 
+				`end_date_reservation` >= DATE( '".$startDateEvent."' ) AND `start_date_reservation` <= DATE( '".$endDateEvent."' ) 
+				AND article_id = '".$reservations['article_id']."'");
+			$query->execute();
+			$filas = $query->fetch(PDO::FETCH_ASSOC);	
+			if($reservationLine > 0) {
+				// si ya hay una linea, a la suma total quitamos la que queremos reservar de nuevo
+				$amountReserved = $filas['reserved'] - $amountAlreadyReserved;
+			} else{
+				$amountReserved = $filas['reserved'];
+			}
+			
+			if($amountReserved + $amountAlreadyReserved>=$stockAvailable) {
+				$unitsMaxToReserve = $stockAvailable - $amountReserved;
+				$res = array('status' => "error", "msg" => "No hay unidades suficientes. Máx. unidades a reservar para las fechas elegidas: ".$unitsMaxToReserve);
+				
+				$this->mostrarRespuesta($res, 200);
+				return false;
+			} elseif ($reservationLine == 1) {				
+				$query = $this->_conn->prepare("UPDATE `article_reservation` set `start_date_reservation`='".$startDateEvent."',`end_date_reservation`='".$endDateEvent."' where id='".$reservations['id']."'");
+				$query->execute();
+				$isPossibleUpdate = true;
+			}
+
+
+			if($isPossibleUpdate) {
+				
+				$query = $this->_conn->prepare("update tt_subconcepts_project set ".$field."='".$value."' where id='".$id."'");				
+				$query->execute();
+				$filasActualizadas = $query->rowCount();
+				if ($filasActualizadas == 1) {
+					$resp = array('status' => "ok", "msg" => "Fecha actualizada correctamente.");
+					$this->mostrarRespuesta($resp, 200);
+				}
 			}
 		}
 		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
@@ -5812,6 +5876,72 @@ class Api extends Rest {
 			$idCompany = $this->datosPeticion['id_company'];
 			$field = $this->datosPeticion['field'];
 			$price = $this->datosPeticion['price'];
+
+			$isPedido = $this->datosPeticion['isPedido'];
+			$customerId = $this->datosPeticion['customerId'];
+			$startDateEvent = $this->datosPeticion['startDateEvent'];
+			$endDateEvent = $this->datosPeticion['endDateEvent'];
+			$amountToReserve = $this->datosPeticion['amountToReserve'];
+			$articleCode = $this->datosPeticion['articleCode'];
+
+
+			if($isPedido == 'true' && $idCompany == '416' && $amountToReserve && $articleCode){
+				
+				// obtenemos el stock real del articulo
+				
+				$query = $this->_conn->prepare("SELECT id from tt_subconcepts_standards where code ='".$articleCode."'");
+				$query->execute();
+				$articles = $query->fetch(PDO::FETCH_ASSOC);	
+				$idArticle = $articles['id'];
+				
+				$query = $this->_conn->prepare("SELECT SUM(units) as stock FROM `tt_articlesvslocation` where article_id=".$idArticle." and borrado=0");
+				$query->execute();
+				$stockage = $query->fetch(PDO::FETCH_ASSOC);	
+				$stockAvailable = $stockage['stock'];
+				
+				// comprobamos si hay ya alguna reserva en la linea del pedido
+				$query = $this->_conn->prepare("SELECT id FROM `article_reservation` WHERE subconcept_project_id = '".$id."'");
+				$query->execute();
+				$article_reservation = $query->fetch(PDO::FETCH_ASSOC);	
+				$reservationLine = $query->rowCount();
+
+				// Hacemos el checkeo de la gestion de reserva. Miramos en la tabla article_reservation, la sumatoria de unidades reservadas entre
+				// las fechas seleccionadas, si es mayor, no podemos meter la linea y si es menor, añadimos nuevo valor a la tabla de reservas
+				$query = $this->_conn->prepare("SELECT SUM( amount ) as reserved FROM `article_reservation` WHERE 
+					`end_date_reservation` >= DATE( '".$startDateEvent."' ) AND `start_date_reservation` <= DATE( '".$endDateEvent."' ) 
+					AND article_id = '".$articleCode."'");
+				
+				$query->execute();
+				$filaRows = $query->fetch(PDO::FETCH_ASSOC);	
+				if($reservationLine > 0) {
+					// si ya hay una linea, a la suma total quitamos la que queremos reservar de nuevo
+					$amountReserved = $filaRows['reserved'] - $amountToReserve;
+				} else{
+					$amountReserved = $filaRows['reserved'];
+				}
+			
+				if($amountReserved + $amountToReserve>=$stockAvailable) {
+					$unitsMaxToReserve = max(0,$stockAvailable - $amountReserved);
+					$res = array('status' => "error", "msg" => "No hay unidades suficientes. Máx. unidades a reservar para las fechas elegidas: ".$unitsMaxToReserve." unidades disponibles");
+					
+					$this->mostrarRespuesta($res, 200);
+					return false;
+				} else {
+					
+				
+					if ($reservationLine == 1) {
+						$query = $this->_conn->prepare("UPDATE `article_reservation` set `start_date_reservation`='".$startDateEvent."',`end_date_reservation`='".$endDateEvent."',`amount`='".$amountToReserve."',`article_id`='".$articleCode."' where id='".$article_reservation['id']."'");
+						$query->execute();
+					} else {
+						// añadimos la reserva a la tabla de article_reservation, sino existe
+						$query = $this->_conn->prepare("INSERT INTO `article_reservation`(`customer_id`,`start_date_reservation`,`end_date_reservation`,`amount`,`article_id`,`subconcept_project_id`) VALUES (
+							$customerId,'".$startDateEvent."','".$endDateEvent."','".$amountToReserve."','".$articleCode."',".$id.")");
+						$query->execute();
+					}
+					
+				}
+
+			}
 			$name = html_entity_decode($this->datosPeticion['name']);
 			$code = html_entity_decode($this->datosPeticion['code']);
 
@@ -5854,13 +5984,11 @@ class Api extends Rest {
 					and tt_subconcepts_standards.id_company = tt_campaign.id_company
 					and tt_subconcepts_standards.code = tt_subconcepts_project.code
 					and tt_warehouse.bdefault = 1
-					and amount <> 0
 					and tt_subconcepts_standards.bstockable = 1
 					and tt_subconcepts_project.id = ".$id);
 
 					$query->execute();
 					$numfilas = $query->rowCount();
-
 					if ($numfilas == 1) {
 						
 						$filas = $query->fetch(PDO::FETCH_ASSOC);		
@@ -5869,48 +5997,45 @@ class Api extends Rest {
 							$query = $this->_conn->prepare("INSERT INTO `tt_articlesvslocation`(`borrado`,`units`, `location_warehouse`, `location_rows`, `location_sections`, `location_heights`, `article_id`, `owner_id`, `state_id`,`date_mod`,`image`,`subconcept_project_id`) VALUES (
 								-1,'".$filas['amount']."','".$filas['id_almacen']."','0','0','0', '".$filas['id_article']."','".$filas['id_customer']."',5,CURRENT_TIMESTAMP,'".$filas['image']."','".$id."')");
 							$query->execute();
-
-							//compruebo que tengo disponibles en el almacén
-							$queryWithFamilies = "select tt_articles_families.familyname as family, tt_subconcepts_standards.id_family, tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
-							from tt_subconcepts_project, tt_subconcepts_standards
-							INNER JOIN tt_articles_families ON tt_subconcepts_standards.id_family = tt_articles_families.id
-							where tt_subconcepts_project.id = ".$id."
-							and tt_subconcepts_project.code = tt_subconcepts_standards.code";
-							$queryWithoutFamilies = "select tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
-							from tt_subconcepts_project, tt_subconcepts_standards
-							where tt_subconcepts_project.id = ".$id."
-							and tt_subconcepts_project.code = tt_subconcepts_standards.code";
-							if($idCompany == "416") {
-								$query = $this->_conn->prepare($queryWithFamilies);
-							} else {
-								$query = $this->_conn->prepare($queryWithoutFamilies);
-
-							}
-
-							$query->execute();
-							$filas = $query->fetch(PDO::FETCH_ASSOC);
-
-
-							if (isset($filas['id'])){
-								$query = $this->_conn->prepare("select sum(units) as solicitadas,
-									(select sum(units) from tt_articlesvslocation where article_id = ".$filas['id']." and borrado = 0) as disponibles,
-									(select amount from tt_subconcepts_project where id =".$id.") as pedidasaqui
-									from tt_articlesvslocation, tt_subconcepts_project, tt_campaign
-									where article_id = ".$filas['id']."
-									and borrado =-1
-									and tt_subconcepts_project.id <> ".$id."
-									and tt_articlesvslocation.subconcept_project_id = tt_subconcepts_project.id
-									and tt_subconcepts_project.id_project = tt_campaign.id");
-
-								$query->execute();
-								$stock = $query->fetch(PDO::FETCH_ASSOC);
-
-							}
-
-						}else{
-							//si la cifra que pone es negativa, metemos en el almacén existencias
+						}
+						//compruebo que tengo disponibles en el almacén
+						$queryWithFamilies = "select tt_articles_families.familyname as family, tt_subconcepts_standards.id_family, tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
+						from tt_subconcepts_project, tt_subconcepts_standards
+						INNER JOIN tt_articles_families ON tt_subconcepts_standards.id_family = tt_articles_families.id
+						where tt_subconcepts_project.id = ".$id."
+						and tt_subconcepts_project.code = tt_subconcepts_standards.code";
+						$queryWithoutFamilies = "select tt_subconcepts_standards.id, tt_subconcepts_standards.description, tt_subconcepts_standards.bstockable
+						from tt_subconcepts_project, tt_subconcepts_standards
+						where tt_subconcepts_project.id = ".$id."
+						and tt_subconcepts_project.code = tt_subconcepts_standards.code";
+						if($idCompany == "416") {
+							$query = $this->_conn->prepare($queryWithFamilies);
+						} else {
+							$query = $this->_conn->prepare($queryWithoutFamilies);
 
 						}
+						
+						$query->execute();
+						$filas = $query->fetch(PDO::FETCH_ASSOC);
+
+
+						if (isset($filas['id'])){
+							$query = $this->_conn->prepare("select sum(units) as solicitadas,
+								(select sum(units) from tt_articlesvslocation where article_id = ".$filas['id']." and borrado = 0) as disponibles,
+								(select amount from tt_subconcepts_project where id =".$id.") as pedidasaqui
+								from tt_articlesvslocation, tt_subconcepts_project, tt_campaign
+								where article_id = ".$filas['id']."
+								and borrado =-1
+								and tt_subconcepts_project.id <> ".$id."
+								and tt_articlesvslocation.subconcept_project_id = tt_subconcepts_project.id
+								and tt_subconcepts_project.id_project = tt_campaign.id");
+
+							$query->execute();
+							$stock = $query->fetch(PDO::FETCH_ASSOC);
+
+						}
+
+						
 
 					}
 					if($idCompany == "416") {
