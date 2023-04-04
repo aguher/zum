@@ -1,6 +1,6 @@
 <app-header *ngIf="!removeMenu"></app-header>
 <div class="body-content" [ngClass]="getClasses()">
-  <router-outlet></router-outlet> 
+  <router-outlet></router-outlet>
 </div>
-<app-footer *ngIf="!removeMenu"></app-footer>
+<!--<app-footer *ngIf="!removeMenu"></app-footer>-->
 <simple-notifications [options]="options"></simple-notifications>

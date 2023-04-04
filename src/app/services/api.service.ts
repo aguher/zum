@@ -50,6 +50,20 @@ export class ApiService {
         .map((response: Response) => response.json());
     }
   }
+  getAllEventReservations() {
+    let dataSelected = this._common.getIdCompanyYearSelected();
+
+    if (dataSelected) {
+      const queryString = `&id_company=${dataSelected.company}`;
+      return this.http
+        .get(
+          this._config.Server +
+            this._config.getAllEventReservations +
+            queryString
+        )
+        .map((response: Response) => response.json());
+    }
+  }
   // COMPANY REPORT
   updateCompanyReport(body) {
     let dataSelected = this._common.getIdCompanyYearSelected();

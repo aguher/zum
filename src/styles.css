@@ -3,13 +3,13 @@
 
 /* You can add global styles to this file, and also import other style files */
 * {
-    font-family:  Tahoma;/* 'Montserrat', */
+    font-family: 'Inter';
     box-sizing: border-box;
 }
 body {
     margin:0;
     padding:0;    
-    background-color: #F7F8F9;
+    background-color: #f1f5f9;
     overflow-y: scroll;
 }
 ul {
@@ -35,7 +35,7 @@ a:hover {
     margin: 15px 0;
 }
 .title-loading {
-	font-family: 'Montserrat', sans-serif;
+	font-family: 'Inter', sans-serif;
 	font-weight: 300;
 	color:#4d4d4d;
 	text-align: center;

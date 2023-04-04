@@ -122,6 +122,7 @@ export class ProjectsNewComponent implements OnInit {
     parent_account: "",
     type: null,
   };
+  showReservationLogic = false;
   autoNumbered = true;
   roleUser: number = 0;
   user_id: number = -1;
@@ -524,6 +525,10 @@ export class ProjectsNewComponent implements OnInit {
     this.end_date_calendar = this.end_date;
 
     let dataSelected = this._common.getIdCompanyYearSelected();
+    if (dataSelected && dataSelected.company === "416") {
+      this.showReservationLogic = true;
+    }
+
     if (!dataSelected) {
       this._notification.error(
         "¡Aviso!",

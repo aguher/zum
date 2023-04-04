@@ -18,6 +18,8 @@ export class Configuration {
   public updateIncomeVariableConcept: string = "updateIncomeVariableConcept";
   public getBreakdownSupervisor: string = "getBreakdownSupervisor";
 
+  public getAllEventReservations: string = "getAllEventReservations";
+
   public getStadisticsBilling: string = "getStadisticsBilling";
   public getStadisticsCampaigns: string = "getStadisticsCampaigns";
   public getArticlesLocation: string = "getArticlesLocation";

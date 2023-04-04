@@ -125,6 +125,10 @@ input{
                 position: relative;
                 top: 0;
                 font-size: 12px;
+                &.reservations {
+                    background: $dangerColor;
+                    margin-left: 10px;
+                }
                 &.export {
                     background: $thirdColor;
                     margin-left: 10px;

@@ -154,6 +154,16 @@
             roleUser == 10
           "
         >
+          <a
+            class="big-button reservations"
+            routerLink="/calendario"
+            *ngIf="showReservationLogic"
+          >
+            <i alt="Reservas" title="Reservas" class="material-icons"
+              >calendar_today</i
+            >
+            Ver Reservas
+          </a>
           <a class="big-button export" (click)="exportExcel()">
             <i alt="exportar" title="exportar" class="material-icons"
               >get_app</i
