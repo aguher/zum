@@ -8,7 +8,7 @@ import {
 } from "angular-calendar";
 import { WeekDay } from "calendar-utils";
 import { Subject } from "rxjs";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { ApiService } from "app/services/api.service";
 
 const colors: any = {
@@ -33,23 +33,37 @@ const colors: any = {
   encapsulation: ViewEncapsulation.None,
 })
 export class CalendarioComponent {
+  router;
   view: string = "month";
   refresh: Subject<any> = new Subject();
-
+  articleInfo = undefined;
   viewDate: Date = new Date();
   activeDayIsOpen: boolean = false;
   locale: string = "es";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-  constructor(private route: ActivatedRoute, private _api: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private _api: ApiService,
+    private _router: Router
+  ) {
+    this.router = _router;
+  }
   ngOnInit() {
+    let idArticle = undefined;
     this.route.paramMap.subscribe((params: ParamMap) => {
-      console.log(+params.get("id_article"));
+      idArticle = params.get("id_article");
     });
-    this._api.getAllEventReservations().subscribe((response) => {
+
+    this._api.getAllEventReservations(idArticle).subscribe((response) => {
       if (response.status === "ok") {
+        this.articleInfo = response.article_selected
+          ? `${response.article_selected.brand} - [${response.article_selected.code}] ${response.article_selected.description}`
+          : undefined;
         response.reservations.forEach((reserve) => {
           this.events.push({
-            title: reserve.subconcept,
+            title: reserve.article,
+            subconcept: reserve.subconcept,
+            campaign: reserve.campaign,
             amount: reserve.amount,
             customer: reserve.customer,
             color: this.generateRandomColor(),
@@ -60,6 +74,9 @@ export class CalendarioComponent {
         this.refresh.next();
       }
     });
+  }
+  goToCampaign(event) {
+    this.router.navigate([`/desglose/${event.campaign}`]);
   }
   eventTimesChanged({ event, newStart, newEnd }: any): void {
     console.log("eventTimesChanged Event", event);

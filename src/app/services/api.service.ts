@@ -50,11 +50,14 @@ export class ApiService {
         .map((response: Response) => response.json());
     }
   }
-  getAllEventReservations() {
+  getAllEventReservations(idArticle) {
     let dataSelected = this._common.getIdCompanyYearSelected();
 
     if (dataSelected) {
-      const queryString = `&id_company=${dataSelected.company}`;
+      const queryString =
+        idArticle !== null
+          ? `&id_article=${idArticle}&id_company=${dataSelected.company}`
+          : `&id_company=${dataSelected.company}`;
       return this.http
         .get(
           this._config.Server +

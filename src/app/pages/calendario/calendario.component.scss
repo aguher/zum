@@ -6,12 +6,25 @@ h4.title-open-day {
     font-size: 14px;
     text-transform: uppercase;
 }
+.wrapper-reserve {
+    padding: 10px;
+    border: 1px solid #e4e4e4;
+    border-left-width: 5px;
+    border-left-style: solid;
+    margin:2px 0;
+    h6 {
+        border-bottom: 1px solid #e4e4e4;
+        padding-bottom: 8px;
+        display: flex;
+    align-items: center;
+    justify-content: space-between;
+    }
+}
 .container-reservation-day {
     margin: 2px 0;
     padding: 4px;
     font-size: 14px;
-    border-left-width: 5px;
-    border-left-style: solid;
+    
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 5px 10px;
@@ -47,12 +60,16 @@ h4.title-open-day {
         font-weight: 600;
     }
 }
+
 .container-reservation {
     margin: 2px 0;
     padding: 4px;
     font-size: 14px;
     border-top-width: 5px;
     border-top-style: solid;
+    display: grid;
+    width: 100%;
+    gap: 6px;
     .customer {
         background-color: #fff4f3;
         border:1px solid#e05e64;
@@ -150,6 +167,13 @@ h2 {
 }
 .container-own {
     height:calc(100vh - 150px);
+    .article-info {
+        text-align: right;
+        span {
+            font-weight:300;
+        }
+        
+    }
     .container-calendar {
         background: white;
         border-radius: 16px;

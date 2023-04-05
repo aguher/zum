@@ -8,26 +8,38 @@
     Resumen del dia seleccionado
   </h4>
   <div
-    class="container-reservation-day"
+    class="wrapper-reserve"
     *ngFor="let event of events; let x = index"
     [ngStyle]="{ 'border-color': event.color }"
   >
-    <h4>Cliente</h4>
-    <h4>Artículo reservado</h4>
-    <h4>Unidades reservadas</h4>
-    <h4>Fecha de reserva</h4>
-    <span class="customer">{{ event.customer }}</span>
+    <h6>
+      <span> <b>Nombre del pedido: </b>{{ event.subconcept }} </span>
+      <button
+        type="button"
+        class="btn btn-outline-success btn-sm"
+        (click)="goToCampaign(event)"
+      >
+        Ir al pedido
+      </button>
+    </h6>
 
-    <span class="title">{{ event.title }}</span>
+    <div class="container-reservation-day">
+      <h4>Cliente</h4>
+      <h4>Artículo reservado</h4>
+      <h4>Unidades reservadas</h4>
+      <h4>Fecha de reserva</h4>
+      <span class="customer">{{ event.customer }}</span>
 
-    <span class="amount">
-      <i class="material-icons">work</i>{{ event.amount }} unidades</span
-    >
-    <span class="title"
-      >{{ event.start | date : "dd/MM/yyyy" }}-{{
-        event.end | date : "dd/MM/yyyy"
-      }}</span
-    >
+      <span class="title">{{ event.title }}</span>
+
+      <span class="amount">
+        <i class="material-icons">work</i>{{ event.amount }} unidades</span
+      >
+      <span class="title"
+        >Desde {{ event.start | date : "dd/MM/yyyy" }} al
+        {{ event.end | date : "dd/MM/yyyy" }}</span
+      >
+    </div>
   </div>
 </ng-template>
 
@@ -57,7 +69,15 @@
 </ng-template>
 <div class="container-own">
   <div class="row">
-    <h2>Calendario de reservas</h2>
+    <div class="col">
+      <h2>Calendario de reservas</h2>
+    </div>
+    <div class="col article-info" *ngIf="articleInfo">
+      <h5>
+        Reservas de artículo:
+        <span class="badge badge-warning">{{ articleInfo }}</span>
+      </h5>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-8">
