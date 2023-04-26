@@ -17,7 +17,7 @@ export class Configuration {
   public getInfoImportERP: string = "getInfoImportERP";
   public updateIncomeVariableConcept: string = "updateIncomeVariableConcept";
   public getBreakdownSupervisor: string = "getBreakdownSupervisor";
-
+  public createBillFromMultipleOrders: string = "createBillFromMultipleOrders";
   public getAllEventReservations: string = "getAllEventReservations";
 
   public getStadisticsBilling: string = "getStadisticsBilling";

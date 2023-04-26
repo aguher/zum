@@ -37,7 +37,9 @@
   </div>
 </div>
 <div
-  *ngIf="info.status === 'Pedido' && info.start_date_event"
+  *ngIf="
+    id_company == '416' && info.status === 'Pedido' && info.start_date_event
+  "
   class="date-container"
 >
   <div>

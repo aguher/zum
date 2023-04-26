@@ -34,7 +34,9 @@ export class ProjectsNewComponent implements OnInit {
   nuevoClienteOculto = true;
   cargandolistado: any = false;
   bPermisoAnyadir: boolean = true;
-
+  customerSelected = null;
+  ordersCustomer = [];
+  ordersSelectedToFacture = [];
   filtronumero: any;
   filtroproyecto: any;
   filtrocliente: any;
@@ -51,7 +53,7 @@ export class ProjectsNewComponent implements OnInit {
   filtromargenreales: any;
   filtroPtesFacturar: boolean = false;
   filtroSinFactura: boolean = false;
-  cabeceraNuevoProyecto;
+  cabeceraNuevoProyecto = "Facturar pedidos";
   tabSeleccionada = 2;
 
   start_date: any;
@@ -106,6 +108,8 @@ export class ProjectsNewComponent implements OnInit {
     },
   };
   displayDialog: boolean = false;
+  billDate = null;
+  displayDialogMultiplePedidos: boolean = false;
   displayDialogNew: boolean = false;
   displayDialogCliente: boolean = false;
   selectedCustomer: any;
@@ -163,6 +167,10 @@ export class ProjectsNewComponent implements OnInit {
       day: 9,
     },
   };
+
+  onDateBillChanged(event: IMyDateModel) {
+    this.billDate = event.date;
+  }
 
   public lineChartLabels: Array<any> = [
     "Ene",
@@ -388,7 +396,61 @@ export class ProjectsNewComponent implements OnInit {
       this.changeSearchInput(value);
     });
   }
+  updateCustomerSelected(value) {
+    this.ordersCustomer = this.projects.filter(
+      (project) => project.customer == this.customerSelected
+    );
+    this.ordersCustomer = this.ordersCustomer.map((order) => ({
+      ...order,
+      checked: false,
+    }));
+  }
+  onUpdateCheckbox(value, id) {
+    if (value.checked) {
+      this.ordersSelectedToFacture.push(id);
+      this.ordersSelectedToFacture = Array.from(
+        new Set(this.ordersSelectedToFacture)
+      );
+    } else {
+      const index = this.ordersSelectedToFacture.indexOf(id);
+      this.ordersSelectedToFacture.splice(index, 1);
+    }
+    this.ordersCustomer = this.ordersCustomer.map((order) => ({
+      ...order,
+      checked: order.id === id ? value.checked : order.checked,
+    }));
+  }
 
+  createMultipleOrders() {
+    console.log(JSON.parse(localStorage.getItem("selectedCompany")).value.id);
+    console.log(
+      JSON.parse(localStorage.getItem("selectedFiscalYear")).value.id
+    );
+    console.log(localStorage.getItem("token"));
+    console.log(this.ordersSelectedToFacture.join(","));
+    console.log(
+      `${this.billDate.date.year}-${this.billDate.date.month}-${this.billDate.date.day}`
+    );
+
+    this.displayDialogMultiplePedidos = false;
+    const token = localStorage.getItem("token");
+    const id_fiscal_year = JSON.parse(
+      localStorage.getItem("selectedFiscalYear")
+    ).value.id;
+    const id_company = JSON.parse(localStorage.getItem("selectedCompany")).value
+      .id;
+    const fechafactura = `${this.billDate.date.year}-${this.billDate.date.month}-${this.billDate.date.day}`;
+    this._api
+      .createBillFromMultipleOrders(
+        `id_fiscal_year=${id_fiscal_year}&id_company=${id_company}&token=${token}&orders=${this.ordersSelectedToFacture.join(
+          ","
+        )}&date_bill=${fechafactura}`
+      )
+      .subscribe((response) => {
+        const idBill = response.id_bill;
+        this._router.navigate(["/factura", idBill]);
+      });
+  }
   refresh(mensaje: boolean = false) {
     this.cargandolistado = true;
     this.showInput = parseInt(this._token.getInfo().role) >= 6 ? false : true;
@@ -1037,6 +1099,10 @@ export class ProjectsNewComponent implements OnInit {
       }
     } else {
     }
+  }
+
+  factureMultiplePedidos() {
+    this.displayDialogMultiplePedidos = true;
   }
 
   createCampaign(proy = null) {

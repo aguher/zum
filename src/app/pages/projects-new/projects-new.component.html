@@ -95,7 +95,7 @@
 <div class="container-projects" *ngIf="choosenCompany; else choosenProjects">
   <div class="container-title">
     <div class="ui-grid-row" style="margin-bottom: 5px">
-      <div class="ui-grid-col-4">
+      <div class="ui-grid-col-3">
         <button
           style="top: 15px; position: relative"
           type="button"
@@ -143,7 +143,7 @@
         </div>
       </div>
 
-      <div class="ui-grid-col-4; text-right">
+      <div class="ui-grid-col-6; text-right">
         <div
           class="add-campaign"
           *ngIf="
@@ -164,6 +164,17 @@
             >
             Ver Reservas
           </a>
+          <a
+            class="big-button facturar"
+            (click)="factureMultiplePedidos()"
+            *ngIf="showReservationLogic"
+          >
+            <i alt="Reservas" title="Reservas" class="material-icons"
+              >receipt</i
+            >
+            Facturar Múltiples Pedidos
+          </a>
+
           <a class="big-button export" (click)="exportExcel()">
             <i alt="exportar" title="exportar" class="material-icons"
               >get_app</i
@@ -823,6 +834,106 @@
   <!-- "-->
 </div>
 
+<p-dialog
+  [header]="cabeceraNuevoProyecto"
+  [(visible)]="displayDialogMultiplePedidos"
+  [style]="{ width: '600px' }"
+  [modal]="true"
+>
+  <div
+    class="ui-grid ui-grid-responsive ui-fluid"
+    [ngStyle]="{ width: '850px' }"
+  >
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">Selecciona un cliente</div>
+      <div class="ui-grid-col-8">
+        <select
+          [ngStyle]="{ width: '100%' }"
+          [(ngModel)]="customerSelected"
+          #selectCustomer
+          (change)="updateCustomerSelected(selectCustomer.label)"
+        >
+          <option
+            *ngFor="let customer of dataCombos.customers"
+            [value]="customer.label"
+          >
+            {{ customer.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div>
+    <hr />
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-12">Selecciona varios pedidos a facturar</div>
+    </div>
+    <hr />
+    <div [ngStyle]="{ height: '245px', 'overflow-y': 'scroll' }">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Código</th>
+            <th scope="col">Núm. Pedido</th>
+            <th scope="col">Fecha Creación</th>
+            <th scope="col">Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of ordersCustomer">
+            <th scope="row">
+              <input
+                type="checkbox"
+                [checked]="order.checked"
+                #selectCheckbox
+                (change)="onUpdateCheckbox(selectCheckbox, order.id)"
+              />
+            </th>
+            <td>{{ order.campaign_code }}</td>
+            <td>{{ order.ped_code }}</td>
+            <td>{{ order.creation_date }}</td>
+            <td>{{ order.campaign_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <hr />
+    <div
+      class="ui-grid-row row justify-content-end"
+      [ngStyle]="{ margin: '16px' }"
+    >
+      <div class="ui-grid-col-8">
+        <span class="title"
+          >Va a Facturar los pedidos. Indique la fecha de facturación:
+        </span>
+      </div>
+      <div class="ui-grid-col-4">
+        <my-date-picker
+          name="mydate"
+          [options]="myDatePickerOptions"
+          [(ngModel)]="billDate"
+          (dateChanged)="onDateBillChanged($event)"
+        ></my-date-picker>
+      </div>
+    </div>
+    <div
+      class="ui-grid-row row justify-content-end"
+      [ngStyle]="{ margin: '10px 0' }"
+    >
+      <div class="ui-grid-col">
+        <button
+          [disabled]="ordersSelectedToFacture.length == 0 || billDate == null"
+          class="btn btn-primary"
+          title="Facturar pedidos"
+          (click)="createMultipleOrders()"
+        >
+          + Facturar pedidos seleccionados
+        </button>
+      </div>
+    </div>
+  </div>
+</p-dialog>
 <p-dialog
   styleClass="dashboard-dialog"
   [header]="cabeceraNuevoProyecto"

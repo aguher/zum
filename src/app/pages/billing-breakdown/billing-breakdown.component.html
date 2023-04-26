@@ -5,7 +5,13 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-12">
             <label for="creation_date">Fecha de Emisión</label>
-            <my-date-picker [disabled]="isreadonly" name="mydate" [options]="myDatePickerOptions" [(ngModel)]="issue_date" (dateChanged)="onDateChanged($event,  'issue_date')"></my-date-picker>
+            <my-date-picker
+              [disabled]="isreadonly"
+              name="mydate"
+              [options]="myDatePickerOptions"
+              [(ngModel)]="issue_date"
+              (dateChanged)="onDateChanged($event, 'issue_date')"
+            ></my-date-picker>
           </div>
         </div>
       </div>
@@ -14,7 +20,13 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-12">
             <label for="creation_date">Fecha de Vencimiento</label>
-            <my-date-picker [disabled]="isreadonly" name="mydate" [options]="myDatePickerOptions" [(ngModel)]="due_date" (dateChanged)="onDateChanged($event,  'due_date')"></my-date-picker>
+            <my-date-picker
+              [disabled]="isreadonly"
+              name="mydate"
+              [options]="myDatePickerOptions"
+              [(ngModel)]="due_date"
+              (dateChanged)="onDateChanged($event, 'due_date')"
+            ></my-date-picker>
           </div>
         </div>
       </div>
@@ -23,58 +35,86 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-12">
             <label for="creation_date">PO</label>
-            <input [readonly]="isreadonly"  type="text" style="max-width:200px" [(ngModel)]="po_field" (blur)="blurValidity($event,'PO')" (keydown)="changeInfoBill($event, 'PO')" />
+            <input
+              [readonly]="isreadonly"
+              type="text"
+              style="max-width: 200px"
+              [(ngModel)]="po_field"
+              (blur)="blurValidity($event, 'PO')"
+              (keydown)="changeInfoBill($event, 'PO')"
+            />
           </div>
         </div>
       </div>
       <div class="ui-grid-col-4">
-          <div class="ui-grid-col-8" *ngIf="addresses && addresses.length > 0">
-            <label>Dirección</label>
-            <select [disabled]="isreadonly" #selectAddr style="min-height: 35px" (change)="changeAddress(selectAddr.value,true)">
-              <option *ngFor="let direccion of addresses" value={{direccion.id}} [selected]="direccion.id==infoBilling.id_address">{{direccion.Nombre}}</option>
-            </select>
-          </div>
-          <div class="ui-grid-col-4">
-            <label>A la att. de</label>
-            <input [readonly]="isreadonly" type=text [(ngModel)]="contact_field" style="max-width:200px" (blur)="blurValidity($event,'A la Att. de:')" (keydown)="changeInfoBill($event, 'contact')" /> 
-          </div>
+        <div class="ui-grid-col-8" *ngIf="addresses && addresses.length > 0">
+          <label>Dirección</label>
+          <select
+            [disabled]="isreadonly"
+            #selectAddr
+            style="min-height: 35px"
+            (change)="changeAddress(selectAddr.value, true)"
+          >
+            <option
+              *ngFor="let direccion of addresses"
+              value="{{ direccion.id }}"
+              [selected]="direccion.id == infoBilling.id_address"
+            >
+              {{ direccion.Nombre }}
+            </option>
+          </select>
+        </div>
+        <div class="ui-grid-col-4">
+          <label>A la att. de</label>
+          <input
+            [readonly]="isreadonly"
+            type="text"
+            [(ngModel)]="contact_field"
+            style="max-width: 200px"
+            (blur)="blurValidity($event, 'A la Att. de:')"
+            (keydown)="changeInfoBill($event, 'contact')"
+          />
+        </div>
       </div>
       <div class="ui-grid-col-2">
         <a class="pdf-button" (click)="exportPDF()">
-          <i alt="exportar" title="exportar" class="material-icons">picture_as_pdf</i>
+          <i alt="exportar" title="exportar" class="material-icons"
+            >picture_as_pdf</i
+          >
           Imprimir
         </a>
       </div>
     </div>
   </div>
-  <div class="ui-grid ui-grid-responsive ui-fluid" id="header-cloned" *ngIf="infoBilling">
+  <div
+    class="ui-grid ui-grid-responsive ui-fluid"
+    id="header-cloned"
+    *ngIf="infoBilling"
+  >
     <div class="ui-grid-row">
       <div class="ui-grid-col-12 h1">
-        {{infoBilling.description}}
+        {{ infoBilling.description }}
+        <div class="number">número: {{ infoBilling.number }}</div>
         <div class="number">
-          número: {{infoBilling.number}}
+          serie: {{ infoBilling.numbertext | slice : 0 : 2 }}
         </div>
-        <div class="number">
-          serie: {{infoBilling.numbertext | slice:0:2 }}
-        </div>
-        <label style="margin-left:15px" *ngIf="infoBilling.id_rect != 0">(abona Fra. {{infoBilling.numbertext_rect}})</label>
+        <label style="margin-left: 15px" *ngIf="infoBilling.id_rect != 0"
+          >(abona Fra. {{ infoBilling.numbertext_rect }})</label
+        >
       </div>
     </div>
     <div class="ui-grid-row">
-      <div class="ui-grid-col-6" style='line-height:42px;background: #F1F2F7;color: #222222; '>
+      <div
+        class="ui-grid-col-6"
+        style="line-height: 42px; background: #f1f2f7; color: #222222"
+      >
         Conceptos Variables
       </div>
       <div class="ui-grid-col-6">
         <div class="ui-grid-row">
-          <div class="ui-grid-col-4 label">
-            Cantidad
-          </div>
-          <div class="ui-grid-col-4 label">
-            Precio Unitario
-          </div>
-          <div class="ui-grid-col-4 label">
-            Total
-          </div>
+          <div class="ui-grid-col-4 label">Cantidad</div>
+          <div class="ui-grid-col-4 label">Precio Unitario</div>
+          <div class="ui-grid-col-4 label">Total</div>
         </div>
       </div>
     </div>
@@ -82,31 +122,28 @@
   <div class="ui-grid ui-grid-responsive ui-fluid header" *ngIf="infoBilling">
     <div class="ui-grid-row">
       <div class="ui-grid-col-12 h1">
-        {{infoBilling.description}}
+        {{ infoBilling.description }}
+        <div class="number">número: {{ infoBilling.number }}</div>
         <div class="number">
-          número: {{infoBilling.number}}
+          serie: {{ infoBilling.numbertext | slice : 0 : 2 }}
         </div>
-        <div class="number">
-          serie: {{infoBilling.numbertext | slice:0:2 }}
-        </div>
-        <label style="margin-left:15px" *ngIf="infoBilling.id_rect != 0">(abona Fra. {{infoBilling.numbertext_rect}})</label>
+        <label style="margin-left: 15px" *ngIf="infoBilling.id_rect != 0"
+          >(abona Fra. {{ infoBilling.numbertext_rect }})</label
+        >
       </div>
     </div>
     <div class="ui-grid-row">
-      <div class="ui-grid-col-6" style='line-height:42px;background: #F1F2F7;color: #222222; '>
+      <div
+        class="ui-grid-col-6"
+        style="line-height: 42px; background: #f1f2f7; color: #222222"
+      >
         Conceptos Variables
       </div>
       <div class="ui-grid-col-6">
         <div class="ui-grid-row">
-          <div class="ui-grid-col-4 label">
-            Cantidad
-          </div>
-          <div class="ui-grid-col-4 label">
-            Precio Unitario
-          </div>
-          <div class="ui-grid-col-4 label">
-            Total
-          </div>
+          <div class="ui-grid-col-4 label">Cantidad</div>
+          <div class="ui-grid-col-4 label">Precio Unitario</div>
+          <div class="ui-grid-col-4 label">Total</div>
         </div>
       </div>
     </div>
@@ -116,66 +153,110 @@
     <div *ngFor="let line of lines; let idx = index">
       <div class="ui-grid-row variable-concept-line">
         <div class="ui-grid-col-6 name-concept">
-          {{line.name}}
-          <a class="add-button" (click)="addSubconcept(idx)" *ngIf="!isreadonly">
-            <i alt="Añadir subconcepto" title="Añadir subconcepto" class="material-icons">add</i>
+          {{ line.name }}
+          <a
+            class="add-button"
+            (click)="addSubconcept(idx)"
+            *ngIf="!isreadonly"
+          >
+            <i
+              alt="Añadir subconcepto"
+              title="Añadir subconcepto"
+              class="material-icons"
+              >add</i
+            >
           </a>
         </div>
         <div class="ui-grid-col-6">
           <div class="ui-grid-row budget-lines">
             <div class="ui-grid-col-4 label">
-<!--               {{line.budget.amount | currency:false}} -->
+              <!--               {{line.budget.amount | currency:false}} -->
             </div>
             <div class="ui-grid-col-4 label">
-<!--               {{line.budget.price | currency}} -->
+              <!--               {{line.budget.price | currency}} -->
             </div>
             <div class="ui-grid-col-4 label">
-              {{line.budget.total | currency}}
+              {{ line.budget.total | currency }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="ui-grid-row variable-concept-line" *ngFor="let subconcept of line.subconcepts; let id_inner = index">
-        <div class="ui-grid-col-6  name-concept">
+      <div
+        class="ui-grid-row variable-concept-line"
+        *ngFor="let subconcept of line.subconcepts; let id_inner = index"
+      >
+        <div class="ui-grid-col-6 name-concept">
+          <textarea
+            [readonly]="isreadonly"
+            style="width: 100%"
+            rows="3"
+            [(ngModel)]="subconcept.name"
+            (blur)="updateSubconcept(subconcept, $event, 'name', true)"
+          >
+          </textarea>
 
-            <textarea [readonly]="isreadonly" style="width:100%" rows=3 [(ngModel)]="subconcept.name" (blur)="updateSubconcept(subconcept, $event, 'name', true)">
-
-            </textarea>
-
-
-<!--           <p-autoComplete [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name" (onBlur)="updateSubconcept(subconcept, $event, 'name', true)"
+          <!--           <p-autoComplete [maxlength]="300" (onFocus)="$event.target.select()" [(ngModel)]="subconcept.name" (onBlur)="updateSubconcept(subconcept, $event, 'name', true)"
             (onDropdownClick)="updateSubconcept(subconcept, $event, 'name')" (onSelect)="updateSubconcept(subconcept, $event, 'name')"
             [suggestions]="subconcepts_standard" (completeMethod)="searchSubconceptsStandards($event)">
 
           </p-autoComplete> -->
 
-          <a class="remove-button" (click)="removeSubconcept(subconcept.id, idx, id_inner)" *ngIf="!isreadonly">
-            <i alt="Eliminar subconcepto" title="Eliminar subconcepto" class="material-icons">remove</i>
+          <a
+            class="remove-button"
+            (click)="removeSubconcept(subconcept.id, idx, id_inner)"
+            *ngIf="!isreadonly"
+          >
+            <i
+              alt="Eliminar subconcepto"
+              title="Eliminar subconcepto"
+              class="material-icons"
+              >remove</i
+            >
           </a>
         </div>
         <div class="ui-grid-col-6">
           <div class="ui-grid-row budget-lines">
             <div class="ui-grid-col-4 label">
-              <input [readonly]="isreadonly"  (blur)="blurred($event, old, subconcept, 'budget', 'amount')" myCurrencyFormatter type="text" pInputText [(ngModel)]="subconcept['budget']['amount']"
-                (focus)="old=subconcept.budget.amount;$event.target.className=''" (keydown)="resetClass($event);changeInput(subconcept, $event, 'amount');"
+              <input
+                [readonly]="isreadonly"
+                (blur)="blurred($event, old, subconcept, 'budget', 'amount')"
+                myCurrencyFormatter
+                type="text"
+                pInputText
+                [(ngModel)]="subconcept['budget']['amount']"
+                (focus)="
+                  old = subconcept.budget.amount; $event.target.className = ''
+                "
+                (keydown)="
+                  resetClass($event); changeInput(subconcept, $event, 'amount')
+                "
               />
             </div>
             <div class="ui-grid-col-4 label">
-              <input [readonly]="isreadonly"  (blur)="blurred($event, old, subconcept, 'budget', 'price')" myCurrencyFormatter type="text" pInputText [(ngModel)]="subconcept['budget']['price']"
-                (focus)="old=subconcept.budget.price;$event.target.className=''" (keydown)="resetClass($event);changeInput(subconcept, $event, 'price');"
+              <input
+                [readonly]="isreadonly"
+                (blur)="blurred($event, old, subconcept, 'budget', 'price')"
+                myCurrencyFormatter
+                type="text"
+                pInputText
+                [(ngModel)]="subconcept['budget']['price']"
+                (focus)="
+                  old = subconcept.budget.price; $event.target.className = ''
+                "
+                (keydown)="
+                  resetClass($event); changeInput(subconcept, $event, 'price')
+                "
               />
             </div>
             <div class="ui-grid-col-4 label">
-              {{subconcept.budget.total | currency}}
+              {{ subconcept.budget.total | currency }}
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
 
   <div class="ui-grid ui-grid-responsive ui-fluid subtotal" *ngIf="false">
     <div class="ui-grid-row">
@@ -184,11 +265,9 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-3"></div>
           <div class="ui-grid-col-3"></div>
+          <div class="ui-grid-col-3 label">Subtotal</div>
           <div class="ui-grid-col-3 label">
-            Subtotal
-          </div>
-          <div class="ui-grid-col-3 label">
-            {{subtotal.budget_total | currency}}
+            {{ subtotal.budget_total | currency }}
           </div>
         </div>
       </div>
@@ -196,50 +275,70 @@
   </div>
   <div class="ui-grid ui-grid-responsive ui-fluid lines" *ngIf="false">
     <div class="ui-grid-row variable-concept-line end-line">
-      <div class="ui-grid-col-4 name-concept fee">
-        Fee de Empresa
-      </div>
+      <div class="ui-grid-col-4 name-concept fee">Fee de Empresa</div>
       <div class="ui-grid-col-8">
         <div class="ui-grid-row budget-lines">
           <div class="ui-grid-col-3 label">
-            <input (blur)="blurred($event, old, fee, 'budget', 'amount')" myCurrencyFormatter type="text" pInputText [(ngModel)]="fee['budget']['amount']"
-              (focus)="old=fee.budget.amount;$event.target.className=''" (keydown)="resetClass($event);changeInputFee(fee, $event, 'amount');"
+            <input
+              (blur)="blurred($event, old, fee, 'budget', 'amount')"
+              myCurrencyFormatter
+              type="text"
+              pInputText
+              [(ngModel)]="fee['budget']['amount']"
+              (focus)="old = fee.budget.amount; $event.target.className = ''"
+              (keydown)="
+                resetClass($event); changeInputFee(fee, $event, 'amount')
+              "
             />
           </div>
           <div class="ui-grid-col-3 label">
-            <input (blur)="blurred($event, old, fee, 'budget', 'units')" myCurrencyFormatter type="text" pInputText [(ngModel)]="fee['budget']['units']"
-              (focus)="old=fee.budget.units;$event.target.className=''" (keydown)="resetClass($event);changeInputFee(fee, $event, 'unit_budget');"
+            <input
+              (blur)="blurred($event, old, fee, 'budget', 'units')"
+              myCurrencyFormatter
+              type="text"
+              pInputText
+              [(ngModel)]="fee['budget']['units']"
+              (focus)="old = fee.budget.units; $event.target.className = ''"
+              (keydown)="
+                resetClass($event); changeInputFee(fee, $event, 'unit_budget')
+              "
             />
           </div>
           <div class="ui-grid-col-3 label">
-            <input (blur)="blurred($event, old, fee, 'budget', 'price')" myCurrencyFormatter type="text" pInputText [(ngModel)]="fee['budget']['price']"
-              (focus)="old=fee.budget.price;$event.target.className=''" (keydown)="resetClass($event);changeInputFee(fee, $event, 'price');"
+            <input
+              (blur)="blurred($event, old, fee, 'budget', 'price')"
+              myCurrencyFormatter
+              type="text"
+              pInputText
+              [(ngModel)]="fee['budget']['price']"
+              (focus)="old = fee.budget.price; $event.target.className = ''"
+              (keydown)="
+                resetClass($event); changeInputFee(fee, $event, 'price')
+              "
             />
           </div>
           <div class="ui-grid-col-3 label">
-            {{fee.budget.total | currency}}
+            {{ fee.budget.total | currency }}
           </div>
         </div>
       </div>
     </div>
   </div>
   <div class="ui-grid ui-grid-responsive ui-fluid subtotal">
-      <div class="ui-grid-row">
-        <div class="ui-grid-col-6"></div>
-        <div class="ui-grid-col-6">
-          <div class="ui-grid-row">
-            <div class="ui-grid-col-3"></div>
-            <div class="ui-grid-col-3"></div>
-            <div class="ui-grid-col-3 label">
-              Base Imponible
-            </div>
-            <div class="ui-grid-col-3 label">
-              {{ this.tax_base | currency}}
-            </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-6"></div>
+      <div class="ui-grid-col-6">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-3"></div>
+          <div class="ui-grid-col-3"></div>
+          <div class="ui-grid-col-3 label">Base Imponible</div>
+          <div class="ui-grid-col-3 label">
+            {{ this.tax_base | currency }}
           </div>
         </div>
       </div>
     </div>
+  </div>
   <div class="ui-grid ui-grid-responsive ui-fluid total">
     <div class="ui-grid-row">
       <div class="ui-grid-col-6"></div>
@@ -247,11 +346,16 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-3"></div>
           <div class="ui-grid-col-3"></div>
-          <div class="ui-grid-col-3 label taxes">
-            IVA
-          </div>
+          <div class="ui-grid-col-3 label taxes">IVA</div>
           <div class="ui-grid-col-3 label">
-            <p-dropdown [disabled]="isreadonly" styleClass="dashboard-dropdown" [options]="taxes" [(ngModel)]="selectedTax" (onChange)="changeTaxes($event)" placeholder="Selecciona IVA a aplicar"></p-dropdown>
+            <p-dropdown
+              [disabled]="isreadonly"
+              styleClass="dashboard-dropdown"
+              [options]="taxes"
+              [(ngModel)]="selectedTax"
+              (onChange)="changeTaxes($event)"
+              placeholder="Selecciona IVA a aplicar"
+            ></p-dropdown>
           </div>
         </div>
       </div>
@@ -262,12 +366,10 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-3"></div>
           <div class="ui-grid-col-3"></div>
+          <div class="ui-grid-col-3 label">Total</div>
           <div class="ui-grid-col-3 label">
-            Total
+            {{ this.total.budget_total | currency }}
           </div>
-          <div class="ui-grid-col-3 label">
-            {{this.total.budget_total | currency}}
-          </div> 
         </div>
       </div>
     </div>

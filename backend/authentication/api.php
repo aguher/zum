@@ -48,6 +48,7 @@ class Api extends Rest {
 
 		$time = round(time() * 1000);
 		$role = Auth::GetData($token)->data->role;
+	
 		if($time > Auth::GetData($token)->exp) {
 			$respuesta['error'] = 'error';
 			$respuesta['msg'] = 'La sesión ha caducado';
@@ -1984,6 +1985,161 @@ class Api extends Rest {
 			$this->mostrarRespuesta(HandleErrors::sendError(3), 204);
 
 		}
+		private function createBillFromMultipleOrders() {
+			
+			if ($_SERVER['REQUEST_METHOD'] != "POST") {
+				$this->mostrarRespuesta(HandleErrors::sendError(1), 400);
+			}
+			if(!$this->isValidSuperAdminToken($this->datosPeticion['token'])) {
+				return false;
+			}
+			
+			
+			if (isset($this->datosPeticion['orders'], $this->datosPeticion['date_bill'], $this->datosPeticion['id_company'], $this->datosPeticion['id_fiscal_year'])) {
+				$orders = $this->datosPeticion['orders'];
+				$id_company = $this->datosPeticion['id_company'];
+				$id_fiscal_year = $this->datosPeticion['id_fiscal_year'];
+				$date_bill = $this->datosPeticion['date_bill'];
+				$ordersSplitted = explode(',',$orders);
+				// Cogemos Nombre, cliente y grupo del primer pedido (todos los pedidos deberian pertenecer al mismo cliente)
+				$idFirstOrder = $ordersSplitted[0];				
+				$query = $this->_conn->prepare("select * from tt_campaign where id_company='".$id_company."' and id='".$idFirstOrder."'");
+				
+				$filas = $query->execute();
+				$filas = $query->fetch(PDO::FETCH_ASSOC);
+				$billName ="Factura múltiples pedidos:";
+				$billCustomer = $filas['id_customer'];
+				$billTeam = $filas['id_team'];
+
+				//creamos el nuevo pedido, en el que añadiremos todas las lineas de los pedidos que queremos facturar
+				$query = $this->_conn->prepare("select max(campaign_code)+1 as cod from tt_campaign where id_company='".$id_company."'");
+				$query->execute();
+				$filas = $query->fetch(PDO::FETCH_ASSOC);
+
+				if($filas['cod'] === NULL) {
+				   $campaign_code = 1;
+				} else {
+					$campaign_code = $filas['cod'];
+				}  
+			   	$query = $this->_conn->prepare("select number, concat(replace(prefix,'yyyy',YEAR(CURDATE())),number) as prefix from tt_numbers where type = 1 and id_company='".$id_company."'");
+				$query->execute();
+				$filas = $query->fetch(PDO::FETCH_ASSOC);
+
+				if($filas['number'] === NULL) {
+					$ped_code = 1;
+				} else {
+					$ped_code = $filas['prefix'];
+					$filas['number'] = $filas['number'] + 1;
+					$query = $this->_conn->prepare("update tt_numbers set number = ".$filas['number']." where type = 1 and id_company='".$id_company."'");
+					$query->execute();
+				} 
+
+				// CREAMOS NUEVO PEDIDO QUE ENGLOBE A LOS PEDIDOS SELECCIONADOS, Y SE LO ASIGNAMOS A LA FACTURA QUE SE CREA A CONTINUACION
+				$query = $this->_conn->prepare("insert into tt_campaign(id_company,id_fiscal_year,campaign_code,ped_code, campaign_name,id_customer,id_team,id_status,creation_date, end_date ,btramite,visible) values(
+					'".$id_company."','".$id_fiscal_year."','".$campaign_code."','".$ped_code."','Multiples pedidos: ".$orders."','".$billCustomer."','".$billTeam."','2','".$date_bill."','".date('Y-m-d', strtotime($Date. ' + 60 days'))."','0',false)");
+				$query->execute();
+				$newOrder = $query->fetch(PDO::FETCH_ASSOC);
+				$newOrderInsertId = $this->_conn->lastInsertId();
+				
+				for($i=0;$i<count($ordersSplitted);$i++) {
+					$query = $this->_conn->prepare("select * from tt_campaign where id_company='".$id_company."' and id='".$ordersSplitted[$i]."'");			
+					$filas = $query->execute();
+					$filas = $query->fetch(PDO::FETCH_ASSOC);
+					$billName .= " ". $filas['campaign_name'];
+					// Para cada pedido, actualizamos su estado a FACTURADO
+					$query = $this->_conn->prepare("update tt_campaign set id_status = 2 where id='".$ordersSplitted[$i]."' and id_fiscal_year='".$id_fiscal_year."' and id_company='".$id_company."'");
+					$query->execute();		
+				}
+				
+				$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = YEAR(CURDATE()) and numbertext like 'FR%' and id_fiscal_year='".$id_fiscal_year."'");
+
+				$filas = $query->execute();
+				$filasActualizadas = $query->rowCount();
+
+				if ($filasActualizadas === 1) {
+						$filas = $query->fetch(PDO::FETCH_ASSOC);
+						$number = $filas['number_bill'];
+						$number = $number + 1;
+				} else {
+						$number = 1;
+				}
+
+
+
+				// CREAMOS LA NUEVA FACTURA CON LA INFORMACION DE LOS PEDIDOS
+				$query = $this->_conn->prepare("insert into tt_billing(number, issue_date, due_date, description, id_team, id_customer, id_company, id_fiscal_year, id_project, numbertext) values(
+					'".$number."','".$date_bill."','".date('Y-m-d', strtotime($Date. ' + 60 days'))."','".$billName."','".$billTeam."', '".$billCustomer."','".$id_company."','".$id_fiscal_year."','".$newOrderInsertId."','FR".date("Y")."/".$number."')");
+				$query->execute();
+				$filasActualizadas = $query->rowCount();
+
+
+				if ($filasActualizadas == 1) {
+					$insertId = $this->_conn->lastInsertId();
+					
+					// una vez creada la factura, creamos las lineas de subconceptos y las lineas de subconceptos de la factura copiando las que tiene el proyecto de origen
+					for($i=0;$i<count($ordersSplitted);$i++) {
+						//Para cada Pedido(tt_campaign) creamos una linea adicional  que tenga un valor fijo con la fecha del evento, para que salga una linea con la fecha del evento
+						$query = $this->_conn->prepare("select * from tt_campaign where id_company='".$id_company."' and id='".$ordersSplitted[$i]."'");			
+						$campaign = $query->execute();
+						$campaign = $query->fetch(PDO::FETCH_ASSOC);
+						$start = explode('-',$campaign['start_date_event']);
+						$end = explode('-',$campaign['end_date_event']);
+						//Creamos una linea adicional, para que salga a la hora de imprimir la factura, en id_variable_concept, le metemos 470, que es el valor de ALQUILER MANTELES(esperemos que siempre
+						// quieran usar el mismo concepto)
+						$query = $this->_conn->prepare("insert into tt_subconcepts_billing(id_bill, id_variable_concept, amount, unit_budget, price,unit_real, name) values(
+							'".$insertId."','470','-','-','-','-','PEDIDO REALIZADO ".$start[2]."-".$start[1]."-".$start[0]." a ".$end[2]."-".$end[1]."-".$end[0]."')");
+						$query->execute();
+
+						$strToSearch = "select * from tt_subconcepts_project where id_project='".$ordersSplitted[$i]."'";		
+
+						foreach($this->_conn->query($strToSearch) as $row) {						
+						
+							$query = $this->_conn->prepare("insert into tt_subconcepts_project(id_project, id_variable_concept, amount, unit_budget, price,unit_real, name,code,start_date_event, end_date_event) values(
+								'".$newOrderInsertId."','".$row['id_variable_concept']."','".$row['amount']."','".$row['unit_budget']."','".$row['price']."','".$row['unit_real']."','".$row['name']."','".$row['code']."','".$row['start_date_event']."','".$row['end_date_event']."')");
+							$query->execute();
+							$query = $this->_conn->prepare("insert into tt_subconcepts_billing(id_bill, id_variable_concept, amount, unit_budget, price,unit_real, name) values(
+								'".$insertId."','".$row['id_variable_concept']."','".$row['amount']."','".$row['unit_budget']."','".$row['price']."','".$row['unit_real']."','".$row['name']."')");
+							$query->execute();
+						}
+
+					}
+					
+
+					$tax_base = 0;
+		
+
+					$strToSearch ="select amount, unit_budget, price from tt_subconcepts_billing where id_bill='".$insertId."'";
+					foreach($this->_conn->query($strToSearch) as $row) {
+						$tax_base = $tax_base + $row['amount']*$row['unit_budget']*$row['price'];
+					}
+
+					$taxes = round($tax_base*0.21,2);
+					$total = $tax_base+$taxes;
+					
+
+					 $query = $this->_conn->prepare("UPDATE tt_billing set
+						tax_base='".$tax_base."',
+						percent_tax = 21,
+						taxes ='".$taxes."',
+						total='".$total."' where id='".$insertId."'");
+					$query->execute();
+
+					$respuesta['status'] = 'ok';
+					$respuesta['id_bill'] = $insertId;
+
+					$this->mostrarRespuesta($respuesta, 200);
+				} else {
+					$respuesta['status'] = 'error';
+					$respuesta['msg'] = 'No se ha podido añadir la factura';
+					$this->mostrarRespuesta($respuesta, 200);
+				}
+
+
+			}
+
+			$this->mostrarRespuesta(HandleErrors::sendError(3), 204);
+
+		}
 
 		private function deleteStorage() {
 
@@ -2472,6 +2628,7 @@ class Api extends Rest {
 													inner join `tt_status` status
 													on campaign.id_status=status.id 
 													where campaign.id_company='".$id_company."' 
+													and campaign.visible = 1
 													and campaign.id_fiscal_year='".$id_fiscal_year."'
 													and campaign.creation_date >= '".$start_date."'
 													and campaign.creation_date <= '".$end_date."') as t";
@@ -5785,6 +5942,68 @@ class Api extends Rest {
 		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
 	}
 
+	private function getAllEventReservations() {
+		if ($_SERVER['REQUEST_METHOD'] != "GET") {
+			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
+		}
+		$idCompany = $this->datosPeticion['id_company'];
+		$idArticle = $this->datosPeticion['id_article'];
+		
+		
+		$idx=0;
+		$arrayVariables = [];
+		if(is_null($idArticle)){			
+			$strToSearch = "SELECT * from article_reservation where company_id ='".$idCompany."'";	
+		}else {
+			$strToSearch = "SELECT * from article_reservation where company_id ='".$idCompany."' and article_id='".$idArticle."'";
+			
+			$query = $this->_conn->query("SELECT * FROM tt_subconcepts_standards where code='".$idArticle."'");
+			$articleInfo = $query->fetch(PDO::FETCH_ASSOC);
+		}
+		
+		foreach($this->_conn->query($strToSearch) as $row) {
+
+			$arrayVariables[$idx]->amount = $row['amount'];
+			$arrayVariables[$idx]->start_date_reservation = $row['start_date_reservation'];
+			$arrayVariables[$idx]->end_date_reservation = $row['end_date_reservation'];
+
+			$query = $this->_conn->prepare("select customer_name from tt_customer where id=".$row['customer_id']);
+			$query->execute();			
+			$customer = $query->fetch(PDO::FETCH_ASSOC);
+			$arrayVariables[$idx]->customer = $customer['customer_name'];
+
+			$query = $this->_conn->prepare("select id_project from tt_subconcepts_project where id=".$row['subconcept_project_id']);
+			$query->execute();			
+			$subconcept = $query->fetch(PDO::FETCH_ASSOC);
+			$idCampaign = $subconcept['id_project'];
+			$query = $this->_conn->prepare("select id, campaign_name from tt_campaign where id=".$idCampaign);
+			$query->execute();			
+			$campaign = $query->fetch(PDO::FETCH_ASSOC);			
+			$arrayVariables[$idx]->campaign = $campaign['id'];
+			$arrayVariables[$idx]->subconcept = $campaign['campaign_name'];
+
+			$query = $this->_conn->prepare("select brand, description from tt_subconcepts_standards where code='".$row['article_id']."' and id_company=".$idCompany);
+			$query->execute();			
+			$article = $query->fetch(PDO::FETCH_ASSOC);
+			$arrayVariables[$idx]->article = $article['brand']." - " .$article['description'];
+
+			
+			$idx++;
+		}
+
+		$jsonResponse['status'] = 'ok';
+		$jsonResponse['reservations'] = $arrayVariables;
+		$jsonResponse['article_selected'] = $articleInfo;
+		
+		$this->mostrarRespuesta($jsonResponse, 200);
+
+
+
+
+
+		
+	}
+
 	private function updateEventDateSubconcept() {
 		if ($_SERVER['REQUEST_METHOD'] != "PUT") {
 			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
@@ -5910,17 +6129,21 @@ class Api extends Rest {
 				$query = $this->_conn->prepare("SELECT SUM( amount ) as reserved FROM `article_reservation` WHERE 
 					`end_date_reservation` >= DATE( '".$startDateEvent."' ) AND `start_date_reservation` <= DATE( '".$endDateEvent."' ) 
 					AND article_id = '".$articleCode."'");
-				
+	
 				$query->execute();
 				$filaRows = $query->fetch(PDO::FETCH_ASSOC);	
 				if($reservationLine > 0) {
+					// Cogemos la cantidad que ya habia reservada para esa linea, y se la restamos al total, para comprobar si la nueva cantidad es posible reservarla
+					$query = $this->_conn->prepare("SELECT SUM(amount) as total FROM `article_reservation` WHERE subconcept_project_id = '".$id."' and article_id='".$articleCode."'");
+					$query->execute();
+					$reservedLine = $query->fetch(PDO::FETCH_ASSOC);	
 					// si ya hay una linea, a la suma total quitamos la que queremos reservar de nuevo
-					$amountReserved = $filaRows['reserved'] - $amountToReserve;
+					$amountReserved = $filaRows['reserved'] - $reservedLine['total'];
 				} else{
 					$amountReserved = $filaRows['reserved'];
 				}
-			
-				if($amountReserved + $amountToReserve>=$stockAvailable) {
+				
+				if($amountReserved + $amountToReserve>$stockAvailable) {
 					$unitsMaxToReserve = max(0,$stockAvailable - $amountReserved);
 					$res = array('status' => "error", "msg" => "No hay unidades suficientes. Máx. unidades a reservar para las fechas elegidas: ".$unitsMaxToReserve." unidades disponibles");
 					
@@ -5934,8 +6157,8 @@ class Api extends Rest {
 						$query->execute();
 					} else {
 						// añadimos la reserva a la tabla de article_reservation, sino existe
-						$query = $this->_conn->prepare("INSERT INTO `article_reservation`(`customer_id`,`start_date_reservation`,`end_date_reservation`,`amount`,`article_id`,`subconcept_project_id`) VALUES (
-							$customerId,'".$startDateEvent."','".$endDateEvent."','".$amountToReserve."','".$articleCode."',".$id.")");
+						$query = $this->_conn->prepare("INSERT INTO `article_reservation`(`customer_id`,`start_date_reservation`,`end_date_reservation`,`amount`,`article_id`,`subconcept_project_id`,`company_id`) VALUES (
+							$customerId,'".$startDateEvent."','".$endDateEvent."','".$amountToReserve."','".$articleCode."',".$id.",".$idCompany.")");
 						$query->execute();
 					}
 					
@@ -6144,8 +6367,10 @@ class Api extends Rest {
 			$id_customer = $this->datosPeticion['id_customer'];
 
 			//$response = $this->operationApi("SELECT description as name,s_s.brand as family, s_v.unit_price FROM tt_subconcepts_standards s_s, tt_subconcepts_std_vs_client s_v where s_s.id = s_v.id_subconcept and s_s.id_company='".$id_company."' and s_s.description LIKE '%".$text."%' union  ALL SELECT description as name, unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name ASC", 'GET');//
-			$response = $this->operationApi("SELECT code, brand as family,  description as name, CASE WHEN (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') IS NULL THEN unit_price ELSE (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') END AS unit_price FROM tt_subconcepts_standards where id_company='".$id_company."' and description LIKE '%".$text."%' order by name", 'GET');
-			
+			$response = $this->operationApi("SELECT code, familyname as family,  description as name, CASE WHEN (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') IS NULL THEN unit_price ELSE (SELECT s_v.unit_price FROM tt_subconcepts_std_vs_client s_v where tt_subconcepts_standards.id = s_v.id_subconcept and s_v.id_customer ='".$id_customer."') END AS unit_price FROM tt_subconcepts_standards INNER JOIN tt_articles_families fam
+			where tt_subconcepts_standards.id_company='".$id_company."' and description LIKE '%".$text."%' AND fam.id = tt_subconcepts_standards.id_family
+			order by name", 'GET');
+		
 			$jsonResponse['data'] = $response;
 			$this->mostrarRespuesta($jsonResponse, 200);
 

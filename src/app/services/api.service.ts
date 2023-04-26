@@ -1532,6 +1532,15 @@ export class ApiService {
         .map((response: Response) => response.json());
     }
   }
+  createBillFromMultipleOrders(body: string) {
+    return this.http
+      .post(
+        this._config.Server + this._config.createBillFromMultipleOrders,
+        this.addToken(body),
+        this.jwt()
+      )
+      .map((response: Response) => response.json());
+  }
 
   createBill(id_project: string) {
     let dataSelected = this._common.getIdCompanyYearSelected();

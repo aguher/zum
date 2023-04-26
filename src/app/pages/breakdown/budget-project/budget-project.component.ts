@@ -908,8 +908,8 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
           name: "",
           code: "",
           budget: {
-            amount: 0,
-            units: 0,
+            amount: 1,
+            units: 1,
             price: 0,
             total: 0,
           },
@@ -1908,7 +1908,6 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     } else {
       cliente.push(this.infoCustomer.customer.address_bis);
     }
-
     if (
       this.infoCustomer.customer.cif &&
       this.infoCustomer.customer.cif != "undefined"
@@ -1997,7 +1996,13 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
           break;
       }
     }
-
+    if (dataCompany.id === "416" && this.infoCustomer.observ_int !== "") {
+      doc.text(
+        2.2,
+        inicio_cuadro + altura_cuadro + 1,
+        "Observaciones internas: " + this.infoCustomer.observ_int
+      );
+    }
     //última línea al final del albarán
     doc.setFontSize(7);
     doc.setFontType("normal");

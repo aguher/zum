@@ -305,25 +305,31 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
           });
           let total_budget =
             element.amount * element.unit_budget * element.price;
+          if (varConcept) {
+            varConcept.budget.amount += this._common.toFloat(element.amount);
+            varConcept.budget.units += this._common.toFloat(
+              element.unit_budget
+            );
+            varConcept.budget.price += this._common.toFloat(element.price);
+            varConcept.budget.total +=
+              this._common.toFloat(element.amount) *
+              this._common.toFloat(element.unit_budget) *
+              this._common.toFloat(element.price);
 
-          varConcept.budget.amount += this._common.toFloat(element.amount);
-          varConcept.budget.units += this._common.toFloat(element.unit_budget);
-          varConcept.budget.price += this._common.toFloat(element.price);
-          varConcept.budget.total +=
-            this._common.toFloat(element.amount) *
-            this._common.toFloat(element.unit_budget) *
-            this._common.toFloat(element.price);
-
-          varConcept.subconcepts.push({
-            id: element.id,
-            name: element.name,
-            budget: {
-              amount: this._common.currencyFormatES(element.amount, false),
-              units: this._common.currencyFormatES(element.unit_budget, false),
-              price: this._common.currencyFormatES(element.price, false),
-              total: this._common.currencyFormatES(total_budget, false),
-            },
-          });
+            varConcept.subconcepts.push({
+              id: element.id,
+              name: element.name,
+              budget: {
+                amount: this._common.currencyFormatES(element.amount, false),
+                units: this._common.currencyFormatES(
+                  element.unit_budget,
+                  false
+                ),
+                price: this._common.currencyFormatES(element.price, false),
+                total: this._common.currencyFormatES(total_budget, false),
+              },
+            });
+          }
         });
       }
       let tmp = {
@@ -1472,7 +1478,8 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
             });
 
             //        if (parseInt(sub.budget.total) != 0){
-            let pintaunidades = true;
+            let pintaunidades =
+              sub.name.startsWith("PEDIDO REALIZADO") == false;
             texto_lineas.forEach((line) => {
               if (altura_texto > inicio_cuadro + altura_cuadro - 2) {
                 doc.setFontType("italic");
@@ -1542,7 +1549,10 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
               }
 
               altura_texto += 0.4;
-              if (pintaunidades) {
+              if (
+                sub.name.startsWith("PEDIDO REALIZADO ") == false &&
+                pintaunidades
+              ) {
                 //quitar cuando tenga tiempo
                 if (typeof sub.budget.total == "number") {
                   importeparcial += sub.budget.total;
