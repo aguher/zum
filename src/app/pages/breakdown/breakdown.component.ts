@@ -107,6 +107,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
       this._api.getInfoCampaign(body).subscribe((response) => {
         if (response !== null) {
+          this.info.already_invoiced = response.info.already_invoiced;
           this.info.raw_start_date_event = response.info.start_date_event;
           this.info.raw_end_date_event = response.info.end_date_event;
           this.info.start_date_event =
@@ -347,6 +348,7 @@ export class BreakdownComponent implements OnInit, OnDestroy {
 
     this._api.getInfoCampaign(body).subscribe((response) => {
       if (response !== null) {
+        this.info.already_invoiced = response.info.already_invoiced;
         this.info.campaign_code = response.info.campaign_code;
         this.info.campaign_name = response.info.campaign_name;
         this.info.project = response.info.project;

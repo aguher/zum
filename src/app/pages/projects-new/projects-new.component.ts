@@ -398,7 +398,9 @@ export class ProjectsNewComponent implements OnInit {
   }
   updateCustomerSelected(value) {
     this.ordersCustomer = this.projects.filter(
-      (project) => project.customer == this.customerSelected
+      (project) =>
+        project.customer == this.customerSelected &&
+        project.already_invoiced == "0"
     );
     this.ordersCustomer = this.ordersCustomer.map((order) => ({
       ...order,
@@ -422,16 +424,6 @@ export class ProjectsNewComponent implements OnInit {
   }
 
   createMultipleOrders() {
-    console.log(JSON.parse(localStorage.getItem("selectedCompany")).value.id);
-    console.log(
-      JSON.parse(localStorage.getItem("selectedFiscalYear")).value.id
-    );
-    console.log(localStorage.getItem("token"));
-    console.log(this.ordersSelectedToFacture.join(","));
-    console.log(
-      `${this.billDate.date.year}-${this.billDate.date.month}-${this.billDate.date.day}`
-    );
-
     this.displayDialogMultiplePedidos = false;
     const token = localStorage.getItem("token");
     const id_fiscal_year = JSON.parse(
@@ -859,10 +851,9 @@ export class ProjectsNewComponent implements OnInit {
         ) {
           pasafiltroptesfacturar = true;
         }
-
         if (
           !this.filtroSinFactura ||
-          (this.projects[i].numfacturas == 0 &&
+          (this.projects[i].already_invoiced == 0 &&
             this.projects[i].id_status >= 2 &&
             this.projects[i].budget_income != 0)
         ) {

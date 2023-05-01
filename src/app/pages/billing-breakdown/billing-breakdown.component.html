@@ -218,36 +218,41 @@
         <div class="ui-grid-col-6">
           <div class="ui-grid-row budget-lines">
             <div class="ui-grid-col-4 label">
-              <input
-                [readonly]="isreadonly"
-                (blur)="blurred($event, old, subconcept, 'budget', 'amount')"
-                myCurrencyFormatter
-                type="text"
-                pInputText
-                [(ngModel)]="subconcept['budget']['amount']"
-                (focus)="
-                  old = subconcept.budget.amount; $event.target.className = ''
-                "
-                (keydown)="
-                  resetClass($event); changeInput(subconcept, $event, 'amount')
-                "
-              />
+              <div *ngIf="!subconcept.name.startsWith('PEDIDO REALIZADO ')">
+                <input
+                  [readonly]="isreadonly"
+                  (blur)="blurred($event, old, subconcept, 'budget', 'amount')"
+                  myCurrencyFormatter
+                  type="text"
+                  pInputText
+                  [(ngModel)]="subconcept['budget']['amount']"
+                  (focus)="
+                    old = subconcept.budget.amount; $event.target.className = ''
+                  "
+                  (keydown)="
+                    resetClass($event);
+                    changeInput(subconcept, $event, 'amount')
+                  "
+                />
+              </div>
             </div>
             <div class="ui-grid-col-4 label">
-              <input
-                [readonly]="isreadonly"
-                (blur)="blurred($event, old, subconcept, 'budget', 'price')"
-                myCurrencyFormatter
-                type="text"
-                pInputText
-                [(ngModel)]="subconcept['budget']['price']"
-                (focus)="
-                  old = subconcept.budget.price; $event.target.className = ''
-                "
-                (keydown)="
-                  resetClass($event); changeInput(subconcept, $event, 'price')
-                "
-              />
+              <div *ngIf="!subconcept.name.startsWith('PEDIDO REALIZADO ')">
+                <input
+                  [readonly]="isreadonly"
+                  (blur)="blurred($event, old, subconcept, 'budget', 'price')"
+                  myCurrencyFormatter
+                  type="text"
+                  pInputText
+                  [(ngModel)]="subconcept['budget']['price']"
+                  (focus)="
+                    old = subconcept.budget.price; $event.target.className = ''
+                  "
+                  (keydown)="
+                    resetClass($event); changeInput(subconcept, $event, 'price')
+                  "
+                />
+              </div>
             </div>
             <div class="ui-grid-col-4 label">
               {{ subconcept.budget.total | currency }}

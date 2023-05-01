@@ -562,6 +562,7 @@
                   showCol &&
                   roleUser != 9 &&
                   roleUser != 10 &&
+                  proyecto.already_invoiced == '0' &&
                   proyecto.numfacturas == '0' &&
                   proyecto.btramite == '0' &&
                   proyecto.salidas == '0'
@@ -576,7 +577,8 @@
                   showCol &&
                   roleUser != 9 &&
                   roleUser != 10 &&
-                  (proyecto.numfacturas != '0' ||
+                  (proyecto.already_invoiced == '1' ||
+                    proyecto.numfacturas != '0' ||
                     proyecto.btramite == '1' ||
                     proyecto.salidas != '0')
                 "
@@ -594,6 +596,7 @@
                 title="editar"
                 *ngIf="
                   showCol &&
+                  proyecto.already_invoiced == '0' &&
                   proyecto.numfacturas == '0' &&
                   proyecto.btramite == '0' &&
                   proyecto.salidas == '0'
@@ -606,7 +609,8 @@
                 title="no se puede modificar, tiene facturas o salidas asociadas o está en trámite"
                 *ngIf="
                   showCol &&
-                  (proyecto.numfacturas != '0' ||
+                  (proyecto.already_invoiced == '1' ||
+                    proyecto.numfacturas != '0' ||
                     proyecto.btramite == '1' ||
                     proyecto.salidas != '0')
                 "

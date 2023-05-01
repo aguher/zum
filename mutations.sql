@@ -3,7 +3,7 @@ ALTER TABLE `tt_campaign` ADD `shipping_method_return` VARCHAR( 100 ) NOT NULL
 ALTER TABLE `tt_campaign` ADD `start_date_event` DATE NOT NULL ,
 ADD `end_date_event` DATE NOT NULL
 ALTER TABLE `tt_campaign` ADD `visible` BOOLEAN NOT NULL DEFAULT TRUE
-
+ALTER TABLE `tt_campaign` ADD `already_invoiced` BOOLEAN NOT NULL COMMENT 'Indica que ese pedido ya ha sido facturado'
 ALTER TABLE `tt_subconcepts_project` ADD `start_date_event` DATE NOT NULL ,
 ADD `end_date_event` DATE NOT NULL
 

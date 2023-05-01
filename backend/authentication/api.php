@@ -2042,6 +2042,8 @@ class Api extends Rest {
 				$newOrderInsertId = $this->_conn->lastInsertId();
 				
 				for($i=0;$i<count($ordersSplitted);$i++) {
+					$query = $this->_conn->prepare("update tt_campaign set already_invoiced = '1' where id='".$ordersSplitted[$i]."'");
+					$query->execute();
 					$query = $this->_conn->prepare("select * from tt_campaign where id_company='".$id_company."' and id='".$ordersSplitted[$i]."'");			
 					$filas = $query->execute();
 					$filas = $query->fetch(PDO::FETCH_ASSOC);
@@ -2595,7 +2597,7 @@ class Api extends Rest {
 				$end_date = $this->datosPeticion['end_date'];
 				
 
-				$strQuery = "select id, campaign_code, ped_code, campaign_name, customer, id_customer, creation_date, end_date,
+				$strQuery = "select id,already_invoiced, campaign_code, ped_code, campaign_name, customer, id_customer, creation_date, end_date,
 				budget_income, budget_expenses, real_income, real_expenses, numfacturas,
 				desestimado, fechadesestimado, motivodesestimado, btramite, salidas, 
 				case when id_company = 412 or id_company = 385 then 						
@@ -2603,7 +2605,7 @@ class Api extends Rest {
 				case when id_company = 412 or id_company = 385 then 
 				case when real_income = budget_income and salidaspendientes = 0 then 'Finalizado' when salidaspendientes = 0 and id_status = 2 then 'Procesado' when btramite = 1 or salidas <> 0 then 'En Proceso' else status end else status end as status,
 				(select valuechar from tt_valuesbvsfields where idtable = t.id and freefieldsvscompanyid = 1) as project
-				from(select campaign.id_company, campaign.id, campaign.campaign_code, campaign.ped_code, campaign.campaign_name, user.nickname as user, user.id as id_user, customer.customer_name as customer, customer.id as id_customer, team.team_name as team,
+				from(select campaign.id_company, campaign.already_invoiced,campaign.id, campaign.campaign_code, campaign.ped_code, campaign.campaign_name, user.nickname as user, user.id as id_user, customer.customer_name as customer, customer.id as id_customer, team.team_name as team,
 								team.id as id_team, grupo.name as grupo, grupo.id as id_group, subgroup.name as subgroup, subgroup.id as id_subgroup, status.id as id_status, status.status, campaign.creation_date, campaign.end_date, campaign.security_level,
 								case when bdesestimado = 2 then 0 else (select sum(amount*unit_budget*price) as total from tt_subconcepts_project where id_project= campaign.id) end as budget_income,
 								case when bdesestimado = 2 then 0 else (select sum(amount*unit_budget*unit_real) as total from tt_subconcepts_project where id_project= campaign.id) end as budget_expenses,
@@ -2632,7 +2634,6 @@ class Api extends Rest {
 													and campaign.id_fiscal_year='".$id_fiscal_year."'
 													and campaign.creation_date >= '".$start_date."'
 													and campaign.creation_date <= '".$end_date."') as t";
-
 				// Depende del rol, selecciona unos proyectos u otros.
 				if($role == 6 || $role == 7 || $role == 8) {
 					$query = $this->_conn->prepare("select id_team from tt_user where id=".$id_user);
@@ -6057,8 +6058,7 @@ class Api extends Rest {
 			} else{
 				$amountReserved = $filas['reserved'];
 			}
-			
-			if($amountReserved + $amountAlreadyReserved>=$stockAvailable) {
+			if($amountReserved + $amountAlreadyReserved>$stockAvailable) {
 				$unitsMaxToReserve = $stockAvailable - $amountReserved;
 				$res = array('status' => "error", "msg" => "No hay unidades suficientes. Máx. unidades a reservar para las fechas elegidas: ".$unitsMaxToReserve);
 				
@@ -6080,6 +6080,9 @@ class Api extends Rest {
 					$resp = array('status' => "ok", "msg" => "Fecha actualizada correctamente.");
 					$this->mostrarRespuesta($resp, 200);
 				}
+			} else {
+				$resp = array('status' => "ok", "msg" => "Fecha actualizada correctamente.");
+					$this->mostrarRespuesta($resp, 200);
 			}
 		}
 		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
@@ -7260,7 +7263,7 @@ class Api extends Rest {
 			$idCompany = (int) $this->datosPeticion['id_company'];
 			$idFiscalYear = (int) $this->datosPeticion['id_fiscal_year'];
 
-			$query = $this->_conn->prepare("select campaign.start_date_event, campaign.end_date_event,  campaign.id, campaign.campaign_code, campaign.ped_code, campaign.observ_cli, campaign.observ_int, campaign.campaign_name, user.nickname as user, user.id as id_user, customer.customer_name as customer, customer.id as id_customer, team.team_name as team,
+			$query = $this->_conn->prepare("select campaign.already_invoiced,campaign.start_date_event, campaign.end_date_event,  campaign.id, campaign.campaign_code, campaign.ped_code, campaign.observ_cli, campaign.observ_int, campaign.campaign_name, user.nickname as user, user.id as id_user, customer.customer_name as customer, customer.id as id_customer, team.team_name as team,
 			team.id as id_team, grupo.name as grupo, grupo.id as id_group, subgroup.name as subgroup, subgroup.id as id_subgroup, status.status as status, status.id as id_status, campaign.creation_date, campaign.end_date, fiscal_year.year,
 			customer.logo as customer_logo,customer.cif as customer_cif,customer.address as customer_address,customer.address_bis as customer_address_bis, customer.postal_code as customer_postal_code, customer.city as customer_city,
 			(select sum(amount*unit_budget*price) as total from tt_subconcepts_billing, tt_billing where tt_billing.id=tt_subconcepts_billing.id_bill and tt_billing.id_project = campaign.id) as real_income, 
