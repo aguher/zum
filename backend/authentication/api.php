@@ -2988,12 +2988,14 @@ class Api extends Rest {
 	}
 
 		private function updateCampaign() {
+			
 			if ($_SERVER['REQUEST_METHOD'] != "PUT") {
 				$this->mostrarRespuesta(HandleErrors::sendError(1), 400);
 			}
 			if(!$this->isValidUserToken($this->datosPeticion['token'])) {
 				return false;
 			}
+			
 			if (isset($this->datosPeticion['id'],$this->datosPeticion['campaign_code'], $this->datosPeticion['id_company'], $this->datosPeticion['id_fiscal_year'], $this->datosPeticion['campaign_name'], $this->datosPeticion['id_user'],
 			$this->datosPeticion['id_customer'], $this->datosPeticion['id_team'], $this->datosPeticion['id_group'], $this->datosPeticion['id_subgroup'], $this->datosPeticion['id_status'], $this->datosPeticion['creation_date'],
 			$this->datosPeticion['end_date'], $this->datosPeticion['id_security'])) {
@@ -3011,6 +3013,24 @@ class Api extends Rest {
 				$creation_date = $this->datosPeticion['creation_date'];
 				$end_date = $this->datosPeticion['end_date'];
 				$id_security = $this->datosPeticion['id_security'];
+
+				// obtenemos las IDS de las lineas de pedido, para actualizar el cliente (si se ha modificado) en la tabla de articles_reservation
+				$query = $this->_conn->prepare("select id from tt_subconcepts_project where id_project='".$id."'");
+
+				$filas = $query->execute();
+				$lineas = $query->fetchAll(PDO::FETCH_ASSOC);
+				
+				$filasActualizadas = $query->rowCount();
+
+				if($filasActualizadas > 0) {
+					foreach($lineas as $linea) {
+						$query = $this->_conn->prepare("UPDATE article_reservation set customer_id='".$id_customer."' where subconcept_project_id='".$linea['id']."'");
+						$query->execute();
+					}
+				}	
+
+
+
 
 				$query = $this->_conn->prepare("select * from tt_campaign where id_fiscal_year='".$id_fiscal_year."' and id_company='".$id_company."' and id!='".$id."' and (campaign_code='".$campaign_code."')");//campaign_name='".$campaign_name."' or
 				$filas = $query->execute();
@@ -3205,6 +3225,7 @@ class Api extends Rest {
 		}
 
 		private function deleteCampaign() {
+			
 			$query = $this->_conn->prepare("select id FROM `tt_lines_subconcept`where amount>0 and id_project='".$this->datosPeticion['id']."'");
 			$query->execute();
 			$filas = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -3274,6 +3295,23 @@ class Api extends Rest {
 
 			$response = $this->operationApi("DELETE FROM tt_campaign WHERE id=".$this->datosPeticion['id'], 'DELETE', false);
 			if ( $response != false) {
+
+
+				// Eliminamos los article_reservation si se elimina el pedido
+				$query = $this->_conn->prepare("select id from tt_subconcepts_project where id_project='".$this->datosPeticion['id']."'");
+				
+				$filas = $query->execute();
+				$lineas = $query->fetchAll(PDO::FETCH_ASSOC);
+
+				$filasActualizadas = $query->rowCount();
+
+				if($filasActualizadas > 0) {
+					foreach($lineas as $linea) {
+						$query = $this->_conn->prepare("DELETE FROM article_reservation where subconcept_project_id='".$linea['id']."'");
+						$query->execute();
+					}
+				}	
+
 				$jsonResponse['status'] = 'ok';
 				$this->mostrarRespuesta($jsonResponse, 200);
 			}
