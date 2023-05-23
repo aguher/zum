@@ -500,6 +500,7 @@ export class StorageComponent implements OnInit {
             value: element.id,
           });
         });
+
         response.teams.forEach((element) => {
           this.dataCombos.teams.push({
             label: element.team_name,
@@ -568,6 +569,7 @@ export class StorageComponent implements OnInit {
             bdefault: element.bdefault,
           });
         });
+        this.selectedStorage.idestado = this.dataCombos.states[0].value;
         response.warehouses.forEach((element) => {
           this.dataCombos.warehouses.push({
             label: element.name,
@@ -575,6 +577,7 @@ export class StorageComponent implements OnInit {
             bdefault: element.bdefault,
           });
         });
+        this.selectedStorage.idalmacen = this.dataCombos.warehouses[0].value;
       }
     });
   }
@@ -1220,19 +1223,20 @@ export class StorageComponent implements OnInit {
           return o.label == this.selectedStorage.codigo;
         });
 
+        this.selectedStorage.cliente = this.dataCombos.customers[0].value;
         let idcliente = _.findIndex(this.dataCombos.customers, (o) => {
-          return o.label == this.selectedStorage.cliente;
+          return o.value == this.selectedStorage.cliente;
         });
 
         if (this.validateStorage(idarticulo, idcliente) == true) {
           body = "id_company=" + dataSelected.company;
           body += "&units=" + this.selectedStorage.unidades;
           body += "&warehouse=" + this.selectedStorage.idalmacen;
-          body += "&row=" + this.selectedStorage.pasillo;
-          body += "&section=" + this.selectedStorage.seccion;
-          body += "&height=" + this.selectedStorage.altura;
+          body += "&row=0";
+          body += "&section=0";
+          body += "&height=0";
           body += "&article_id=" + this.dataCombos.articles[idarticulo].value;
-          body += "&dateexpiry=" + fechacaducidad;
+          body += "&dateexpiry=null";
           body += "&owner_id=" + this.dataCombos.customers[idcliente].value;
           body += "&state_id=" + this.selectedStorage.idestado;
           body += "&user_id=" + this.id_user;
@@ -1272,20 +1276,7 @@ export class StorageComponent implements OnInit {
   }
 
   validateStorage(idarticulo, idcliente) {
-    if (
-      isNaN(parseInt(this.selectedStorage.seccion)) ||
-      isNaN(parseInt(this.selectedStorage.pasillo)) ||
-      isNaN(parseInt(this.selectedStorage.altura)) ||
-      isNaN(parseInt(this.selectedStorage.unidades)) ||
-      this.selectedStorage.idalmacen < 0 ||
-      this.selectedStorage.idestado < 0
-    ) {
-      this._notification.info(
-        "¡Aviso!",
-        "Debe rellenar todos los datos correctamente"
-      );
-      return false;
-    } else if (idarticulo < 0) {
+    if (idarticulo < 0) {
       this._notification.info("¡Aviso!", "Debe seleccionar el artículo");
       return false;
     } else if (idcliente < 0) {

@@ -223,12 +223,21 @@
           <th scope="col">Descripción</th>
           <th scope="col">Cliente</th>
           <th scope="col">Fecha</th>
-          <th scope="col" class="text-right">Ing.Previstos</th>
-          <th scope="col" class="text-right">Facturado</th>
-          <th scope="col" class="text-right">Gas.Previstos</th>
-          <th scope="col" class="text-right">Gas.Reales</th>
-          <th scope="col" class="text-right">M.Prev.</th>
-          <th scope="col" class="text-right">M.Real</th>
+
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">
+            Ing.Previstos
+          </th>
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">
+            Facturado
+          </th>
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">
+            Gas.Previstos
+          </th>
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">
+            Gas.Reales
+          </th>
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">M.Prev.</th>
+          <th *ngIf="roleUser != 9" scope="col" class="text-right">M.Real</th>
           <th></th>
         </tr>
         <tr>
@@ -289,7 +298,7 @@
               placeholder="Filtre fecha"
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -297,7 +306,7 @@
               placeholder="Filtre ing. prev."
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -305,7 +314,7 @@
               placeholder="Filtre ing. real."
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -313,7 +322,7 @@
               placeholder="Filtre gas. prev."
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -321,7 +330,7 @@
               placeholder="Filtre gas. real"
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -329,7 +338,7 @@
               placeholder="Filtre margen prev."
             />
           </th>
-          <th scope="col">
+          <th *ngIf="roleUser != 9" scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -379,6 +388,7 @@
           <td>{{ proyecto.customer }}</td>
           <td>{{ proyecto.creation_date }}</td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{
               color: isNegative(proyecto.budget_income) ? 'red' : ''
@@ -387,12 +397,14 @@
             {{ proyecto.budget_income | currency : false }}
           </td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{ color: isNegative(proyecto.real_income) ? 'red' : '' }"
           >
             {{ proyecto.real_income | currency : false }}
           </td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{
               color: isNegative(proyecto.budget_expenses) ? 'red' : ''
@@ -401,6 +413,7 @@
             {{ proyecto.budget_expenses | currency : false }}
           </td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{
               color: isNegative(proyecto.real_expenses) ? 'red' : ''
@@ -409,6 +422,7 @@
             {{ proyecto.real_expenses | currency : false }}
           </td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{
               color: isNegative(
@@ -424,6 +438,7 @@
             }}</b>
           </td>
           <td
+            *ngIf="roleUser != 9"
             class="text-right"
             [ngStyle]="{
               color: isNegative(proyecto.real_income - proyecto.real_expenses)
@@ -639,6 +654,7 @@
           <th></th>
           <th></th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{
@@ -648,6 +664,7 @@
             {{ totalingresosprevistos | currency : false }}
           </th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{ color: isNegative(totalingresosreales) ? 'red' : '' }"
@@ -655,6 +672,7 @@
             {{ totalingresosreales | currency : false }}
           </th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{ color: isNegative(totalgastosprevistos) ? 'red' : '' }"
@@ -662,6 +680,7 @@
             {{ totalgastosprevistos | currency : false }}
           </th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{ color: isNegative(totalgastosreales) ? 'red' : '' }"
@@ -669,6 +688,7 @@
             {{ totalgastosreales | currency : false }}
           </th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{
@@ -682,6 +702,7 @@
             }}
           </th>
           <th
+            *ngIf="roleUser != 9"
             scope="col"
             class="text-right"
             [ngStyle]="{

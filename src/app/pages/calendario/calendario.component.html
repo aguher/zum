@@ -4,9 +4,18 @@
   let-isOpen="isOpen"
 >
   <h4 *ngIf="events.length == 0">No hay reservas en este dia</h4>
-  <h4 class="title-open-day" *ngIf="events.length > 0">
-    Resumen del dia seleccionado
-  </h4>
+  <div class="row-day">
+    <h4 class="title-open-day" *ngIf="events.length > 0">
+      Resumen del dia seleccionado
+    </h4>
+    <button
+      type="button"
+      class="btn btn-success btn-sm"
+      (click)="this.activeDayIsOpen = false"
+    >
+      Cerrar ventana resumen
+    </button>
+  </div>
   <div
     class="wrapper-reserve"
     *ngFor="let event of events; let x = index"
@@ -44,26 +53,43 @@
 </ng-template>
 
 <ng-template #customCellTemplate let-day="day">
-  <div *ngIf="day.events.length == 0" class="container-date">
+  <div class="container-date">
     <div [ngClass]="day.isToday ? 'today' : !day.inMonth ? 'past' : 'day'">
-      {{ day.date | date : "dd" }}
+      <div class="order">
+        <div class="date">
+          <div class="month">
+            {{ getMonth(day.date | date : "M") }}
+          </div>
+          <div class="day">
+            {{ day.date | date : "dd" }}
+          </div>
+        </div>
+
+        <span>{{ day.events.length }} pedidos</span>
+      </div>
     </div>
-  </div>
-  <div *ngIf="day.events.length > 0" class="container-date">
-    <div [ngClass]="day.isToday ? 'today' : !day.inMonth ? 'past' : 'day'">
-      {{ day.date | date : "dd" }}
-    </div>
-    <div
-      class="container-reservation"
-      *ngFor="let event of day.events; let x = index"
-      (click)="handleEvent('Clicked', day.events[x])"
-      [ngStyle]="{ 'border-color': event.color }"
-    >
-      <span class="customer">{{ event.customer }}</span>
-      <span class="title">{{ event.title }}</span>
-      <span class="amount">
-        <i class="material-icons">work</i>{{ event.amount }} unidades</span
+    <div *ngIf="day.events.length > 0" class="container-hiding">
+      <div
+        class="container-reservation"
+        *ngFor="let event of day.events; let x = index"
+        (click)="handleEvent('Clicked', day.events[x])"
+        [ngStyle]="{ 'border-color': event.color }"
       >
+        <span title="{{ event.customer }}" class="customer">{{
+          event.customer
+        }}</span>
+        <span class="title" title="{{ event.subconcept }}">{{
+          event.subconcept
+        }}</span>
+        <!-- <span class="amount">
+        <i class="material-icons">work</i>{{ event.amount }} unidades</span
+      > -->
+      </div>
+    </div>
+    <div *ngIf="day.events.length >= 3" class="more-button">
+      <button type="button" class="btn btn-warning">
+        Mostrar {{ day.events.length - 3 }} más
+      </button>
     </div>
   </div>
 </ng-template>

@@ -395,6 +395,7 @@ export class SubconceptStandardComponent implements OnInit {
       let idembalaje = _.findIndex(this.dataCombos.envelopes, (o) => {
         return o.label == this.selectedSubconcept.envelope;
       });
+      this.selectedSubconcept.customer_name = this.dataCombos.customer[0].label;
 
       let idcliente = _.findIndex(this.dataCombos.customer, (o) => {
         return o.label == this.selectedSubconcept.customer_name;
@@ -650,8 +651,8 @@ export class SubconceptStandardComponent implements OnInit {
         Marca: line.brand,
         Perecedero: line.perishable,
         Almacenable: line.stockable,
-        Cliente: line.customer_name,
-        Contacto: line.contact,
+        // Cliente: line.customer_name,
+        // Contacto: line.contact,
       });
     });
 

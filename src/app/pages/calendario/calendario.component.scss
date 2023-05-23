@@ -65,7 +65,7 @@ h4.title-open-day {
     margin: 2px 0;
     padding: 4px;
     font-size: 14px;
-    border-top-width: 5px;
+    border-top-width: 2px;
     border-top-style: solid;
     display: grid;
     width: 100%;
@@ -77,12 +77,21 @@ h4.title-open-day {
         padding:2px;
         color:#e05e64;
         display: inline-block;
+        
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
     .title {
         font-size: 14px;
         font-weight: 400;
         letter-spacing: -1px;
         display: inline-block;
+        
+        
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
     .amount {
         background-color: #fef4ea;
@@ -119,10 +128,70 @@ h4.title-open-day {
         box-shadow: inset 0 0 7px 0 rgba(0, 0, 0, 0.5);
     }
 }
+.order {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+        background: #f7f8fa;
+    padding: 2px 5px;
+    color: #555e74;
+    font-weight: 400;
+    font-size: 13px;
+    }
+    .date {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: #3b71e0;
+        border-radius: 10px;
+        color:white;
+        padding:2px 5px;
+        .day {
+            font-size: 20px;
+            color: white !important;
+            padding: 0 !important;
+            font-size: 15px!important;
+    line-height: 15px!important;
+    text-align: center!important;
+        }
+        .month {
+            font-size: 14px;
+            font-weight: 200;
+            color:white;
+        }
+    }
+}
+
+.row-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.more-button{
+    width:100%;
+    button {
+        display: block;
+        width: 90%;
+        margin: 5px auto;
+    }
+} 
+.container-hiding {
+    max-height: 200px;
+    overflow: hidden;
+    &.open{
+        max-height:none;
+    }
+}
 .container-date {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+
+
+
 }
 .cal-month-view .cal-day-cell {
     .past {
@@ -138,9 +207,7 @@ h4.title-open-day {
         font-weight: 600;
         padding: 6px;
         display: inline-block;
-        width: 37px;
-        border-radius: 7px;
-        margin: 4px;
+        width: 100%;
     }
 
     .day {
@@ -148,6 +215,7 @@ h4.title-open-day {
         text-align: right;
         font-weight: 600;
         padding: 10px;
+        width:100%;
     }
 }
 .title {

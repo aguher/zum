@@ -223,7 +223,7 @@
               >arrow_drop_up</i
             >
           </th>
-          <th
+          <!-- <th
             width="10%"
             scope="col"
             (click)="ordenar($event)"
@@ -261,8 +261,8 @@
               *ngIf="orden == 'contact' && !ordsentido"
               >arrow_drop_up</i
             >
-          </th>
-          <th width="6%" class="text-center">Imagen</th>
+          </th> -->
+          <!-- <th width="6%" class="text-center">Imagen</th> -->
           <th width="7%" *ngIf="roleUser != 10 && roleUser != 11"></th>
         </tr>
         <tr>
@@ -331,7 +331,7 @@
               placeholder="Filtre {{ nombresColumnas[2] }}"
             />
           </th>
-          <th scope="col">
+          <!-- <th scope="col">
             <input
               (keyup)="filtrar()"
               type="text"
@@ -346,7 +346,7 @@
               [(ngModel)]="filtrocontacto"
               placeholder="Filtre contacto"
             />
-          </th>
+          </th> -->
           <th *ngIf="roleUser != 10 && roleUser != 11"></th>
         </tr>
       </thead>
@@ -375,9 +375,9 @@
           <td>{{ exportacion.brand }}</td>
           <td>{{ exportacion.perishable }}</td>
           <td>{{ exportacion.stockable }}</td>
-          <td>{{ exportacion.customer_name }}</td>
-          <td>{{ exportacion.contact }}</td>
-          <td
+          <!-- <td>{{ exportacion.customer_name }}</td>
+          <td>{{ exportacion.contact }}</td> -->
+          <!-- <td
             class="text-center"
             data-toggle="modal"
             data-target="#imgMax"
@@ -388,7 +388,7 @@
               *ngIf="exportacion.image && exportacion.image != null"
               [src]="urlUpload + exportacion.image"
             />
-          </td>
+          </td> -->
           <td *ngIf="roleUser != 10 && roleUser != 11">
             <div class="menu">
               <a
@@ -716,7 +716,7 @@
         ></p-dropdown>
       </div>
     </div>
-    <div class="ui-grid-row">
+    <!-- <div class="ui-grid-row">
       <div class="ui-grid-col-6">
         <label for="unit_price">{{ nombresColumnas[4] | titlecase }}</label>
         <input
@@ -737,7 +737,7 @@
         <label for="unit_price">Contacto</label>
         <input pInputText id="brand" [(ngModel)]="selectedSubconcept.contact" />
       </div>
-    </div>
+    </div> -->
 
     <div class="ui-grid-row" *ngIf="id_company == 414">
       <div class="ui-grid-col-4">

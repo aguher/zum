@@ -1,291 +1,481 @@
-<nav [ngClass]="{'loaded':loaded}">
-    <div class="main-menu" [ngClass]="{'loaded':loaded}">
-        <ul>
-            <li class="logo">
-                <a routerLink="/" title="friendly finances" (click)="closeMenu()">
-                    <img style="height:75px; left:2px; top:0px; position:fixed" [src]="urllogo + storeCompany?.value?.logo" />
-                    <em style="left:135px;position:fixed; top:5px">Zum</em>
-                    <span style="position:fixed; left:130px; top:40px">friendly<br>finances</span>
-                </a>
+<nav [ngClass]="{ loaded: loaded }">
+  <div class="main-menu" [ngClass]="{ loaded: loaded }">
+    <ul>
+      <li class="logo">
+        <a routerLink="/" title="friendly finances" (click)="closeMenu()">
+          <img
+            style="height: 75px; left: 2px; top: 0px; position: fixed"
+            [src]="urllogo + storeCompany?.value?.logo"
+          />
+          <em style="left: 135px; position: fixed; top: 5px">Zum</em>
+          <span style="position: fixed; left: 130px; top: 40px"
+            >friendly<br />finances</span
+          >
+        </a>
+      </li>
+
+      <ng-container *ngIf="roleUser == 3 || roleUser == 4">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu" *ngIf="roleUser === 3">
+              <a
+                (click)="visibleReport = true"
+                (window:mouseup)="visibleReport = false"
+              >
+                Informes
+              </a>
             </li>
-
-
-
-            <ng-container *ngIf="roleUser == 3 || roleUser == 4">
-                <li class="inner-menu">
-                    <ul>
-                        <li class="list-menu" *ngIf="roleUser === 3">
-                            <a (click)="visibleReport = true" (window:mouseup)="visibleReport = false"> Informes </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
-                        </li>
-                        <!--             <li class="list-menu">
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
+            </li>
+            <!--             <li class="list-menu">
                 <a routerLinkActive="active" routerLink="/compras"> Compras </a>
               </li>  -->
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/proyectos"> Pres. y Pedidos </a>
-                        </li>
-                        <!--      <li class="list-menu">
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/proyectos">
+                Pres. y Pedidos
+              </a>
+            </li>
+            <!--      <li class="list-menu">
               <a routerLinkActive="active" routerLink="/presupuestos"> Ofertas </a>
             </li>-->
-                        <li class="list-menu" *ngIf="roleUser===3">
-                            <a routerLinkActive="active" routerLink="/facturas"> Facturas </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/compras"> Compras </a>
-                        </li>
-                        <li class="link-submenu" *ngIf="roleUser === 3">
-                            <a (click)="openSubmenu();closeMenu()" (window:mouseup)="hideSubmenu()">
-                                <i class="material-icons">settings</i>
-                            </a>
-                        </li>
-                        <li class="list-menu" *ngIf="roleUser === 4">
-                            <a routerLinkActive="active" (click)="closeMenu()" routerLink="/informe-proyectos"> Informe de Proyectos </a>
-                        </li>
-                    </ul>
-                </li>
-
-            </ng-container>
-            <ng-container *ngIf="roleUser == 5">
-                <li class="inner-menu">
-                    <ul>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/proyectos" (click)="closeMenu()"> Pres. y Pedidos </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/facturas"> Facturas </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/compras"> Compras </a>
-                        </li>
-                        <!--             <li class="list-menu">
+            <li class="list-menu" *ngIf="roleUser === 3">
+              <a routerLinkActive="active" routerLink="/facturas"> Facturas </a>
+            </li>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/compras"> Compras </a>
+            </li>
+            <li class="link-submenu" *ngIf="roleUser === 3">
+              <a
+                (click)="openSubmenu(); closeMenu()"
+                (window:mouseup)="hideSubmenu()"
+              >
+                <i class="material-icons">settings</i>
+              </a>
+            </li>
+            <li class="list-menu" *ngIf="roleUser === 4">
+              <a
+                routerLinkActive="active"
+                (click)="closeMenu()"
+                routerLink="/informe-proyectos"
+              >
+                Informe de Proyectos
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="roleUser == 5">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
+            </li>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/proyectos"
+                (click)="closeMenu()"
+              >
+                Pres. y Pedidos
+              </a>
+            </li>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/facturas"> Facturas </a>
+            </li>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/compras"> Compras </a>
+            </li>
+            <!--             <li class="list-menu">
               <a routerLinkActive="active" (click)="closeMenu()" routerLink="/informe-proyectos"> Informe de Proyectos </a>
             </li> -->
-                        <li class="link-submenu">
-                            <a (click)="openSubmenu();closeMenu()" (window:mouseup)="hideSubmenu()">
-                                <i class="material-icons">settings</i>
-                            </a>
-                        </li>
-                    </ul>
-            </ng-container>
+            <li class="link-submenu">
+              <a
+                (click)="openSubmenu(); closeMenu()"
+                (window:mouseup)="hideSubmenu()"
+              >
+                <i class="material-icons">settings</i>
+              </a>
+            </li>
+          </ul>
+        </li></ng-container
+      >
+      <ng-container *ngIf="roleUser == 9">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/proyectos"
+                (click)="closeMenu()"
+              >
+                Pres. y Pedidos
+              </a>
+            </li>
 
-            <ng-container *ngIf="roleUser == 9 || roleUser == 10">
-                <li class="inner-menu">
-                    <ul>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/compras"> Compras </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/proyectos" (click)="closeMenu()"> Pres. y Pedidos </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/subconceptos-standard"> Artículos </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/almacen" (click)="closeMenu()"> Almacén </a>
-                        </li>
-                    </ul>
-            </ng-container>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/subconceptos-standard">
+                Artículos
+              </a>
+            </li>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/almacen"
+                (click)="closeMenu()"
+              >
+                Almacén
+              </a>
+            </li>
+          </ul>
+        </li></ng-container
+      >
 
-            <ng-container *ngIf="roleUser == 11">
-                <li class="inner-menu">
-                    <ul>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/subconceptos-standard"> Artículos </a>
-                        </li>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/almacen" (click)="closeMenu()"> Almacén </a>
-                        </li>
-                    </ul>
-            </ng-container>
+      <ng-container *ngIf="roleUser == 10">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/compras"> Compras </a>
+            </li>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/proyectos"
+                (click)="closeMenu()"
+              >
+                Pres. y Pedidos
+              </a>
+            </li>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/clientes"> Clientes </a>
+            </li>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/subconceptos-standard">
+                Artículos
+              </a>
+            </li>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/almacen"
+                (click)="closeMenu()"
+              >
+                Almacén
+              </a>
+            </li>
+          </ul>
+        </li></ng-container
+      >
 
-            <ng-container *ngIf="(roleUser == 6 || roleUser == 7 || roleUser == 8) && showSearchBar">
-                <li class="search-input-block">
-                    <input (click)="closeMenu()" (input)="onSearchChange($event.target.value)" type="text" placeholder="Introduzca un campo a buscar">
-                    <i class="material-icons">search</i>
-                </li>
-            </ng-container>
-            <ng-container *ngIf="roleUser == 6 || roleUser == 7 || roleUser == 8">
-                <li class="inner-menu">
-                    <ul>
-                        <li class="list-menu">
-                            <a routerLinkActive="active" routerLink="/presupuestos"> Presupuestos </a>
-                        </li>
-                        <li class="list-menu" *ngIf="roleUser == 6 || roleUser == 7 || roleUser == 8">
-                            <a routerLinkActive="active" routerLink="/proyectos" (click)="closeMenu()"> Proyectos </a>
-                        </li>
-                    </ul>
-                </li>
-            </ng-container>
-            <li class="user-info" *ngIf="profileInfo">
-                <span [ngClass]="{'visible' : !isHidden}" (click)="toggleMenu()">
-          <i class="initials">{{profileInfo.initials}}</i>
-          {{profileInfo.nickname}}
+      <ng-container *ngIf="roleUser == 11">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/subconceptos-standard">
+                Artículos
+              </a>
+            </li>
+            <li class="list-menu">
+              <a
+                routerLinkActive="active"
+                routerLink="/almacen"
+                (click)="closeMenu()"
+              >
+                Almacén
+              </a>
+            </li>
+          </ul>
+        </li></ng-container
+      >
+
+      <ng-container
+        *ngIf="
+          (roleUser == 6 || roleUser == 7 || roleUser == 8) && showSearchBar
+        "
+      >
+        <li class="search-input-block">
+          <input
+            (click)="closeMenu()"
+            (input)="onSearchChange($event.target.value)"
+            type="text"
+            placeholder="Introduzca un campo a buscar"
+          />
+          <i class="material-icons">search</i>
+        </li>
+      </ng-container>
+      <ng-container *ngIf="roleUser == 6 || roleUser == 7 || roleUser == 8">
+        <li class="inner-menu">
+          <ul>
+            <li class="list-menu">
+              <a routerLinkActive="active" routerLink="/presupuestos">
+                Presupuestos
+              </a>
+            </li>
+            <li
+              class="list-menu"
+              *ngIf="roleUser == 6 || roleUser == 7 || roleUser == 8"
+            >
+              <a
+                routerLinkActive="active"
+                routerLink="/proyectos"
+                (click)="closeMenu()"
+              >
+                Proyectos
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+      <li class="user-info" *ngIf="profileInfo">
+        <span [ngClass]="{ visible: !isHidden }" (click)="toggleMenu()">
+          <i class="initials">{{ profileInfo.initials }}</i>
+          {{ profileInfo.nickname }}
         </span>
-                <div class="dropdown" [ngClass]="{'hide' : isHidden}">
-                    <div class="selectedCompany" *ngIf="storeCompany && storeYear">
-                        <p class="title">Empresa seleccionada</p>
-                        <p class="subtitle">{{storeCompany.label}}</p>
-                        <p class="title">Ejercicio seleccionado</p>
-                        <p class="subtitle">{{storeYear.label}}</p>
-                    </div>
-                    <div class="selectedCompany" *ngIf="!storeCompany && !storeYear">
-                        <p class="title">Selecciona una empresa</p>
-                    </div>
-                    <div class="selectedCompany" *ngIf="storeCompany && !storeYear">
-                        <p class="title">Empresa seleccionada</p>
-                        <p class="subtitle">{{storeCompany.label}}</p>
-                    </div>
-                    <ul>
-                        <li>
-                            <i class="material-icons close" (click)="closeMenu()">close</i>
-                            <div class="password-btn">
-                                <a (click)="updatePassword()">cambiar contraseña</a>
-                            </div>
-                            <div class="select-date" *ngIf="showSelectCompany">
-                                <p>Empresa</p>
-                                <p-dropdown [options]="companies" [(ngModel)]="selectedCompany" (onChange)="onChangeCompany(selectedCompany)" placeholder="Selecciona una empresa"></p-dropdown>
-                            </div>
-                            <div class="select-date">
-                                <p>Ejercicio</p>
-                                <p-dropdown [options]="fiscalYears" [(ngModel)]="selectedYear" placeholder="Selecciona un ejercicio"></p-dropdown>
-                            </div>
-                            <div class="refresh-btn">
-                                <a (click)="updateDataCompany()">actualizar</a>
-                            </div>
-                            <div class="logout">
-                                <i class="material-icons">exit_to_app</i>
-                                <a (click)="logout()" class="btn-green">cerrar sesion</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div class="secondary-menu" [ngClass]="{'visible' : visibleSubmenu}" *ngIf="roleUser == 3 || roleUser == 4 || roleUser == 5">
-        <ul>
+        <div class="dropdown" [ngClass]="{ hide: isHidden }">
+          <div class="selectedCompany" *ngIf="storeCompany && storeYear">
+            <p class="title">Empresa seleccionada</p>
+            <p class="subtitle">{{ storeCompany.label }}</p>
+            <p class="title">Ejercicio seleccionado</p>
+            <p class="subtitle">{{ storeYear.label }}</p>
+          </div>
+          <div class="selectedCompany" *ngIf="!storeCompany && !storeYear">
+            <p class="title">Selecciona una empresa</p>
+          </div>
+          <div class="selectedCompany" *ngIf="storeCompany && !storeYear">
+            <p class="title">Empresa seleccionada</p>
+            <p class="subtitle">{{ storeCompany.label }}</p>
+          </div>
+          <ul>
             <li>
-                <a (click)="closeMenu()" routerLink="/equipos" routerLinkActive="active">
-                    <i class="material-icons">supervisor_account</i> Equipos
-                </a>
+              <i class="material-icons close" (click)="closeMenu()">close</i>
+              <div class="password-btn">
+                <a (click)="updatePassword()">cambiar contraseña</a>
+              </div>
+              <div class="select-date" *ngIf="showSelectCompany">
+                <p>Empresa</p>
+                <p-dropdown
+                  [options]="companies"
+                  [(ngModel)]="selectedCompany"
+                  (onChange)="onChangeCompany(selectedCompany)"
+                  placeholder="Selecciona una empresa"
+                ></p-dropdown>
+              </div>
+              <div class="select-date">
+                <p>Ejercicio</p>
+                <p-dropdown
+                  [options]="fiscalYears"
+                  [(ngModel)]="selectedYear"
+                  placeholder="Selecciona un ejercicio"
+                ></p-dropdown>
+              </div>
+              <div class="refresh-btn">
+                <a (click)="updateDataCompany()">actualizar</a>
+              </div>
+              <div class="logout">
+                <i class="material-icons">exit_to_app</i>
+                <a (click)="logout()" class="btn-green">cerrar sesion</a>
+              </div>
             </li>
-            <li *ngIf="roleUser !== 5">
-                <a (click)="closeMenu()" routerLink="/usuarios" routerLinkActive="active">
-                    <i class="material-icons">face</i> Usuarios
-                </a>
-            </li>
-            <!--       <li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div
+    class="secondary-menu"
+    [ngClass]="{ visible: visibleSubmenu }"
+    *ngIf="roleUser == 3 || roleUser == 4 || roleUser == 5"
+  >
+    <ul>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/equipos"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">supervisor_account</i> Equipos
+        </a>
+      </li>
+      <li *ngIf="roleUser !== 5">
+        <a
+          (click)="closeMenu()"
+          routerLink="/usuarios"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">face</i> Usuarios
+        </a>
+      </li>
+      <!--       <li>
         <a (click)="closeMenu()" routerLink="/clientes" routerLinkActive="active">
           <i class="material-icons">card_travel</i>
           Clientes
         </a>
       </li> -->
-            <li>
-                <a (click)="closeMenu()" routerLink="/grupos" routerLinkActive="active">
-                    <i class="material-icons">copyright</i> Grupos
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/subgrupos" routerLinkActive="active">
-                    <i class="material-icons">list</i> Subgrupos
-                </a>
-            </li>
-            <li *ngIf="roleUser !== 5">
-                <a (click)="closeMenu()" routerLink="/conceptos-fijos" routerLinkActive="active">
-                    <i class="material-icons">toc</i> Conceptos Fijos
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/conceptos-variables" routerLinkActive="active">
-                    <i class="material-icons">low_priority</i> Conceptos Variables
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/subconceptos-standard" routerLinkActive="active">
-                    <i class="material-icons">speaker_notes</i> Artículos
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/almacen" routerLinkActive="active">
-                    <i class="material-icons">storage</i> Almacenaje
-                </a>
-            </li>
-            <li *ngIf="roleUser !== 5">
-                <a (click)="closeMenu()" routerLink="/configuracion" routerLinkActive="active">
-                    <i class="material-icons">build</i> Configuracion
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div class="secondary-menu" [ngClass]="{'visible' : visibleReport}" *ngIf="roleUser == 3 || roleUser == 4">
-        <ul>
-            <li>
-                <a (click)="closeMenu()" routerLink="/informe-empresa" routerLinkActive="active">
-                    <i class="material-icons">equalizer</i> Resumen General
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/informe-estadistico" routerLinkActive="active">
-                    <i class="material-icons">subtitles</i> Informe Estadístico
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/informe-proyectos" routerLinkActive="active">
-                    <i class="material-icons">receipt</i> Informe Proyectos
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/informe-proyectos-estado" routerLinkActive="active">
-                    <i class="material-icons">business</i> Proyectos por Estados
-                </a>
-            </li>
-            <li>
-                <a (click)="closeMenu()" routerLink="/informe-mensual" routerLinkActive="active">
-                    <i class="material-icons">storage</i> Informe Mensual
-                </a>
-            </li>
-        </ul>
-    </div>
+      <li>
+        <a (click)="closeMenu()" routerLink="/grupos" routerLinkActive="active">
+          <i class="material-icons">copyright</i> Grupos
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/subgrupos"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">list</i> Subgrupos
+        </a>
+      </li>
+      <li *ngIf="roleUser !== 5">
+        <a
+          (click)="closeMenu()"
+          routerLink="/conceptos-fijos"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">toc</i> Conceptos Fijos
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/conceptos-variables"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">low_priority</i> Conceptos Variables
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/subconceptos-standard"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">speaker_notes</i> Artículos
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/almacen"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">storage</i> Almacenaje
+        </a>
+      </li>
+      <li *ngIf="roleUser !== 5">
+        <a
+          (click)="closeMenu()"
+          routerLink="/configuracion"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">build</i> Configuracion
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="secondary-menu"
+    [ngClass]="{ visible: visibleReport }"
+    *ngIf="roleUser == 3 || roleUser == 4"
+  >
+    <ul>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/informe-empresa"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">equalizer</i> Resumen General
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/informe-estadistico"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">subtitles</i> Informe Estadístico
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/informe-proyectos"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">receipt</i> Informe Proyectos
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/informe-proyectos-estado"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">business</i> Proyectos por Estados
+        </a>
+      </li>
+      <li>
+        <a
+          (click)="closeMenu()"
+          routerLink="/informe-mensual"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">storage</i> Informe Mensual
+        </a>
+      </li>
+    </ul>
+  </div>
 </nav>
 
-<p-dialog styleClass="dashboard-dialog" width="500" header="Cambio contraseña" [(visible)]="displayDialogPassword" [responsive]="true" showEffect="ease" [modal]="true">
-    <div class="ui-grid ui-grid-responsive ui-fluid">
-        <div class="ui-grid-row"><br><br>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-7">
-                    <span class="title" style="min-width:500px">Introduzca la nueva contraseña:</span>
-                </div>
-                <div class="ui-grid-col-5">
-                    <input type="password" [(ngModel)]="password" id="password" size="22" /><br><br>
-                </div>
-            </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-7">
-                    <span class="title" style="min-width:500px">Repita su nueva contraseña:</span>
-                </div>
-                <div class="ui-grid-col-5">
-                    <input type="password" [(ngModel)]="passwordrpt" id="passwordrpt" size="22" /><br><br>
-                </div>
-            </div>
+<p-dialog
+  styleClass="dashboard-dialog"
+  width="500"
+  header="Cambio contraseña"
+  [(visible)]="displayDialogPassword"
+  [responsive]="true"
+  showEffect="ease"
+  [modal]="true"
+>
+  <div class="ui-grid ui-grid-responsive ui-fluid">
+    <div class="ui-grid-row">
+      <br /><br />
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-7">
+          <span class="title" style="min-width: 500px"
+            >Introduzca la nueva contraseña:</span
+          >
         </div>
+        <div class="ui-grid-col-5">
+          <input
+            type="password"
+            [(ngModel)]="password"
+            id="password"
+            size="22"
+          /><br /><br />
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-7">
+          <span class="title" style="min-width: 500px"
+            >Repita su nueva contraseña:</span
+          >
+        </div>
+        <div class="ui-grid-col-5">
+          <input
+            type="password"
+            [(ngModel)]="passwordrpt"
+            id="passwordrpt"
+            size="22"
+          /><br /><br />
+        </div>
+      </div>
     </div>
-    <p-footer>
-        <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-            <a (click)="displayDialogPassword = false" class="cancel">              
-              cancelar
-            </a>
-            <a (click)="updatePasswordApi()">              
-              Cambiar contraseña
-            </a>
-        </div>
-    </p-footer>
+  </div>
+  <p-footer>
+    <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+      <a (click)="displayDialogPassword = false" class="cancel"> cancelar </a>
+      <a (click)="updatePasswordApi()"> Cambiar contraseña </a>
+    </div>
+  </p-footer>
 </p-dialog>

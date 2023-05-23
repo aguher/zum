@@ -2864,21 +2864,63 @@ class Api extends Rest {
 				$image=$this->datosPeticion['image'];
 				$observations= html_entity_decode($this->datosPeticion['observations']);
 
-				$query = $this->_conn->prepare("select id from tt_articlesvslocation where location_warehouse='".$warehouse."' and location_rows='".$row."' 
-									and location_sections='".$section."' and location_heights='".$height."' and article_id='".$article_id."' 
-									and borrado = 0 and dateexpiry='".$dateexpiry."' and owner_id='".$owner_id."' and state_id='".$state_id."'");
+				$query = $this->_conn->prepare("select id from tt_articlesvslocation where location_warehouse='".$warehouse."'  and article_id='".$article_id."' 
+									and borrado = 0 and owner_id='".$owner_id."' and state_id='".$state_id."'");
 				$filas = $query->execute();
 				$filas = $query->fetch(PDO::FETCH_ASSOC);
 				$filasActualizadas = $query->rowCount();
 
 				if($filasActualizadas === 0) {
 
-					$query = $this->_conn->prepare("INSERT INTO `tt_articlesvslocation`(`units`, `location_warehouse`, `location_rows`, `location_sections`, `location_heights`, `article_id`, `dateexpiry`, `owner_id`, `state_id`,`date_mod`,`image`) VALUES (
-							'".$units."','".$warehouse."','".$row."','".$section."','".$height."', '".$article_id."','".$dateexpiry."','".$owner_id."','".$state_id."',CURRENT_TIMESTAMP,'".$image."')");
+					$query = $this->_conn->prepare("INSERT INTO `tt_articlesvslocation`(`units`, `location_warehouse`, `location_rows`, `location_sections`, `location_heights`, `article_id`, `owner_id`, `state_id`,`date_mod`,`image`) VALUES (
+							'".$units."','".$warehouse."','".$row."','".$section."','".$height."', '".$article_id."','".$owner_id."','".$state_id."',CURRENT_TIMESTAMP,'".$image."')");
 					$query->execute();
 					$filasActualizadas = $query->rowCount();
 
 					$insertId = $this->_conn->lastInsertId();
+
+					$query = $this->_conn->prepare("INSERT INTO `tt_articles_movement`(`articlesvslocation_id`, `operation_id`, `date`, `user_id`, `location_row`, `location_height`, `location_section`, `observations`, `units`, `location_warehouse`) VALUES ( 
+						'".$insertId."',1,CURRENT_TIMESTAMP,'".$user_id."','".$row."', '".$height."','".$section."','".$observations."','".$units."','".$warehouse."')");
+					$query->execute();
+	
+						if ($filasActualizadas == 1) {
+							$respuesta['status'] = 'ok';
+							$query = $this->_conn->prepare("SELECT tt_articlesvslocation.id, tt_warehouse.name as almacen,
+							tt_articlesvslocation.location_rows as pasillo,
+							tt_articlesvslocation.location_sections as seccion,
+							tt_articlesvslocation.location_heights as altura,
+							tt_subconcepts_standards.code as codigo,
+							tt_subconcepts_standards.description as articulo,
+							tt_articles_families.familyname as familia,
+							tt_customer.customer_name as cliente,
+							tt_articlesvslocation.dateexpiry as caducidad,
+							tt_articles_envelopes.name as embalaje,
+							tt_articlesvslocation.units as unidades,
+							tt_subconcepts_standards.unitsperitem as unidadesxitem,
+							(tt_articlesvslocation.units*tt_subconcepts_standards.unitsperitem) as total,
+							tt_articles_state.state, 
+							tt_warehouse.id as idalmacen, tt_articles_state.id as idestado, tt_customer.id as idcliente,
+							tt_subconcepts_standards.brand as marca, tt_articlesvslocation.image
+							from tt_articlesvslocation, tt_subconcepts_standards, 
+							tt_warehouse, tt_articles_families,tt_articles_envelopes, tt_customer, tt_articles_state
+							where article_id = tt_subconcepts_standards.id
+							and tt_articlesvslocation.location_warehouse = tt_warehouse.id
+							and tt_articles_families.id = tt_subconcepts_standards.id_family
+							and tt_articles_envelopes.id = tt_subconcepts_standards.envelope_type
+							and tt_customer.id = tt_articlesvslocation.owner_id
+							and tt_articles_state.id = tt_articlesvslocation.state_id
+							and tt_articlesvslocation.borrado = 0
+							and tt_subconcepts_standards.id_company =".$id_company." order by tt_articlesvslocation.date_mod desc, tt_articlesvslocation.id desc");
+	
+							$query->execute();
+							$filas = $query->fetchAll(PDO::FETCH_ASSOC);
+							$respuesta['items'] = $filas;
+							$this->mostrarRespuesta($respuesta, 200);
+						} else {
+							$respuesta['status'] = 'error';
+							$respuesta['msg'] = 'No se ha podido añadir la línea';
+							$this->mostrarRespuesta($respuesta, 200);
+						}
 
 				}else{
 					$insertId = $filas['id'];
@@ -2886,50 +2928,42 @@ class Api extends Rest {
 					$query = $this->_conn->prepare("UPDATE `tt_articlesvslocation` SET date_mod=CURRENT_TIMESTAMP, units = units +".$units."
 						where id =".$insertId);
 					$query->execute();
+
+					$respuesta['status'] = 'ok';
+							$query = $this->_conn->prepare("SELECT tt_articlesvslocation.id, tt_warehouse.name as almacen,
+							tt_articlesvslocation.location_rows as pasillo,
+							tt_articlesvslocation.location_sections as seccion,
+							tt_articlesvslocation.location_heights as altura,
+							tt_subconcepts_standards.code as codigo,
+							tt_subconcepts_standards.description as articulo,
+							tt_articles_families.familyname as familia,
+							tt_customer.customer_name as cliente,
+							tt_articlesvslocation.dateexpiry as caducidad,
+							tt_articles_envelopes.name as embalaje,
+							tt_articlesvslocation.units as unidades,
+							tt_subconcepts_standards.unitsperitem as unidadesxitem,
+							(tt_articlesvslocation.units*tt_subconcepts_standards.unitsperitem) as total,
+							tt_articles_state.state, 
+							tt_warehouse.id as idalmacen, tt_articles_state.id as idestado, tt_customer.id as idcliente,
+							tt_subconcepts_standards.brand as marca, tt_articlesvslocation.image
+							from tt_articlesvslocation, tt_subconcepts_standards, 
+							tt_warehouse, tt_articles_families,tt_articles_envelopes, tt_customer, tt_articles_state
+							where article_id = tt_subconcepts_standards.id
+							and tt_articlesvslocation.location_warehouse = tt_warehouse.id
+							and tt_articles_families.id = tt_subconcepts_standards.id_family
+							and tt_articles_envelopes.id = tt_subconcepts_standards.envelope_type
+							and tt_customer.id = tt_articlesvslocation.owner_id
+							and tt_articles_state.id = tt_articlesvslocation.state_id
+							and tt_articlesvslocation.borrado = 0
+							and tt_subconcepts_standards.id_company =".$id_company." order by tt_articlesvslocation.date_mod desc, tt_articlesvslocation.id desc");
+	
+							$query->execute();
+							$filas = $query->fetchAll(PDO::FETCH_ASSOC);
+							$respuesta['items'] = $filas;
+							$this->mostrarRespuesta($respuesta, 200);
 				}
 
-				$query = $this->_conn->prepare("INSERT INTO `tt_articles_movement`(`articlesvslocation_id`, `operation_id`, `date`, `user_id`, `location_row`, `location_height`, `location_section`, `observations`, `units`, `location_warehouse`) VALUES ( 
-					'".$insertId."',1,CURRENT_TIMESTAMP,'".$user_id."','".$row."', '".$height."','".$section."','".$observations."','".$units."','".$warehouse."')");
-				$query->execute();
-
-					if ($filasActualizadas == 1) {
-						$respuesta['status'] = 'ok';
-						$query = $this->_conn->prepare("SELECT tt_articlesvslocation.id, tt_warehouse.name as almacen,
-						tt_articlesvslocation.location_rows as pasillo,
-						tt_articlesvslocation.location_sections as seccion,
-						tt_articlesvslocation.location_heights as altura,
-						tt_subconcepts_standards.code as codigo,
-						tt_subconcepts_standards.description as articulo,
-						tt_articles_families.familyname as familia,
-						tt_customer.customer_name as cliente,
-						tt_articlesvslocation.dateexpiry as caducidad,
-						tt_articles_envelopes.name as embalaje,
-						tt_articlesvslocation.units as unidades,
-						tt_subconcepts_standards.unitsperitem as unidadesxitem,
-						(tt_articlesvslocation.units*tt_subconcepts_standards.unitsperitem) as total,
-						tt_articles_state.state, 
-						tt_warehouse.id as idalmacen, tt_articles_state.id as idestado, tt_customer.id as idcliente,
-						tt_subconcepts_standards.brand as marca, tt_articlesvslocation.image
-						from tt_articlesvslocation, tt_subconcepts_standards, 
-						tt_warehouse, tt_articles_families,tt_articles_envelopes, tt_customer, tt_articles_state
-						where article_id = tt_subconcepts_standards.id
-						and tt_articlesvslocation.location_warehouse = tt_warehouse.id
-						and tt_articles_families.id = tt_subconcepts_standards.id_family
-						and tt_articles_envelopes.id = tt_subconcepts_standards.envelope_type
-						and tt_customer.id = tt_articlesvslocation.owner_id
-						and tt_articles_state.id = tt_articlesvslocation.state_id
-						and tt_articlesvslocation.borrado = 0
-						and tt_subconcepts_standards.id_company =".$id_company." order by tt_articlesvslocation.date_mod desc, tt_articlesvslocation.id desc");
-
-						$query->execute();
-						$filas = $query->fetchAll(PDO::FETCH_ASSOC);
-						$respuesta['items'] = $filas;
-						$this->mostrarRespuesta($respuesta, 200);
-					} else {
-						$respuesta['status'] = 'error';
-						$respuesta['msg'] = 'No se ha podido añadir la línea';
-						$this->mostrarRespuesta($respuesta, 200);
-					}
+				
 			}
 			$this->mostrarRespuesta(HandleErrors::sendError(3), 204);
 		}

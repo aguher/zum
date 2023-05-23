@@ -74,6 +74,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
   budget_validity = null;
   typeSource = "budget";
   showClone: boolean = false;
+  roleUser = "";
   showDateWrong: boolean = false;
   showDialogImprimirAlbaran: boolean = false;
   lines = [];
@@ -123,6 +124,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
   ) {
     let dataCompany = JSON.parse(localStorage.getItem("selectedCompany")).value;
     this.id_company = dataCompany.id;
+    this.roleUser = this._token.getInfo().role;
   }
 
   onScroll() {

@@ -1,96 +1,162 @@
 <ng-template #choosenbilling>
-    <div *ngIf="!choosenCompany; else choosen">
-        <h2 class="title-loading">
-            Seleccione una empresa y año fiscal
-        </h2>
-    </div>
+  <div *ngIf="!choosenCompany; else choosen">
+    <h2 class="title-loading">Seleccione una empresa y año fiscal</h2>
+  </div>
 </ng-template>
 <ng-template #choosen>
-    <div *ngIf="!noBilling; else createBilling">
-        <h2 class="title-loading">
-            <div class="loader"></div>
-            Cargando almacenaje...
-        </h2>
-    </div>
+  <div *ngIf="!noBilling; else createBilling">
+    <h2 class="title-loading">
+      <div class="loader"></div>
+      Cargando almacenaje...
+    </h2>
+  </div>
 </ng-template>
 
 <ng-template #createBilling>
-    <div class="container-billing no-billing" *ngIf="false">
-        <div class="container-title" *ngIf="roleUser <=5">
-            <span class="title">Añade la primera Factura</span>
-            <div class="add-bill">
-                <a class="big-button" (click)="showNewBill = true">
-                    <i class="material-icons">playlist_add</i> Nueva Factura
-                </a>
-            </div>
-        </div>
-        <div class="container-title" *ngIf="roleUser >5">
-            <span class="title">No hay ningún Factura añadido</span>
-        </div>
+  <div class="container-billing no-billing" *ngIf="false">
+    <div class="container-title" *ngIf="roleUser <= 5">
+      <span class="title">Añade la primera Factura</span>
+      <div class="add-bill">
+        <a class="big-button" (click)="showNewBill = true">
+          <i class="material-icons">playlist_add</i> Nueva Factura
+        </a>
+      </div>
     </div>
+    <div class="container-title" *ngIf="roleUser > 5">
+      <span class="title">No hay ningún Factura añadido</span>
+    </div>
+  </div>
 </ng-template>
 
-<div class="container-billing" *ngIf="choosenCompany else choosenbilling">
-    <div class="container-title">
-        <div class="ui-grid-row" style="margin-bottom:5px">
-            <div class="ui-grid-col-4" style="margin-top:5px">
-                <div class="btn-group" role="group" style="margin-bottom:10px; margin-top:10px" *ngIf="roleUser != 11">
-                    <button type="button" class="btn btn-outline-warning" (click)="tabSeleccionada=1;filtrar()" [ngClass]="{'active': 1 == tabSeleccionada}">Existencias</button>
-                    <button type="button" class="btn btn-outline-warning" (click)="tabSeleccionada=2" [ngClass]="{'active': 2 == tabSeleccionada}">Movimientos</button>
-                    <button type="button" class="btn btn-outline-warning" (click)="tabSeleccionada=4" [ngClass]="{'active': 4 == tabSeleccionada}" *ngIf="(id_company == 412 || id_company == 385)">Pendiente de Salir</button>
-                    <!--                     <button type="button" class="btn btn-outline-warning" (click)="tabSeleccionada=4" [ngClass]="{'active': 4 == tabSeleccionada}" *ngIf="id_user == 82 || id_user == 83">Nuevas Salidas</button> -->
-                </div>
-            </div>
+<div class="container-billing" *ngIf="choosenCompany; else choosenbilling">
+  <div class="container-title">
+    <div class="ui-grid-row" style="margin-bottom: 5px">
+      <div class="ui-grid-col-4" style="margin-top: 5px">
+        <div
+          class="btn-group"
+          role="group"
+          style="margin-bottom: 10px; margin-top: 10px"
+          *ngIf="roleUser != 11"
+        >
+          <button
+            type="button"
+            class="btn btn-outline-warning"
+            (click)="tabSeleccionada = 1; filtrar()"
+            [ngClass]="{ active: 1 == tabSeleccionada }"
+          >
+            Existencias
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-warning"
+            (click)="tabSeleccionada = 2"
+            [ngClass]="{ active: 2 == tabSeleccionada }"
+          >
+            Movimientos
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-warning"
+            (click)="tabSeleccionada = 4"
+            [ngClass]="{ active: 4 == tabSeleccionada }"
+            *ngIf="id_company == 412 || id_company == 385"
+          >
+            Pendiente de Salir
+          </button>
+          <!--                     <button type="button" class="btn btn-outline-warning" (click)="tabSeleccionada=4" [ngClass]="{'active': 4 == tabSeleccionada}" *ngIf="id_user == 82 || id_user == 83">Nuevas Salidas</button> -->
+        </div>
+      </div>
 
-            <div class="ui-grid-col-4" style="position:relative; top:15px">
-                <div class="ui-grid-row" *ngIf="tabSeleccionada!=2">
-                    <div class="ui-grid-col-12">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="ui-grid-row" *ngIf="tabSeleccionada==2">
-                    <div class="ui-grid-col-2" style="position:relative; top:6px">
-                        <small>Desde: </small>
-                    </div>
-                    <div class="ui-grid-col-4">
-                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="start_date_calendar" (dateChanged)="onDateChanged($event,  'start_date')"></my-date-picker>
-                    </div>
-                    <div class="ui-grid-col-2" style="position:relative; top:6px">
-                        <small>&nbsp;Hasta:</small>
-                    </div>
-                    <div class="ui-grid-col-4">
-                        <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="end_date_calendar" (dateChanged)="onDateChanged($event,  'end_date')"></my-date-picker>
-                    </div>
-                </div>
-            </div>
+      <div class="ui-grid-col-4" style="position: relative; top: 15px">
+        <div class="ui-grid-row" *ngIf="tabSeleccionada != 2">
+          <div class="ui-grid-col-12">&nbsp;</div>
+        </div>
+        <div class="ui-grid-row" *ngIf="tabSeleccionada == 2">
+          <div class="ui-grid-col-2" style="position: relative; top: 6px">
+            <small>Desde: </small>
+          </div>
+          <div class="ui-grid-col-4">
+            <my-date-picker
+              name="mydate"
+              [options]="myDatePickerOptions"
+              [(ngModel)]="start_date_calendar"
+              (dateChanged)="onDateChanged($event, 'start_date')"
+            ></my-date-picker>
+          </div>
+          <div class="ui-grid-col-2" style="position: relative; top: 6px">
+            <small>&nbsp;Hasta:</small>
+          </div>
+          <div class="ui-grid-col-4">
+            <my-date-picker
+              name="mydate"
+              [options]="myDatePickerOptions"
+              [(ngModel)]="end_date_calendar"
+              (dateChanged)="onDateChanged($event, 'end_date')"
+            ></my-date-picker>
+          </div>
+        </div>
+      </div>
 
-
-            <div class="ui-grid-col-4 text-right" style="max-height: 70px">
-
-                <div class="add-bill">
-                    <!-- *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6" -->
-                    <a class="big-button export" (click)="exportExcel()" *ngIf="tabSeleccionada == 1 || tabSeleccionada == 2 || tabSeleccionada == 3">
-                        <i alt="excel" title="excel" class="material-icons">get_app</i> Exportar a EXCEL
-                    </a>
-                    <a class="big-button" (click)="selectStorage()" *ngIf="tabSeleccionada == 1 && !showNewExport && roleUser != 10 && roleUser != 11">
-                        <i alt="Añadir existencias" title="Añadir existencias" class="material-icons">library_add</i> Añadir Existencias
-                    </a>
-                    <a class="big-button" (click)="showNewBill = true" *ngIf="false">
-                        <i class="material-icons">playlist_add</i> Nueva Factura
-                    </a>
-                    <a *ngIf="choosenCompany" (click)="refresh(true)">
-                        <i class="material-icons refresh" title="recargar listado y estadísticas" style="color:#418EE5; cursor:pointer; position:relative; margin-right:20px; top:10px">refresh</i>
-                    </a>
-                </div>
-                <!--                 <div class="search-input-block" *ngIf="false" [ngClass]="{'hidden': !showInput}">
+      <div class="ui-grid-col-4 text-right" style="max-height: 70px">
+        <div class="add-bill">
+          <!-- *ngIf="roleUser === 3 || roleUser === 5 || roleUser === 6" -->
+          <a
+            class="big-button export"
+            (click)="exportExcel()"
+            *ngIf="
+              tabSeleccionada == 1 ||
+              tabSeleccionada == 2 ||
+              tabSeleccionada == 3
+            "
+          >
+            <i alt="excel" title="excel" class="material-icons">get_app</i>
+            Exportar a EXCEL
+          </a>
+          <a
+            class="big-button"
+            (click)="selectStorage()"
+            *ngIf="
+              tabSeleccionada == 1 &&
+              !showNewExport &&
+              roleUser != 10 &&
+              roleUser != 11
+            "
+          >
+            <i
+              alt="Añadir existencias"
+              title="Añadir existencias"
+              class="material-icons"
+              >library_add</i
+            >
+            Añadir Existencias
+          </a>
+          <a class="big-button" (click)="showNewBill = true" *ngIf="false">
+            <i class="material-icons">playlist_add</i> Nueva Factura
+          </a>
+          <a *ngIf="choosenCompany" (click)="refresh(true)">
+            <i
+              class="material-icons refresh"
+              title="recargar listado y estadísticas"
+              style="
+                color: #418ee5;
+                cursor: pointer;
+                position: relative;
+                margin-right: 20px;
+                top: 10px;
+              "
+              >refresh</i
+            >
+          </a>
+        </div>
+        <!--                 <div class="search-input-block" *ngIf="false" [ngClass]="{'hidden': !showInput}">
                     <input class="search" #inputSearch type="text" placeholder="Introduzca un campo a buscar" [(ngModel)]="valueInputSearch">
                     <i class="material-icons">search</i>
                 </div> -->
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!--     <div *ngIf="showNewExport" style="background-color:rgb(199, 181, 147); border:1px solid gray" >
+  <!--     <div *ngIf="showNewExport" style="background-color:rgb(199, 181, 147); border:1px solid gray" >
         <div class="ui-grid-row">   
             <div class="ui-grid-col-12" class="text-center">
                 <b>Añadir Existencias</b>
@@ -157,81 +223,357 @@
         </div>
     </div> -->
 
-    <div class="list" *ngIf="tabSeleccionada == 1">
-
-        <table class="table table-sm" id="tablafacturas">
-            <thead>
-                <tr>
-                    <th width="5%" scope="col" (click)="ordenar($event)" id="almacen" style="cursor:pointer">Almacén<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='almacen' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='almacen' && !ordsentido">arrow_drop_up</i></th>
+  <div class="list" *ngIf="tabSeleccionada == 1">
+    <table class="table table-sm" id="tablafacturas">
+      <thead>
+        <tr>
+          <!-- <th width="5%" scope="col" (click)="ordenar($event)" id="almacen" style="cursor:pointer">Almacén<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='almacen' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='almacen' && !ordsentido">arrow_drop_up</i></th>
                     <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="pasillo" style="cursor:pointer">Pas<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='pasillo' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='pasillo' && !ordsentido">arrow_drop_up</i></th>
                     <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="seccion" style="cursor:pointer">Sec<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='seccion' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='seccion' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="altura" style="cursor:pointer">Alt<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='altura' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='altura' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="codigo" style="cursor:pointer">Cód.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='codigo' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='codigo' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="9%" scope="col" (click)="ordenar($event)" id="articulo" style="cursor:pointer">Artículo<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='articulo' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='articulo' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="7%" scope="col" (click)="ordenar($event)" id="familia" style="cursor:pointer">{{nombresColumnas[0] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='familia' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='familia' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="9%" scope="col" (click)="ordenar($event)" id="cliente" style="cursor:pointer">{{nombresColumnas[1] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='cliente' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='cliente' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" (click)="ordenar($event)" id="marca" style="cursor:pointer">Marca<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='marca' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='marca' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="6%" scope="col" class="text-right" (click)="ordenar($event)" id="caducidad" style="cursor:pointer">Caduc.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='caducidad' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='caducidad' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="7%" scope="col" (click)="ordenar($event)" id="embalaje" style="cursor:pointer">Embalaje<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='embalaje' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='embalaje' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="unidades" style="cursor:pointer">Un.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unidades' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unidades' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="4%" scope="col" class="text-right" (click)="ordenar($event)" id="unidadesxitem" style="cursor:pointer">UnxE<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unidadesxitem' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='unidadesxitem' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="total" style="cursor:pointer">Total<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='total' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="6%" scope="col" (click)="ordenar($event)" id="state" style="cursor:pointer">Estado<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='state' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='state' && !ordsentido">arrow_drop_up</i></th>
-                    <th width="5%"></th>
-                    <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
+                    <th width="5%" scope="col" class="text-right" (click)="ordenar($event)" id="altura" style="cursor:pointer">Alt<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='altura' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='altura' && !ordsentido">arrow_drop_up</i></th> -->
+          <th
+            width="5%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar($event)"
+            id="codigo"
+            style="cursor: pointer"
+          >
+            Cód.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'codigo' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'codigo' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="15%"
+            scope="col"
+            (click)="ordenar($event)"
+            id="articulo"
+            style="cursor: pointer"
+          >
+            Artículo<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'articulo' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'articulo' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="12%"
+            scope="col"
+            (click)="ordenar($event)"
+            id="familia"
+            style="cursor: pointer"
+          >
+            {{ nombresColumnas[0] | titlecase
+            }}<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'familia' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'familia' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <!-- <th width="9%" scope="col" (click)="ordenar($event)" id="cliente" style="cursor:pointer">{{nombresColumnas[1] | titlecase}}<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='cliente' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='cliente' && !ordsentido">arrow_drop_up</i></th> -->
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar($event)"
+            id="marca"
+            style="cursor: pointer"
+          >
+            Marca<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'marca' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'marca' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <!-- <th width="6%" scope="col" class="text-right" (click)="ordenar($event)" id="caducidad" style="cursor:pointer">Caduc.<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='caducidad' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='caducidad' && !ordsentido">arrow_drop_up</i></th>
+                    <th width="7%" scope="col" (click)="ordenar($event)" id="embalaje" style="cursor:pointer">Embalaje<i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='embalaje' && ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="orden=='embalaje' && !ordsentido">arrow_drop_up</i></th> -->
+          <th
+            width="4%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar($event)"
+            id="unidades"
+            style="cursor: pointer"
+          >
+            Un.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'unidades' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'unidades' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="4%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar($event)"
+            id="unidadesxitem"
+            style="cursor: pointer"
+          >
+            UnxE<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'unidadesxitem' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'unidadesxitem' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="5%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar($event)"
+            id="total"
+            style="cursor: pointer"
+          >
+            Total<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'total' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'total' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="6%"
+            scope="col"
+            (click)="ordenar($event)"
+            id="state"
+            style="cursor: pointer"
+          >
+            Estado<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'state' && ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="orden == 'state' && !ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th width="5%"></th>
+          <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
 
-                <tr>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroalmacen" placeholder="Filtre almacén" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtropasillo" placeholder="Filtre pasillo" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroseccion" placeholder="Filtre sección" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroaltura" placeholder="Filtre altura" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroartcod" placeholder="Filtre art.cód." /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtronombre" placeholder="Filtre nombre" /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrofamilia" placeholder="Filtre {{nombresColumnas[0]}}" /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocliente" placeholder="Filtre {{nombresColumnas[1]}}" /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtromarca" placeholder="Filtre marca" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocaducidad" placeholder="Filtre caducidad" /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroembalaje" placeholder="Filtre embalaje" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrocantidad" placeholder="Filtre cantidad" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrounidadesxe" placeholder="Filtre UdsxE" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtrototal" placeholder="Filtre total" /></th>
-                    <th scope="col"><input (keyup)="filtrar()" type="text" [(ngModel)]="filtroestado" placeholder="Filtre estado" /></th>
-                    <th scope="col"></th>
-                    <th *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr (dblclick)="selectStorage(factura)" style="cursor:pointer" *ngFor="let factura of facturasfiltradas | slice:([numPage]-1)*[pagination]:[numPage]*[pagination]; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
-                    <td>{{factura.almacen}}</td>
-                    <td class="text-right">{{factura.pasillo}}</td>
-                    <td class="text-right">{{factura.seccion}}</td>
-                    <td class="text-right">{{factura.altura}}</td>
-                    <td class="text-right">{{factura.codigo}}</td>
-                    <td>{{factura.articulo}}</td>
-                    <td>{{factura.familia}}</td>
-                    <td>{{factura.cliente}}</td>
-                    <td>{{factura.marca}}</td>
-                    <td class="text-right">{{factura.caducidad}}</td>
-                    <td>{{factura.embalaje}}</td>
-                    <td class="text-right">{{factura.unidades}}</td>
-                    <td class="text-right">{{factura.unidadesxitem}}</td>
-                    <td class="text-right">{{factura.total}}</td>
-                    <td>{{factura.state}}</td>
-                    <td class="text-center" data-toggle="modal" data-target="#imgMax" (click)="selectedStorage = factura"><img style="max-height:65px; max-width:65px" *ngIf="factura.image && factura.image != null" [src]="urlUpload + factura.image"></td>
-                    <td *ngIf="roleUser != 10 && roleUser != 11">
-                        <div class="menu">
-                            <a title="Dar Salida" (click)="exitStorage(factura)">
-                                <i class="material-icons exit-button">exit_to_app</i>
-                            </a>
-                            <a title="Eliminar" (click)="deleteStorage(factura)">
-                                <i class="material-icons delete">delete</i>
-                            </a>
-                            <a title="editar" (click)="selectStorage(factura)">
-                                <!-- //, rowIndex -->
-                                <i class="material-icons edit-button">mode_edit</i>
-                            </a>
-                            <!--                    
+        <tr>
+          <!-- <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroalmacen"
+              placeholder="Filtre almacén"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtropasillo"
+              placeholder="Filtre pasillo"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroseccion"
+              placeholder="Filtre sección"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroaltura"
+              placeholder="Filtre altura"
+            />
+          </th> -->
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroartcod"
+              placeholder="Filtre art.cód."
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtronombre"
+              placeholder="Filtre nombre"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrofamilia"
+              placeholder="Filtre {{ nombresColumnas[0] }}"
+            />
+          </th>
+          <!-- <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrocliente"
+              placeholder="Filtre {{ nombresColumnas[1] }}"
+            />
+          </th> -->
+          <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtromarca"
+              placeholder="Filtre marca"
+            />
+          </th>
+          <!-- <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrocaducidad"
+              placeholder="Filtre caducidad"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroembalaje"
+              placeholder="Filtre embalaje"
+            />
+          </th> -->
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrocantidad"
+              placeholder="Filtre cantidad"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrounidadesxe"
+              placeholder="Filtre UdsxE"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtrototal"
+              placeholder="Filtre total"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrar()"
+              type="text"
+              [(ngModel)]="filtroestado"
+              placeholder="Filtre estado"
+            />
+          </th>
+          <th scope="col"></th>
+          <th *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          (dblclick)="selectStorage(factura)"
+          style="cursor: pointer"
+          *ngFor="
+            let factura of facturasfiltradas
+              | slice
+                : ([numPage] - 1) * [pagination]
+                : [numPage] * [pagination];
+            let impar = even;
+            let i = index
+          "
+          [ngStyle]="{ 'background-color': i % 2 === 0 ? 'white' : '#DDDDDD' }"
+        >
+          <!-- <td>{{ factura.almacen }}</td>
+          <td class="text-right">{{ factura.pasillo }}</td>
+          <td class="text-right">{{ factura.seccion }}</td>
+          <td class="text-right">{{ factura.altura }}</td> -->
+          <td class="text-right">{{ factura.codigo }}</td>
+          <td>{{ factura.articulo }}</td>
+          <td>{{ factura.familia }}</td>
+          <!-- <td>{{ factura.cliente }}</td> -->
+          <td>{{ factura.marca }}</td>
+          <!-- <td class="text-right">{{ factura.caducidad }}</td>
+          <td>{{ factura.embalaje }}</td> -->
+          <td class="text-right">{{ factura.unidades }}</td>
+          <td class="text-right">{{ factura.unidadesxitem }}</td>
+          <td class="text-right">{{ factura.total }}</td>
+          <td>{{ factura.state }}</td>
+          <td
+            class="text-center"
+            data-toggle="modal"
+            data-target="#imgMax"
+            (click)="selectedStorage = factura"
+          >
+            <img
+              style="max-height: 65px; max-width: 65px"
+              *ngIf="factura.image && factura.image != null"
+              [src]="urlUpload + factura.image"
+            />
+          </td>
+          <td *ngIf="roleUser != 10 && roleUser != 11">
+            <div class="menu">
+              <a title="Dar Salida" (click)="exitStorage(factura)">
+                <i class="material-icons exit-button">exit_to_app</i>
+              </a>
+              <a title="Eliminar" (click)="deleteStorage(factura)">
+                <i class="material-icons delete">delete</i>
+              </a>
+              <a title="editar" (click)="selectStorage(factura)">
+                <!-- //, rowIndex -->
+                <i class="material-icons edit-button">mode_edit</i>
+              </a>
+              <!--                    
                         <a title="Factura ya exportada, no se puede eliminar" *ngIf="factura.id_export != 0">              
                                 <i class="material-icons" style="opacity: 0.3">delete</i>
                         </a>
@@ -239,58 +581,111 @@
                             <i class="material-icons abono">remove_shopping_cart</i>
                         </a> -->
 
-                            <!--                       <a title="Exportar Pdf" (click)="exportPDF(factura)">
+              <!--                       <a title="Exportar Pdf" (click)="exportPDF(factura)">
                             <i title="Exportar Pdf" class="material-icons pdf">picture_as_pdf</i>
                         </a> -->
 
-                            <!--                         <a title="Desglose" (click)="breakdownBill(factura)">
+              <!--                         <a title="Desglose" (click)="breakdownBill(factura)">
                             <i class="material-icons desglose">assessment</i>
                         </a> -->
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th scope="col" class="text-right">{{totalcantidades }}</th>
-                    <th></th>
-                    <th scope="col" class="text-right">{{totalitems }}</th>
-                    <th></th>
-                    <th *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-            </tbody>
-        </table>
-
-
-
-
-
-        <hr>
-        <div *ngIf="arrpages.length != 0" style="height:50px">
-            <div class="paginator text-center">
-                <span (click)="numPage=1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">|<</span>
-                <span (click)="numPage=numPage-2" *ngIf="numPage>2" style="cursor:pointer;padding:15px">{{numPage-2}}</span>
-                <span (click)="numPage=numPage-1" *ngIf="numPage!=1" style="cursor:pointer;padding:15px">{{numPage-1}}</span>
-                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPage}}</span>
-                <span (click)="numPage=numPage+1" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">{{numPage+1}}</span>
-                <span (click)="numPage=numPage+2" *ngIf="numPage<arrpages.length-1" style="cursor:pointer;padding:15px">{{numPage+2}}</span>
-                <span (click)="numPage=arrpages.length" *ngIf="numPage!=arrpages.length&&arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
             </div>
-            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
-                <i>Mostrando {{([numPage]-1)*[pagination]+1}} - {{facturasfiltradas.length > [numPage]*[pagination] ? [numPage]*[pagination] : facturasfiltradas.length }} de {{facturasfiltradas.length}} existencias </i>
-            </div>
-        </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- <th></th>
+          <th></th>
+          <th></th>
+          <th></th> -->
+          <th></th>
+          <!-- <th></th>
+          <th></th>
+          <th></th> -->
+          <th></th>
+          <th></th>
+          <th></th>
+          <th scope="col" class="text-right">{{ totalcantidades }}</th>
+          <th></th>
+          <th scope="col" class="text-right">{{ totalitems }}</th>
+          <th></th>
+          <th *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+      </tbody>
+    </table>
 
-        <!--      <div id="graficas" class="text-center">
+    <hr />
+    <div *ngIf="arrpages.length != 0" style="height: 50px">
+      <div class="paginator text-center">
+        <span
+          (click)="numPage = 1"
+          *ngIf="numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >|<</span
+        >
+        <span
+          (click)="numPage = numPage - 2"
+          *ngIf="numPage > 2"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPage - 2 }}</span
+        >
+        <span
+          (click)="numPage = numPage - 1"
+          *ngIf="numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPage - 1 }}</span
+        >
+        <span
+          style="
+            display: inline-table;
+            width: 24px;
+            border-radius: 500px;
+            font-weight: bold;
+            color: white;
+            background-color: gray;
+            cursor: pointer;
+          "
+          >{{ numPage }}</span
+        >
+        <span
+          (click)="numPage = numPage + 1"
+          *ngIf="numPage != arrpages.length && arrpages.length > 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPage + 1 }}</span
+        >
+        <span
+          (click)="numPage = numPage + 2"
+          *ngIf="numPage < arrpages.length - 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPage + 2 }}</span
+        >
+        <span
+          (click)="numPage = arrpages.length"
+          *ngIf="numPage != arrpages.length && arrpages.length > 1"
+          style="cursor: pointer; padding: 15px"
+          >>|</span
+        >
+      </div>
+      <div
+        class="text-left"
+        style="
+          display: inline;
+          position: relative;
+          top: -35px;
+          max-width: 300px;
+        "
+      >
+        <i
+          >Mostrando {{ ([numPage] - 1) * [pagination] + 1 }} -
+          {{
+            facturasfiltradas.length > [numPage] * [pagination]
+              ? [numPage] * [pagination]
+              : facturasfiltradas.length
+          }}
+          de {{ facturasfiltradas.length }} existencias
+        </i>
+      </div>
+    </div>
+
+    <!--      <div id="graficas" class="text-center">
             <div style="display: inline-block;height:180px;width:500px;" >
                 <canvas baseChart width="495" height="180"
                                 [datasets]="lineChartData"
@@ -324,59 +719,151 @@
                 </canvas>                
             </div>
         </div> -->
+  </div>
 
-    </div>
-
-    <div class="export" *ngIf="tabSeleccionada == 2 && !cargandoalmacen">
-
-        <table class="table table-sm" id="tablafacturas">
-            <thead>
-                <tr>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Movimiento</th>
-                    <th scope="col">Almacén</th>
-                    <th scope="col">Pasillo</th>
-                    <th scope="col">Sección</th>
-                    <th scope="col">Altura</th>
-                    <th scope="col">Ar.Cód.</th>
-                    <th scope="col">Ar.Nombre</th>
-                    <th scope="col">Cantidad</th>
-                    <th scope="col">Pedido</th>
-                    <th scope="col">Usuario</th>
-                    <th scope="col">Motivo</th>
-                    <th></th>
-                </tr>
-                <tr>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovfecha" placeholder="Filtre fecha" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovmovimiento" placeholder="Filtre movimiento" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovalmacen" placeholder="Filtre almacén" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovpasillo" placeholder="Filtre pasillo" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovseccion" placeholder="Filtre sección" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovaltura" placeholder="Filtre altura" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovidart" placeholder="Filtre cód.art." /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovarticulo" placeholder="Filtre artículo" /></th>
-                    <th scope="col" class="text-right"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovcantidad" placeholder="Filtre cantidad" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovpedido" placeholder="Filtre pedido" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovusuario" placeholder="Filtre usuario" /></th>
-                    <th scope="col"><input (keyup)="filtrarmov()" type="text" [(ngModel)]="filtromovmotivo" placeholder="Filtre motivo" /></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let exportacion of movimientosfiltrados | slice:([numPageExportation]-1)*[paginationExportation]:[numPageExportation]*[paginationExportation]; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#EEEE66')}">
-                    <td>{{exportacion.date | date:'dd/MM/yyyy'}}</td>
-                    <td>{{exportacion.name}}</td>
-                    <td>{{exportacion.location_warehouse}}</td>
-                    <td>{{exportacion.location_row}}</td>
-                    <td>{{exportacion.location_section}}</td>
-                    <td>{{exportacion.location_height}}</td>
-                    <td>{{exportacion.article_id}}</td>
-                    <td>{{exportacion.description}}</td>
-                    <td>{{exportacion.units}}</td>
-                    <td>{{exportacion.ped_code}}</td>
-                    <td>{{exportacion.nickname}}</td>
-                    <td>{{exportacion.observations}}</td>
-                    <!--                         <td>
+  <div class="export" *ngIf="tabSeleccionada == 2 && !cargandoalmacen">
+    <table class="table table-sm" id="tablafacturas">
+      <thead>
+        <tr>
+          <th scope="col">Fecha</th>
+          <th scope="col">Movimiento</th>
+          <th scope="col">Almacén</th>
+          <th scope="col">Pasillo</th>
+          <th scope="col">Sección</th>
+          <th scope="col">Altura</th>
+          <th scope="col">Ar.Cód.</th>
+          <th scope="col">Ar.Nombre</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Pedido</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Motivo</th>
+          <th></th>
+        </tr>
+        <tr>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovfecha"
+              placeholder="Filtre fecha"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovmovimiento"
+              placeholder="Filtre movimiento"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovalmacen"
+              placeholder="Filtre almacén"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovpasillo"
+              placeholder="Filtre pasillo"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovseccion"
+              placeholder="Filtre sección"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovaltura"
+              placeholder="Filtre altura"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovidart"
+              placeholder="Filtre cód.art."
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovarticulo"
+              placeholder="Filtre artículo"
+            />
+          </th>
+          <th scope="col" class="text-right">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovcantidad"
+              placeholder="Filtre cantidad"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovpedido"
+              placeholder="Filtre pedido"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovusuario"
+              placeholder="Filtre usuario"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarmov()"
+              type="text"
+              [(ngModel)]="filtromovmotivo"
+              placeholder="Filtre motivo"
+            />
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let exportacion of movimientosfiltrados
+              | slice
+                : ([numPageExportation] - 1) * [paginationExportation]
+                : [numPageExportation] * [paginationExportation];
+            let impar = even;
+            let i = index
+          "
+          [ngStyle]="{ 'background-color': i % 2 === 0 ? 'white' : '#EEEE66' }"
+        >
+          <td>{{ exportacion.date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ exportacion.name }}</td>
+          <td>{{ exportacion.location_warehouse }}</td>
+          <td>{{ exportacion.location_row }}</td>
+          <td>{{ exportacion.location_section }}</td>
+          <td>{{ exportacion.location_height }}</td>
+          <td>{{ exportacion.article_id }}</td>
+          <td>{{ exportacion.description }}</td>
+          <td>{{ exportacion.units }}</td>
+          <td>{{ exportacion.ped_code }}</td>
+          <td>{{ exportacion.nickname }}</td>
+          <td>{{ exportacion.observations }}</td>
+          <!--                         <td>
                             <div class="menu">
                                 <a title="Eliminar" (click)="deleteExportation(exportacion)">              
                                         <i class="material-icons delete">delete</i>
@@ -386,140 +873,540 @@
                                 </a>
                             </div>
                     </td>  -->
-                </tr>
+        </tr>
+      </tbody>
+    </table>
 
-            </tbody>
-        </table>
+    <hr />
+    <div *ngIf="arrpagesExportation.length != 0" style="height: 50px">
+      <div class="paginator text-center">
+        <span
+          (click)="numPageExportation = 1"
+          *ngIf="numPageExportation != 1"
+          style="cursor: pointer; padding: 15px"
+          >|<</span
+        >
+        <span
+          (click)="numPageExportation = numPageExportation - 2"
+          *ngIf="numPageExportation > 2"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPageExportation - 2 }}</span
+        >
+        <span
+          (click)="numPageExportation = numPageExportation - 1"
+          *ngIf="numPageExportation != 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPageExportation - 1 }}</span
+        >
+        <span
+          style="
+            display: inline-table;
+            width: 24px;
+            border-radius: 500px;
+            font-weight: bold;
+            color: white;
+            background-color: gray;
+            cursor: pointer;
+          "
+          >{{ numPageExportation }}</span
+        >
+        <span
+          (click)="numPageExportation = numPageExportation + 1"
+          *ngIf="
+            numPageExportation != arrpagesExportation.length &&
+            arrpagesExportation.length > 1
+          "
+          style="cursor: pointer; padding: 15px"
+          >{{ numPageExportation + 1 }}</span
+        >
+        <span
+          (click)="numPageExportation = numPageExportation + 2"
+          *ngIf="numPageExportation < arrpagesExportation.length - 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ numPageExportation + 2 }}</span
+        >
+        <span
+          (click)="numPageExportation = arrpagesExportation.length"
+          *ngIf="
+            numPageExportation != arrpagesExportation.length &&
+            arrpagesExportation.length > 1
+          "
+          style="cursor: pointer; padding: 15px"
+          >>|</span
+        >
+      </div>
+      <div
+        class="text-left"
+        style="
+          display: inline;
+          position: relative;
+          top: -35px;
+          max-width: 300px;
+        "
+      >
+        <i
+          >Mostrando
+          {{ ([numPageExportation] - 1) * [paginationExportation] + 1 }} -
+          {{
+            movimientosfiltrados.length >
+            [numPageExportation] * [paginationExportation]
+              ? [numPageExportation] * [paginationExportation]
+              : movimientosfiltrados.length
+          }}
+          de {{ movimientosfiltrados.length }} movimientos
+        </i>
+      </div>
+    </div>
+  </div>
 
-        <hr>
-        <div *ngIf="arrpagesExportation.length != 0" style="height:50px">
-            <div class="paginator text-center">
-                <span (click)="numPageExportation=1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">|<</span>
-                <span (click)="numPageExportation=numPageExportation-2" *ngIf="numPageExportation>2" style="cursor:pointer;padding:15px">{{numPageExportation-2}}</span>
-                <span (click)="numPageExportation=numPageExportation-1" *ngIf="numPageExportation!=1" style="cursor:pointer;padding:15px">{{numPageExportation-1}}</span>
-                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{numPageExportation}}</span>
-                <span (click)="numPageExportation=numPageExportation+1" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">{{numPageExportation+1}}</span>
-                <span (click)="numPageExportation=numPageExportation+2" *ngIf="numPageExportation<arrpagesExportation.length-1" style="cursor:pointer;padding:15px">{{numPageExportation+2}}</span>
-                <span (click)="numPageExportation=arrpagesExportation.length" *ngIf="numPageExportation!=arrpagesExportation.length&&arrpagesExportation.length>1" style="cursor:pointer;padding:15px">>|</span>
+  <div class="export" *ngIf="tabSeleccionada == 2 && cargandoalmacen">
+    <h2 class="title-loading">
+      <div class="loader"></div>
+      Cargando el listado...
+    </h2>
+  </div>
+
+  <div class="list" *ngIf="tabSeleccionada == 3">
+    <table class="table table-sm" id="tablafacturas">
+      <thead>
+        <tr>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="delivery_date"
+            style="cursor: pointer"
+          >
+            F. Entrega<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'delivery_date' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'delivery_date' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="creation_date"
+            style="cursor: pointer"
+          >
+            Fecha Ped.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'creation_date' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'creation_date' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="ped_code"
+            style="cursor: pointer"
+          >
+            Nº.Ped.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'ped_code' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'ped_code' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="15%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="campaign_name"
+            style="cursor: pointer"
+          >
+            Nombre<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'campaign_name' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'campaign_name' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="15%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="customer_name"
+            style="cursor: pointer"
+          >
+            Cliente<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'customer_name' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'customer_name' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="5%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar_scknew($event)"
+            id="units"
+            style="cursor: pointer"
+          >
+            Unid.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'units' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'units' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="5%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="code"
+            style="cursor: pointer"
+          >
+            Cód.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'code' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'code' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="16%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="description"
+            style="cursor: pointer"
+          >
+            Artículo<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'description' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'description' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="10%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar_scknew($event)"
+            id="disponibles"
+            style="cursor: pointer"
+          >
+            Disponibles<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'disponibles' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'disponibles' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th width="10%" scope="col" class="text-center">Img</th>
+          <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+        <tr>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckfechaentrega"
+              placeholder="Filtre fecha"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckfecha"
+              placeholder="Filtre fecha"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckpedcode"
+              placeholder="Filtre código"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckpedido"
+              placeholder="Filtre pedido"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckcliente"
+              placeholder="Filtre cliente"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckunidades"
+              placeholder="Filtre unidades"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckcodigo"
+              placeholder="Filtre código"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="filtrarstock()"
+              type="text"
+              [(ngModel)]="filtrosckarticulo"
+              placeholder="Filtre artículo"
+            />
+          </th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          style="cursor: pointer"
+          *ngFor="
+            let itemstock of stockfiltrados
+              | slice
+                : ([sck_numPage] - 1) * [sck_pagination]
+                : [sck_numPage] * [sck_pagination];
+            let impar = even;
+            let i = index
+          "
+          [style.color]="getSinExistencias(itemstock)"
+          [ngStyle]="{ 'background-color': i % 2 === 0 ? 'white' : '#DDDDDD' }"
+        >
+          <td>{{ itemstock.delivery_date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ itemstock.creation_date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ itemstock.ped_code }}</td>
+          <td>{{ itemstock.campaign_name }}</td>
+          <td>{{ itemstock.customer_name }}</td>
+          <td class="text-right">{{ itemstock.units }}</td>
+          <td>{{ itemstock.code }}</td>
+          <td>{{ itemstock.description }}</td>
+          <td class="text-right">{{ itemstock.disponibles }}</td>
+          <td
+            class="text-center"
+            data-toggle="modal"
+            data-target="#imgMaxStck"
+            (click)="selectedStock = itemstock"
+          >
+            <img
+              style="max-height: 65px; max-width: 65px"
+              *ngIf="itemstock.image && itemstock.image != null"
+              [src]="urlUpload + itemstock.image"
+            />
+          </td>
+          <td>
+            <div class="menu">
+              <a
+                title="No hay Observaciones"
+                *ngIf="!itemstock.observ_cli && !itemstock.observ_int"
+              >
+                <i class="material-icons comment" style="opacity: 0.2"
+                  >comment</i
+                >
+              </a>
+              <a
+                title="Ver Observaciones"
+                *ngIf="itemstock.observ_cli || itemstock.observ_int"
+                (click)="selectedStock = itemstock"
+                data-toggle="modal"
+                data-target="#dialogoobservaciones"
+              >
+                <i class="material-icons comment">comment</i>
+              </a>
+              <a
+                title="Imprimir Albarán"
+                (click)="exportAlbaran2(itemstock)"
+                title="Imprimir Albarán"
+              >
+                <i class="material-icons doc">picture_as_pdf</i>
+              </a>
+              <span *ngIf="roleUser != 10 && roleUser != 11">
+                <a
+                  title="Poner Pedido En Trámite"
+                  *ngIf="itemstock.btramite == 0"
+                  (click)="tramitarpedido(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogotramitarpedido"
+                >
+                  <i class="material-icons work_sintramite">work</i>
+                </a>
+                <a
+                  title="Quitar Pedido En Trámite"
+                  *ngIf="itemstock.btramite == 1"
+                  (click)="tramitarpedido(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogotramitarpedido"
+                >
+                  <i class="material-icons work_entramite">work</i>
+                </a>
+                <a
+                  *ngIf="itemstock.disponibles < itemstock.units"
+                  title="No hay suficientes existencias en el almacén"
+                >
+                  <i class="material-icons exit-button" style="opacity: 0.3"
+                    >exit_to_app</i
+                  >
+                </a>
+                <a
+                  *ngIf="itemstock.disponibles >= itemstock.units"
+                  title="Dar Salida"
+                  (click)="tramitarsalida(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogosalida"
+                >
+                  <i class="material-icons exit-button">exit_to_app</i>
+                </a>
+              </span>
             </div>
-            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
-                <i>Mostrando {{([numPageExportation]-1)*[paginationExportation]+1}} - {{movimientosfiltrados.length > [numPageExportation]*[paginationExportation] ? [numPageExportation]*[paginationExportation] : movimientosfiltrados.length }} de {{movimientosfiltrados.length}} movimientos </i>
-            </div>
-        </div>
+          </td>
+        </tr>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tbody>
+    </table>
 
+    <hr />
+    <div *ngIf="sck_arrpages.length != 0" style="height: 50px">
+      <div class="paginator text-center">
+        <span
+          (click)="sck_numPage = 1"
+          *ngIf="sck_numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >|<</span
+        >
+        <span
+          (click)="sck_numPage = sck_numPage - 2"
+          *ngIf="sck_numPage > 2"
+          style="cursor: pointer; padding: 15px"
+          >{{ sck_numPage - 2 }}</span
+        >
+        <span
+          (click)="sck_numPage = sck_numPage - 1"
+          *ngIf="sck_numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ sck_numPage - 1 }}</span
+        >
+        <span
+          style="
+            display: inline-table;
+            width: 24px;
+            border-radius: 500px;
+            font-weight: bold;
+            color: white;
+            background-color: gray;
+            cursor: pointer;
+          "
+          >{{ sck_numPage }}</span
+        >
+        <span
+          (click)="sck_numPage = sck_numPage + 1"
+          *ngIf="sck_numPage != sck_arrpages.length && sck_arrpages.length > 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ sck_numPage + 1 }}</span
+        >
+        <span
+          (click)="sck_numPage = sck_numPage + 2"
+          *ngIf="sck_numPage < sck_arrpages.length - 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ sck_numPage + 2 }}</span
+        >
+        <span
+          (click)="sck_numPage = sck_arrpages.length"
+          *ngIf="sck_numPage != sck_arrpages.length && sck_arrpages.length > 1"
+          style="cursor: pointer; padding: 15px"
+          >>|</span
+        >
+      </div>
+      <div
+        class="text-left"
+        style="
+          display: inline;
+          position: relative;
+          top: -35px;
+          max-width: 300px;
+        "
+      >
+        <i
+          >Mostrando {{ ([sck_numPage] - 1) * [sck_pagination] + 1 }} -
+          {{
+            stockfiltrados.length > [sck_numPage] * [sck_pagination]
+              ? [sck_numPage] * [sck_pagination]
+              : stockfiltrados.length
+          }}
+          de {{ stockfiltrados.length }} salidas
+        </i>
+      </div>
     </div>
 
-    <div class="export" *ngIf="tabSeleccionada == 2 && cargandoalmacen">
-        <h2 class="title-loading">
-            <div class="loader"></div>
-            Cargando el listado...
-        </h2>
-    </div>
-
-    <div class="list" *ngIf="tabSeleccionada == 3">
-
-        <table class="table table-sm" id="tablafacturas">
-            <thead>
-                <tr>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="delivery_date" style="cursor:pointer">F. Entrega<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='delivery_date' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='delivery_date' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="creation_date" style="cursor:pointer">Fecha Ped.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='creation_date' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='creation_date' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="ped_code" style="cursor:pointer">Nº.Ped.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='ped_code' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='ped_code' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="15%" scope="col" (click)="ordenar_scknew($event)" id="campaign_name" style="cursor:pointer">Nombre<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='campaign_name' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='campaign_name' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="15%" scope="col" (click)="ordenar_scknew($event)" id="customer_name" style="cursor:pointer">Cliente<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='customer_name' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='customer_name' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="5%" scope="col" class="text-right" (click)="ordenar_scknew($event)" id="units" style="cursor:pointer">Unid.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='units' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='units' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="5%" scope="col" (click)="ordenar_scknew($event)" id="code" style="cursor:pointer">Cód.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="16%" scope="col" (click)="ordenar_scknew($event)" id="description" style="cursor:pointer">Artículo<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='description' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='description' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="10%" scope="col" class="text-right" (click)="ordenar_scknew($event)" id="disponibles" style="cursor:pointer">Disponibles<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='disponibles' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='disponibles' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="10%" scope="col" class="text-center">Img</th>
-                    <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-                <tr>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckfechaentrega" placeholder="Filtre fecha" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckfecha" placeholder="Filtre fecha" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckpedcode" placeholder="Filtre código" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckpedido" placeholder="Filtre pedido" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckcliente" placeholder="Filtre cliente" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckunidades" placeholder="Filtre unidades" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckcodigo" placeholder="Filtre código" /></th>
-                    <th scope="col"><input (keyup)="filtrarstock()" type="text" [(ngModel)]="filtrosckarticulo" placeholder="Filtre artículo" /></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="cursor:pointer" *ngFor="let itemstock of stockfiltrados | slice:([sck_numPage]-1)*[sck_pagination]:[sck_numPage]*[sck_pagination]; let impar = even; let i = index" [style.color]="getSinExistencias(itemstock)" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
-                    <td>{{itemstock.delivery_date | date:'dd/MM/yyyy'}}</td>
-                    <td>{{itemstock.creation_date | date:'dd/MM/yyyy'}}</td>
-                    <td>{{itemstock.ped_code}}</td>
-                    <td>{{itemstock.campaign_name}}</td>
-                    <td>{{itemstock.customer_name}}</td>
-                    <td class="text-right">{{itemstock.units}}</td>
-                    <td>{{itemstock.code}}</td>
-                    <td>{{itemstock.description}}</td>
-                    <td class="text-right">{{itemstock.disponibles}}</td>
-                    <td class="text-center" data-toggle="modal" data-target="#imgMaxStck" (click)="selectedStock = itemstock"><img style="max-height:65px; max-width:65px" *ngIf="itemstock.image && itemstock.image != null" [src]="urlUpload + itemstock.image"></td>
-                    <td>
-                        <div class="menu">
-                            <a title="No hay Observaciones" *ngIf="!itemstock.observ_cli && !itemstock.observ_int">
-                                <i class="material-icons comment" style="opacity:0.2">comment</i>
-                            </a>
-                            <a title="Ver Observaciones" *ngIf="itemstock.observ_cli || itemstock.observ_int" (click)="selectedStock = itemstock" data-toggle="modal" data-target="#dialogoobservaciones">
-                                <i class="material-icons comment">comment</i>
-                            </a>
-                            <a title="Imprimir Albarán" (click)="exportAlbaran2(itemstock)" title="Imprimir Albarán">
-                                <i class="material-icons doc">picture_as_pdf</i>
-                            </a>
-                            <span *ngIf="roleUser != 10 && roleUser != 11">                
-                            <a title="Poner Pedido En Trámite" *ngIf="itemstock.btramite == 0" (click)="tramitarpedido(itemstock)" data-toggle="modal" data-target="#dialogotramitarpedido">              
-                                <i class="material-icons work_sintramite">work</i>
-                            </a>   
-                            <a title="Quitar Pedido En Trámite" *ngIf="itemstock.btramite == 1" (click)="tramitarpedido(itemstock)" data-toggle="modal" data-target="#dialogotramitarpedido">              
-                                <i class="material-icons work_entramite">work</i>
-                            </a>                         
-                            <a *ngIf="itemstock.disponibles < itemstock.units " title="No hay suficientes existencias en el almacén">               
-                                <i class="material-icons exit-button" style="opacity:0.3">exit_to_app</i>
-                            </a>            
-                            <a *ngIf="itemstock.disponibles >= itemstock.units " title="Dar Salida" (click)="tramitarsalida(itemstock)" data-toggle="modal" data-target="#dialogosalida">               
-                                <i class="material-icons exit-button">exit_to_app</i>
-                            </a>      
-                        </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr>
-        <div *ngIf="sck_arrpages.length != 0" style="height:50px">
-            <div class="paginator text-center">
-                <span (click)="sck_numPage=1" *ngIf="sck_numPage!=1" style="cursor:pointer;padding:15px">|<</span>
-                <span (click)="sck_numPage=sck_numPage-2" *ngIf="sck_numPage>2" style="cursor:pointer;padding:15px">{{sck_numPage-2}}</span>
-                <span (click)="sck_numPage=sck_numPage-1" *ngIf="sck_numPage!=1" style="cursor:pointer;padding:15px">{{sck_numPage-1}}</span>
-                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{sck_numPage}}</span>
-                <span (click)="sck_numPage=sck_numPage+1" *ngIf="sck_numPage!=sck_arrpages.length&&sck_arrpages.length>1" style="cursor:pointer;padding:15px">{{sck_numPage+1}}</span>
-                <span (click)="sck_numPage=sck_numPage+2" *ngIf="sck_numPage<sck_arrpages.length-1" style="cursor:pointer;padding:15px">{{sck_numPage+2}}</span>
-                <span (click)="sck_numPage=sck_arrpages.length" *ngIf="sck_numPage!=sck_arrpages.length&&sck_arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
-            </div>
-            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
-                <i>Mostrando {{([sck_numPage]-1)*[sck_pagination]+1}} - {{stockfiltrados.length > [sck_numPage]*[sck_pagination] ? [sck_numPage]*[sck_pagination] : stockfiltrados.length }} de {{stockfiltrados.length}} salidas </i>
-            </div>
-        </div>
-
-        <!--      <div id="graficas" class="text-center">
+    <!--      <div id="graficas" class="text-center">
             <div style="display: inline-block;height:180px;width:500px;" >
                 <canvas baseChart width="495" height="180"
                                 [datasets]="lineChartData"
@@ -553,570 +1440,1242 @@
                 </canvas>                
             </div>
         </div> -->
+  </div>
 
-    </div>
-
-    <div class="list" *ngIf="tabSeleccionada == 4">
-
-        <table class="table table-sm" id="tablafacturas">
-            <thead>
-                <tr>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="delivery_date" style="cursor:pointer">F. Entrega<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='delivery_date' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='delivery_date' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="creation_date" style="cursor:pointer">Fecha Ped.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='creation_date' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='creation_date' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" (click)="ordenar_scknew($event)" id="ped_code" style="cursor:pointer">Nº.Ped.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='ped_code' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='ped_code' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="14%" scope="col" (click)="ordenar_scknew($event)" id="campaign_name" style="cursor:pointer">Nombre<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='campaign_name' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='campaign_name' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="14%" scope="col" (click)="ordenar_scknew($event)" id="customer_name" style="cursor:pointer">Cliente<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='customer_name' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='customer_name' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" class="text-right" (click)="ordenar_scknew($event)" id="units" style="cursor:pointer">Solic.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='units' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='units' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="8%" scope="col" class="text-right" (click)="ordenar_scknew($event)" id="disponibles" style="cursor:pointer">Dispon.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='disponibles' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='disponibles' && !sck_ordsentido">arrow_drop_up</i></th>
-                    <th width="27%" scope="col" class="text-center">Observaciones</th>
-                    <!--             <th width="5%" scope="col" (click)="ordenar_scknew($event)" id="code" style="cursor:pointer">Cód.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && !sck_ordsentido">arrow_drop_up</i></th>
+  <div class="list" *ngIf="tabSeleccionada == 4">
+    <table class="table table-sm" id="tablafacturas">
+      <thead>
+        <tr>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="delivery_date"
+            style="cursor: pointer"
+          >
+            F. Entrega<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'delivery_date' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'delivery_date' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="creation_date"
+            style="cursor: pointer"
+          >
+            Fecha Ped.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'creation_date' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'creation_date' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="ped_code"
+            style="cursor: pointer"
+          >
+            Nº.Ped.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'ped_code' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'ped_code' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="14%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="campaign_name"
+            style="cursor: pointer"
+          >
+            Nombre<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'campaign_name' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'campaign_name' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="14%"
+            scope="col"
+            (click)="ordenar_scknew($event)"
+            id="customer_name"
+            style="cursor: pointer"
+          >
+            Cliente<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'customer_name' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'customer_name' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar_scknew($event)"
+            id="units"
+            style="cursor: pointer"
+          >
+            Solic.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'units' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'units' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th
+            width="8%"
+            scope="col"
+            class="text-right"
+            (click)="ordenar_scknew($event)"
+            id="disponibles"
+            style="cursor: pointer"
+          >
+            Dispon.<i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'disponibles' && sck_ordsentido"
+              >arrow_drop_down</i
+            ><i
+              style="top: 8px; position: relative"
+              class="material-icons"
+              *ngIf="sck_orden == 'disponibles' && !sck_ordsentido"
+              >arrow_drop_up</i
+            >
+          </th>
+          <th width="27%" scope="col" class="text-center">Observaciones</th>
+          <!--             <th width="5%" scope="col" (click)="ordenar_scknew($event)" id="code" style="cursor:pointer">Cód.<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='code' && !sck_ordsentido">arrow_drop_up</i></th>
             <th width="16%" scope="col" (click)="ordenar_scknew($event)" id="description" style="cursor:pointer">Artículo<i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='description' && sck_ordsentido">arrow_drop_down</i><i style="top:8px;position:relative" class="material-icons" *ngIf="sck_orden=='description' && !sck_ordsentido">arrow_drop_up</i></th> -->
-                    <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-                <tr>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckfechaentrega" placeholder="Filtre fecha entrega" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckfecha" placeholder="Filtre fecha" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckpedcode" placeholder="Filtre código" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckpedido" placeholder="Filtre pedido" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckcliente" placeholder="Filtre cliente" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckunidades" placeholder="Filtre solicitados" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckdisponibles" placeholder="Filtre disponibles" /></th>
-                    <th scope="col"><input (keyup)="newfiltrarstock()" type="text" [(ngModel)]="new_filtrosckobservaciones" placeholder="Filtre observaciones" /></th>
-                    <th *ngIf="roleUser != 10 && roleUser != 11"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="cursor:pointer" *ngFor="let itemstock of stockfiltradosnuevos | slice:([newsck_numPage]-1)*[sck_pagination]:[newsck_numPage]*[sck_pagination]; let impar = even; let i = index" [style.color]="getSinExistencias(itemstock)" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
-                    <td>{{itemstock.delivery_date | date:'dd/MM/yyyy'}}</td>
-                    <td>{{itemstock.creation_date | date:'dd/MM/yyyy'}}</td>
-                    <td>{{itemstock.ped_code}}</td>
-                    <td>{{itemstock.campaign_name}}</td>
-                    <td>{{itemstock.customer_name}}</td>
-                    <td class="text-right">{{itemstock.units}}</td>
-                    <td class="text-right">{{itemstock.disponibles}}</td>
-                    <td style="white-space: pre">{{escribirObservaciones(itemstock.observaciones)}}</td>
-                    <td>
-                        <div class="menu">
-                            <a title="No hay Observaciones" *ngIf="!itemstock.observ_cli && !itemstock.observ_int">
-                                <i class="material-icons comment" style="opacity:0.2">comment</i>
-                            </a>
-                            <a title="Ver Observaciones" *ngIf="itemstock.observ_cli || itemstock.observ_int" (click)="selectedStock = itemstock" data-toggle="modal" data-target="#dialogoobservaciones">
-                                <i class="material-icons comment">comment</i>
-                            </a>
-                            <a title="Imprimir Albarán" (click)="exportAlbaran2(itemstock)" title="Imprimir Albarán">
-                                <i class="material-icons doc">picture_as_pdf</i>
-                            </a>
-                            <span *ngIf="roleUser != 10 && roleUser != 11">                
-                        <a title="Poner Pedido En Trámite" *ngIf="itemstock.btramite == 0" (click)="tramitarpedido(itemstock)" data-toggle="modal" data-target="#dialogotramitarpedido">              
-                            <i class="material-icons work_sintramite">work</i>
-                        </a>   
-                        <a title="Quitar Pedido En Trámite" *ngIf="itemstock.btramite == 1" (click)="tramitarpedido(itemstock)" data-toggle="modal" data-target="#dialogotramitarpedido">              
-                            <i class="material-icons work_entramite">work</i>
-                        </a>                         
-                        <a *ngIf="itemstock.disponibles < itemstock.units " title="Dar Salida parcial (a los elementos que hay en el almacén)" (click)="tramitarsalida(itemstock)" data-toggle="modal" data-target="#dialogosalida">               
-                            <i class="material-icons exit-button-partial">exit_to_app</i>
-                        </a>            
-                        <a *ngIf="itemstock.disponibles >= itemstock.units " title="Dar Salida" (click)="tramitarsalida(itemstock)" data-toggle="modal" data-target="#dialogosalida">               
-                            <i class="material-icons exit-button">exit_to_app</i>
-                        </a>      
-                    </span>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </tbody>
-        </table>
-
-        <hr>
-        <div *ngIf="newsck_arrpages.length != 0" style="height:50px">
-            <div class="paginator text-center">
-                <span (click)="newsck_numPage=1" *ngIf="newsck_numPage!=1" style="cursor:pointer;padding:15px">|<</span>
-                <span (click)="newsck_numPage=newsck_numPage-2" *ngIf="newsck_numPage>2" style="cursor:pointer;padding:15px">{{newsck_numPage-2}}</span>
-                <span (click)="newsck_numPage=newsck_numPage-1" *ngIf="newsck_numPage!=1" style="cursor:pointer;padding:15px">{{newsck_numPage-1}}</span>
-                <span style="display:inline-table; width:24px; border-radius:500px; font-weight: bold; color:white; background-color:gray; cursor:pointer">{{newsck_numPage}}</span>
-                <span (click)="newsck_numPage=newsck_numPage+1" *ngIf="newsck_numPage!=newsck_arrpages.length&&newsck_arrpages.length>1" style="cursor:pointer;padding:15px">{{newsck_numPage+1}}</span>
-                <span (click)="newsck_numPage=newsck_numPage+2" *ngIf="newsck_numPage<newsck_arrpages.length-1" style="cursor:pointer;padding:15px">{{newsck_numPage+2}}</span>
-                <span (click)="newsck_numPage=newsck_arrpages.length" *ngIf="newsck_numPage!=newsck_arrpages.length&&newsck_arrpages.length>1" style="cursor:pointer;padding:15px">>|</span>
-            </div>
-            <div class="text-left" style="display:inline; position:relative; top:-35px; max-width:300px;">
-                <i>Mostrando {{([newsck_numPage]-1)*[sck_pagination]+1}} - {{stockfiltradosnuevos.length > [newsck_numPage]*[sck_pagination] ? [newsck_numPage]*[sck_pagination] : stockfiltradosnuevos.length }} de {{stockfiltradosnuevos.length}} pedidos con salidas pendientes </i>
-            </div>
-        </div>
-
-    </div>
-
-    <p-dialog styleClass="dashboard-dialog" header="Detalles del almacenaje" [(visible)]="showNewExport" [responsive]="true" showEffect="ease" minWidth="1100" [modal]="true">
-        <div *ngIf="showNewExport">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-10">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-1">
-                            Unidades
-                            <input pInputText id="units" [(ngModel)]="selectedStorage.unidades" />
-                        </div>
-                        <div class="ui-grid-col-3">
-                            Cód.Art.
-                            <!-- [disabled]="!isEditable" [maxlength]="300"-->
-                            <input list="selectedStoragecod" pInputText placeholder="Selecciona cód.art." [(ngModel)]="selectedStorage.codigo" (keydown)="updatearticle($event)" (input)="updatearticle($event)" />
-                            <datalist id="selectedStoragecod" styleClass="dashboard-dropdown new">           
-                            <option id={{codart.value}} value={{codart.label}} *ngFor="let codart of dataCombos.articles"></option>
-                        </datalist>
-                        </div>
-                        <div class="ui-grid-col-5">
-                            Artículo
-                            <input list="selectedStorageart" pInputText placeholder="Selecciona artículo" [(ngModel)]="selectedStorage.articulo" (keydown)="updatecod($event)" (input)="updatecod($event)" />
-                            <datalist id="selectedStorageart" styleClass="dashboard-dropdown new">           
-                            <option id={{art.value}} value={{art.label}} *ngFor="let art of dataCombos.articlesdesc"></option>
-                        </datalist>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            Estado
-                            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.states" [(ngModel)]="selectedStorage.idestado" placeholder="Selecciona estado"></p-dropdown>
-                        </div>
-                    </div>
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-3">
-                            Almacén
-                            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.warehouses" [(ngModel)]="selectedStorage.idalmacen" placeholder="Selecciona almacén"></p-dropdown>
-                        </div>
-                        <div class="ui-grid-col-1">
-                            Pasillo
-                            <input pInputText id="row" [(ngModel)]="selectedStorage.pasillo" />
-                        </div>
-                        <div class="ui-grid-col-1">
-                            Sección
-                            <input pInputText id="section" [(ngModel)]="selectedStorage.seccion" />
-                        </div>
-                        <div class="ui-grid-col-1">
-                            Altura
-                            <input pInputText id="height" [(ngModel)]="selectedStorage.altura" />
-                        </div>
-                        <div class="ui-grid-col-6">
-                            {{nombresColumnas[1] | titlecase}}
-                            <input list="selectedStoragecli" pInputText placeholder="Selecciona cliente" [(ngModel)]="selectedStorage.cliente" />
-                            <datalist id="selectedStoragecli" styleClass="dashboard-dropdown new">           
-                            <option id={{cli.value}} value={{cli.label}} *ngFor="let cli of dataCombos.customers"></option>
-                        </datalist>
-                        </div>
-                    </div>
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-2">
-                            Caducidad
-                            <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedStorage.caducidad"></my-date-picker>
-                        </div>
-                        <div class="ui-grid-col-3">
-                            Observaciones
-                            <input pInputText id="observations" [(ngModel)]="selectedStorage.observaciones">
-                        </div>
-                        <div class="ui-grid-col-3">&nbsp;</div>
-                        <div class="ui-grid-col-1" *ngIf="selectedStorage && selectedStorage.id < 0">
-                            <br>
-                            <input (click)="addStorage()" style="width:100px" type="button" class="btn btn-primary" value="Entrada">
-                        </div>
-                        <div class="ui-grid-col-1" *ngIf="selectedStorage && selectedStorage.id >= 0">
-                            <br>
-                            <input (click)="updateApi()" style="width:100px" type="button" class="btn btn-success" value="Guardar" *ngIf="roleUser != 10 && roleUser != 11">
-                        </div>
-                        <div class="ui-grid-col-1">&nbsp;</div>
-                        <div class="ui-grid-col-1">
-                            <br>
-                            <input (click)="showNewExport= false" style="width:100px" type="button" class="btn btn-secondary" value="Cerrar">
-                        </div>
-                        <div class="ui-grid-col-1">&nbsp;</div>
-                    </div>
-                </div>
-                <div class="ui-grid-col-2">
-                    <div class="ui-grid-row" style="min-height:105px; max-height:105px; margin:20px 10px 10px 10px">
-                        <img class="preview-image" style="max-height:100px; max-width:100px" [src]="urlUpload + selectedStorage.image" *ngIf="selectedStorage.image != null && selectedStorage.image!= ''" />
-                    </div>
-                    <div class="ui-grid-row">
-                        <input class="inputfile" id="logo_file_{{selectedStorage.image}}" type="file" name="file" ngFileSelect (uploadOutput)="onUploadOutputLogo($event, selectedStorage)">
-                        <!-- [uploadInput]="uploadInputLogo" -->
-                        <div class="ui-grid-col-6">
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <!--                         <label for="logo_file_{{selectedStorage.image}}">
-                            <i class="material-icons delete" style="color:green; cursor:pointer; position:relative; top:-20px; left:35px">photo_camera</i>
-                            <img class="loading-icon" *ngIf="uploading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-                            />
-                            </label> -->
-                        </div>
-                        <div class="ui-grid-col-3">
-                            <!--                         <label>
-                        <i class="material-icons photo" (click)="selectedStorage.image = null" style="color:red; cursor:pointer; position:relative; top:-21px; left:40px">delete</i>
-                        </label> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </p-dialog>
-
-
-    <p-dialog styleClass="dashboard-dialog" *ngIf="selectedBill" header="Detalles del Factura" [(visible)]="displayDialog" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid">
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-12">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-12">
-                            <label for="bill_name">Descripción</label>
-                        </div>
-                        <div class="ui-grid-col-12">
-                            <input type="text" pInputText id="bill_name" [(ngModel)]="selectedBill.bill_name" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-7">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-12">
-                            <label for="name">PO</label>
-                        </div>
-                        <div class="ui-grid-col-12">
-                            <input type="text" pInputText id="po" [(ngModel)]="selectedBill.PO" />
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-col-1">
-                    <div class="ui-grid-row">&nbsp;</div>
-                </div>
-                <div class="ui-grid-col-4">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-12">
-                            <label for="end_date">Fecha de vencimiento</label>
-                        </div>
-                        <div class="ui-grid-col-12">
-                            <my-date-picker name="mydate" [options]="myDatePickerOptions" [(ngModel)]="selectedBill.due_date_model" required></my-date-picker>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ui-grid-row">
-                <div class="ui-grid-col-6">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-12">
-                            <label for="team">Equipo</label>
-                        </div>
-                        <div class="ui-grid-col-12">
-                            <p-dropdown styleClass="dropdown-dialog edit" (onChange)="changeTeam($event)" styleClass="dashboard-dropdown new" [options]="dataCombos.teams" [(ngModel)]="selectedBill.id_team" placeholder="Selecciona un equipo"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-                <div class="ui-grid-col-6">
-                    <div class="ui-grid-row">
-                        <div class="ui-grid-col-12">
-                            <label for="customer">Cliente</label>
-                        </div>
-                        <div class="ui-grid-col-12">
-                            <p-dropdown styleClass="dropdown-dialog edit" styleClass="dashboard-dropdown new" [options]="dataCombos.customers" [(ngModel)]="selectedBill.id_customer" placeholder="Selecciona un cliente"></p-dropdown>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="displayDialog = false" class="cancel">
-                cancelar
-            </a>
-                <a (click)="updateApi()">
-                Guardar
-            </a>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-    <p-dialog styleClass="dashboard-dialog delete" header="Abonar la factura" [(visible)]="displayDialogAbono" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBill">
-            <div class="ui-grid-row">
-                <span class="title">¿Esta seguro de abonar la Factura?</span>
-                <span class="info">{{selectedBill.numbertext}}</span>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="displayDialogAbono = false" class="cancel">              
-              cancelar
-            </a>
-                <a (click)="abonar(selectedBill)">              
-              Abonar
-            </a>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-
-    <p-dialog styleClass="dashboard-dialog delete" header="Eliminar Exportación" [(visible)]="displayDialogDeleteExportation" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedExportation">
-            <div class="ui-grid-row">
-                <span class="title">¿Esta seguro de eliminar la Exportación?</span>
-                <span class="info">{{selectedExportation.id}}</span>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="displayDialogDeleteExportation = false" class="cancel">              
-              cancelar
-            </a>
-                <a (click)="deleteExp(selectedExportation)">              
-              Eliminar
-            </a>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-
-
-
-    <p-dialog styleClass="modal-minimal" [(visible)]="showNewBill" [closable]="false" [responsive]="true" showEffect="ease" [modal]="true" [contentStyle]="{'overflow':'visible'}">
-        <div class="modal-header">
-            <a (click)="showNewBill = !showNewBill">
-                <svg viewBox="0 0 24 24" role="img" aria-label="Close" focusable="false" style="height: 16px; width: 16px; display: block; fill: rgb(118, 118, 118);">
-                <path fill-rule="evenodd" d="M23.25 24a.744.744 0 0 1-.53-.22L12 13.062 1.28 23.782a.75.75 0 0 1-1.06-1.06L10.94 12 .22 1.28A.75.75 0 1 1 1.28.22L12 10.94 22.72.22a.749.749 0 1 1 1.06 1.06L13.062 12l10.72 10.72a.749.749 0 0 1-.53 1.28"></path>
-            </svg>
-            </a>
-        </div>
-        <div class="modal">
-            <i alt="clonar los datos" title="clonar los datos" class="icon material-icons">layers</i>
-            <label for="name">Nueva factura</label>
-            <p>
-                Selecciona el proyecto que deseas facturar
-            </p>
-
-            <div class="sources" *ngIf="listProjects">
-                <div class="selector">
-                    <p-dropdown [options]="listProjects" [(ngModel)]="selectedProject" styleClass="dropdown-dialog edit" filter="true" styleClass="dashboard-dropdown new" placeholder="Selecciona un proyecto">
-                    </p-dropdown>
-                </div>
-            </div>
-
-            <div class="button">
-                <a (click)="createBill()">
-                    <label>Crear Factura</label>
-                    <i class="material-icons">keyboard_tab</i>
-                </a>
-            </div>
-        </div>
-    </p-dialog>
-
-    <p-dialog styleClass="dashboard-dialog delete" header="Eliminar" [(visible)]="displayDialogDelete" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStorage">
-            <div class="ui-grid-row">
-                <span class="title">¿Esta seguro de eliminar la línea de almacén?</span>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="displayDialogDelete = false" class="cancel">              
-              cancelar
-            </a>
-                <a (click)="deleteApi(selectedStorage)">              
-              Eliminar
-            </a>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-    <p-dialog styleClass="dashboard-dialog delete" header="Dar salida a Existencias" [(visible)]="showExitStorage" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStorage">
-            <div class="ui-grid-row">
-                <span class="title">Indique las unidades y observaciones si lo desea</span>
-                <span class="info">
-                 Unidades:   <input pInputText id="units" [(ngModel)]="unidadessalida" /> 
-                 Observaciones:   <input pInputText id="units" [(ngModel)]="observacionessalida" /> 
-            </span>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="showExitStorage = false" class="cancel">              
-              cancelar
-            </a>
-                <a (click)="salida(selectedBill)">              
-              Efectuar salida
-            </a>
-            </div>
-        </p-footer>
-    </p-dialog>
-
-    <div class="modal fade" id="dialogotramitarpedido" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" *ngIf="selectedStock">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgMaxLabel">Pedido en Trámite</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-                </div>
-                <div class="modal-body text-center" *ngIf="selectedStorage != undefined">
-                    <span *ngIf="selectedStock && selectedStock.btramite == 0">Va a indicar que se está tramitando el pedido, por lo que pasará a ser no modificable. ¿Está de acuerdo?</span>
-                    <span *ngIf="selectedStock && selectedStock.btramite == 1">Va a quitar que el pedido está en trámite, por lo que volverá a ser modificable. ¿Está de acuerdo?</span>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" *ngIf="selectedStock && selectedStock.btramite == 1" class="btn btn-success" (click)="tramitarpedidoapi()" data-dismiss="modal">Quitar Trámite Pedido</button>
-                    <button type="button" *ngIf="selectedStock && selectedStock.btramite == 0" class="btn btn-success" (click)="tramitarpedidoapi()" data-dismiss="modal">Tramitar Pedido</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="dialogoobservaciones" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" *ngIf="selectedStock">
-        <div class="modal-dialog" style="min-width:1000px" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgMaxLabel">Observaciones del Pedido {{selectedStock.campaign_name}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-                </div>
-                <div class="modal-body text-center" *ngIf="selectedStorage != undefined">
-                    <div style="float:left; width:50%">
-                        Observaciones para el cliente
-                        <textarea readonly rows=8 cols=55>{{selectedStock.observ_cli}}</textarea>
-                    </div>
-                    <div style="float:left; width:50%">
-                        Observaciones internas
-                        <textarea readonly rows=8 cols=55>{{selectedStock.observ_int}}</textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="dialogosalida" tabindex="-1" role="dialog" *ngIf="selectedStock">
-        <div class="modal-dialog modal-lg" id="myModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title; text-center" id="imgMaxLabel">Dar Salida</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-                </div>
-                <div class="modal-body text-center" id="myModalBody" *ngIf="selectedStock != undefined">
-                    <span>Va a dar salida existencias del almacén. Confirme la ubicación de las existencias. Dará salida a {{selectedStock.disponibles}} artículos</span>
-                    <br>
-                    <br>
-                    <div class="text-center">EXISTENCIAS DISPONIBLES</div>
-                    <br>
-                    <table class="table table-sm">
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Cód.</th>
-                            <th>Artículo</th>
-                            <th>Estado</th>
-                            <th>Caducidad</th>
-                            <th>Salida</th>
-                            <th>Un.</th>
-                            <th>Nave</th>
-                            <th>Pas</th>
-                            <th>Sec</th>
-                            <th>Alt</th>
-                        </tr>
-                        <tr *ngFor="let itemsalida of salidasfiltradas; let impar = even; let i = index" [ngStyle]="{'background-color': (i % 2 === 0 ? 'white' : '#DDDDDD')}">
-                            <td class="text-center" style="cursor:pointer" data-toggle="modal" data-target="#imgMaxStck" (click)="selectedStock = itemsalida"><img style="max-height:65px; max-width:65px" *ngIf="itemsalida.image && itemsalida.image != null" [src]="urlUpload + itemsalida.image"></td>
-                            <td>{{itemsalida.code}}</td>
-                            <td>{{itemsalida.articulo}}</td>
-                            <!-- (keyup)="changevaluesalida($event)" -->
-                            <td>{{itemsalida.state}}</td>
-                            <!-- (keyup)="changevaluesalida($event)" -->
-                            <td>{{itemsalida.caducidad}}</td>
-                            <!-- (keyup)="changevaluesalida($event)" -->
-                            <td><input class="text-center" [(ngModel)]="itemsalida.sacar" style="max-width:70px"></td>
-                            <td>{{itemsalida.total}}</td>
-                            <td>{{itemsalida.almacen}}</td>
-                            <td>{{itemsalida.pasillo}}</td>
-                            <td>{{itemsalida.seccion}}</td>
-                            <td>{{itemsalida.altura}}</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" [disabled]="nosacar" class="btn btn-info" (click)="tramitarsalidaapi()" data-dismiss="modal">Realizar Salidas</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imgMax" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgMaxLabel">{{selectedStorage?.articulo}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-                </div>
-                <div class="modal-body text-center" *ngIf="selectedStorage != undefined">
-                    <!--  -->
-                    <img style="max-height:400px; max-width:400px" *ngIf="selectedStorage.image  && selectedStorage.image != ''" [src]="urlUpload + selectedStorage.image">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="imgMaxStck" tabindex="-1" role="dialog" aria-labelledby="imgMaxLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imgMaxLabel">{{selectedStock?.description}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-                </div>
-                <div class="modal-body text-center" *ngIf="selectedStock != undefined">
-                    <!--  -->
-                    <img style="max-height:400px; max-width:400px" *ngIf="selectedStock.image  && selectedStock.image != ''" [src]="urlUpload + selectedStock.image">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <p-dialog styleClass="dashboard-dialog" header="Imprimir Albarán" [(visible)]="showDialogImprimirAlbaran" [responsive]="true" showEffect="ease" [modal]="true">
-        <div class="ui-grid ui-grid-responsive ui-fluid">
-            <div class="ui-grid-row">
-                <span class="title">¿Desea imprimir las líneas de productos no almacenables?</span>
-            </div>
-        </div>
-        <p-footer>
-            <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
-                <a (click)="getAlbaran(true)" class="cancel">              
-                Imprimir todo
+          <th width="5%" *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+        <tr>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckfechaentrega"
+              placeholder="Filtre fecha entrega"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckfecha"
+              placeholder="Filtre fecha"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckpedcode"
+              placeholder="Filtre código"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckpedido"
+              placeholder="Filtre pedido"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckcliente"
+              placeholder="Filtre cliente"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckunidades"
+              placeholder="Filtre solicitados"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckdisponibles"
+              placeholder="Filtre disponibles"
+            />
+          </th>
+          <th scope="col">
+            <input
+              (keyup)="newfiltrarstock()"
+              type="text"
+              [(ngModel)]="new_filtrosckobservaciones"
+              placeholder="Filtre observaciones"
+            />
+          </th>
+          <th *ngIf="roleUser != 10 && roleUser != 11"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          style="cursor: pointer"
+          *ngFor="
+            let itemstock of stockfiltradosnuevos
+              | slice
+                : ([newsck_numPage] - 1) * [sck_pagination]
+                : [newsck_numPage] * [sck_pagination];
+            let impar = even;
+            let i = index
+          "
+          [style.color]="getSinExistencias(itemstock)"
+          [ngStyle]="{ 'background-color': i % 2 === 0 ? 'white' : '#DDDDDD' }"
+        >
+          <td>{{ itemstock.delivery_date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ itemstock.creation_date | date : "dd/MM/yyyy" }}</td>
+          <td>{{ itemstock.ped_code }}</td>
+          <td>{{ itemstock.campaign_name }}</td>
+          <td>{{ itemstock.customer_name }}</td>
+          <td class="text-right">{{ itemstock.units }}</td>
+          <td class="text-right">{{ itemstock.disponibles }}</td>
+          <td style="white-space: pre">
+            {{ escribirObservaciones(itemstock.observaciones) }}
+          </td>
+          <td>
+            <div class="menu">
+              <a
+                title="No hay Observaciones"
+                *ngIf="!itemstock.observ_cli && !itemstock.observ_int"
+              >
+                <i class="material-icons comment" style="opacity: 0.2"
+                  >comment</i
+                >
               </a>
-                <a (click)="getAlbaran(false)">              
-                Imprimir solo almacenables
-            </a>
+              <a
+                title="Ver Observaciones"
+                *ngIf="itemstock.observ_cli || itemstock.observ_int"
+                (click)="selectedStock = itemstock"
+                data-toggle="modal"
+                data-target="#dialogoobservaciones"
+              >
+                <i class="material-icons comment">comment</i>
+              </a>
+              <a
+                title="Imprimir Albarán"
+                (click)="exportAlbaran2(itemstock)"
+                title="Imprimir Albarán"
+              >
+                <i class="material-icons doc">picture_as_pdf</i>
+              </a>
+              <span *ngIf="roleUser != 10 && roleUser != 11">
+                <a
+                  title="Poner Pedido En Trámite"
+                  *ngIf="itemstock.btramite == 0"
+                  (click)="tramitarpedido(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogotramitarpedido"
+                >
+                  <i class="material-icons work_sintramite">work</i>
+                </a>
+                <a
+                  title="Quitar Pedido En Trámite"
+                  *ngIf="itemstock.btramite == 1"
+                  (click)="tramitarpedido(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogotramitarpedido"
+                >
+                  <i class="material-icons work_entramite">work</i>
+                </a>
+                <a
+                  *ngIf="itemstock.disponibles < itemstock.units"
+                  title="Dar Salida parcial (a los elementos que hay en el almacén)"
+                  (click)="tramitarsalida(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogosalida"
+                >
+                  <i class="material-icons exit-button-partial">exit_to_app</i>
+                </a>
+                <a
+                  *ngIf="itemstock.disponibles >= itemstock.units"
+                  title="Dar Salida"
+                  (click)="tramitarsalida(itemstock)"
+                  data-toggle="modal"
+                  data-target="#dialogosalida"
+                >
+                  <i class="material-icons exit-button">exit_to_app</i>
+                </a>
+              </span>
             </div>
-        </p-footer>
-    </p-dialog>
+          </td>
+        </tr>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tbody>
+    </table>
 
+    <hr />
+    <div *ngIf="newsck_arrpages.length != 0" style="height: 50px">
+      <div class="paginator text-center">
+        <span
+          (click)="newsck_numPage = 1"
+          *ngIf="newsck_numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >|<</span
+        >
+        <span
+          (click)="newsck_numPage = newsck_numPage - 2"
+          *ngIf="newsck_numPage > 2"
+          style="cursor: pointer; padding: 15px"
+          >{{ newsck_numPage - 2 }}</span
+        >
+        <span
+          (click)="newsck_numPage = newsck_numPage - 1"
+          *ngIf="newsck_numPage != 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ newsck_numPage - 1 }}</span
+        >
+        <span
+          style="
+            display: inline-table;
+            width: 24px;
+            border-radius: 500px;
+            font-weight: bold;
+            color: white;
+            background-color: gray;
+            cursor: pointer;
+          "
+          >{{ newsck_numPage }}</span
+        >
+        <span
+          (click)="newsck_numPage = newsck_numPage + 1"
+          *ngIf="
+            newsck_numPage != newsck_arrpages.length &&
+            newsck_arrpages.length > 1
+          "
+          style="cursor: pointer; padding: 15px"
+          >{{ newsck_numPage + 1 }}</span
+        >
+        <span
+          (click)="newsck_numPage = newsck_numPage + 2"
+          *ngIf="newsck_numPage < newsck_arrpages.length - 1"
+          style="cursor: pointer; padding: 15px"
+          >{{ newsck_numPage + 2 }}</span
+        >
+        <span
+          (click)="newsck_numPage = newsck_arrpages.length"
+          *ngIf="
+            newsck_numPage != newsck_arrpages.length &&
+            newsck_arrpages.length > 1
+          "
+          style="cursor: pointer; padding: 15px"
+          >>|</span
+        >
+      </div>
+      <div
+        class="text-left"
+        style="
+          display: inline;
+          position: relative;
+          top: -35px;
+          max-width: 300px;
+        "
+      >
+        <i
+          >Mostrando {{ ([newsck_numPage] - 1) * [sck_pagination] + 1 }} -
+          {{
+            stockfiltradosnuevos.length > [newsck_numPage] * [sck_pagination]
+              ? [newsck_numPage] * [sck_pagination]
+              : stockfiltradosnuevos.length
+          }}
+          de {{ stockfiltradosnuevos.length }} pedidos con salidas pendientes
+        </i>
+      </div>
+    </div>
+  </div>
 
-    <!-- 
+  <p-dialog
+    styleClass="dashboard-dialog"
+    header="Detalles del almacenaje"
+    [(visible)]="showNewExport"
+    [responsive]="true"
+    showEffect="ease"
+    minWidth="1100"
+    [modal]="true"
+  >
+    <div *ngIf="showNewExport">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-10">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-1">
+              Unidades
+              <input
+                pInputText
+                id="units"
+                [(ngModel)]="selectedStorage.unidades"
+              />
+            </div>
+            <div class="ui-grid-col-3">
+              Cód.Art.
+              <!-- [disabled]="!isEditable" [maxlength]="300"-->
+              <input
+                list="selectedStoragecod"
+                pInputText
+                placeholder="Selecciona cód.art."
+                [(ngModel)]="selectedStorage.codigo"
+                (keydown)="updatearticle($event)"
+                (input)="updatearticle($event)"
+              />
+              <datalist
+                id="selectedStoragecod"
+                styleClass="dashboard-dropdown new"
+              >
+                <option
+                  id="{{ codart.value }}"
+                  value="{{ codart.label }}"
+                  *ngFor="let codart of dataCombos.articles"
+                ></option>
+              </datalist>
+            </div>
+            <div class="ui-grid-col-5">
+              Artículo
+              <input
+                list="selectedStorageart"
+                pInputText
+                placeholder="Selecciona artículo"
+                [(ngModel)]="selectedStorage.articulo"
+                (keydown)="updatecod($event)"
+                (input)="updatecod($event)"
+              />
+              <datalist
+                id="selectedStorageart"
+                styleClass="dashboard-dropdown new"
+              >
+                <option
+                  id="{{ art.value }}"
+                  value="{{ art.label }}"
+                  *ngFor="let art of dataCombos.articlesdesc"
+                ></option>
+              </datalist>
+            </div>
+            <div class="ui-grid-col-3">
+              Estado
+              <p-dropdown
+                styleClass="dropdown-dialog edit"
+                styleClass="dashboard-dropdown new"
+                [options]="dataCombos.states"
+                [(ngModel)]="selectedStorage.idestado"
+                placeholder="Selecciona estado"
+              ></p-dropdown>
+            </div>
+          </div>
+          <div class="ui-grid-row">
+            <!-- <div class="ui-grid-col-3">
+              Almacén
+              <p-dropdown
+                styleClass="dropdown-dialog edit"
+                styleClass="dashboard-dropdown new"
+                [options]="dataCombos.warehouses"
+                [(ngModel)]="selectedStorage.idalmacen"
+                placeholder="Selecciona almacén"
+              ></p-dropdown>
+            </div> -->
+            <!-- <div class="ui-grid-col-1">
+              Pasillo
+              <input
+                pInputText
+                id="row"
+                [(ngModel)]="selectedStorage.pasillo"
+              />
+            </div>
+            <div class="ui-grid-col-1">
+              Sección
+              <input
+                pInputText
+                id="section"
+                [(ngModel)]="selectedStorage.seccion"
+              />
+            </div>
+            <div class="ui-grid-col-1">
+              Altura
+              <input
+                pInputText
+                id="height"
+                [(ngModel)]="selectedStorage.altura"
+              />
+            </div> -->
+            <!-- <div class="ui-grid-col-6">
+              {{ nombresColumnas[1] | titlecase }}
+              <input
+                list="selectedStoragecli"
+                pInputText
+                placeholder="Selecciona cliente"
+                [(ngModel)]="selectedStorage.cliente"
+              />
+              <datalist
+                id="selectedStoragecli"
+                styleClass="dashboard-dropdown new"
+              >
+                <option
+                  id="{{ cli.value }}"
+                  value="{{ cli.label }}"
+                  *ngFor="let cli of dataCombos.customers"
+                ></option>
+              </datalist>
+            </div> -->
+          </div>
+          <div class="ui-grid-row">
+            <!-- <div class="ui-grid-col-2">
+              Caducidad
+              <my-date-picker
+                name="mydate"
+                [options]="myDatePickerOptions"
+                [(ngModel)]="selectedStorage.caducidad"
+              ></my-date-picker>
+            </div> -->
+            <div class="ui-grid-col-3">
+              Observaciones
+              <input
+                pInputText
+                id="observations"
+                [(ngModel)]="selectedStorage.observaciones"
+              />
+            </div>
+            <div class="ui-grid-col-3">&nbsp;</div>
+          </div>
+          <div class="ui-grid-row">
+            <div
+              class="ui-grid-col-1"
+              *ngIf="selectedStorage && selectedStorage.id < 0"
+            >
+              <br />
+              <input
+                (click)="addStorage()"
+                style="width: 100px"
+                type="button"
+                class="btn btn-primary"
+                value="Entrada"
+              />
+            </div>
+            <div
+              class="ui-grid-col-1"
+              *ngIf="selectedStorage && selectedStorage.id >= 0"
+            >
+              <br />
+              <input
+                (click)="updateApi()"
+                style="width: 100px"
+                type="button"
+                class="btn btn-success"
+                value="Guardar"
+                *ngIf="roleUser != 10 && roleUser != 11"
+              />
+            </div>
+            <div class="ui-grid-col-1">&nbsp;</div>
+            <div class="ui-grid-col-1">
+              <br />
+              <input
+                (click)="showNewExport = false"
+                style="width: 100px"
+                type="button"
+                class="btn btn-secondary"
+                value="Cerrar"
+              />
+            </div>
+            <div class="ui-grid-col-1">&nbsp;</div>
+          </div>
+        </div>
+        <div class="ui-grid-col-2">
+          <div
+            class="ui-grid-row"
+            style="
+              min-height: 105px;
+              max-height: 105px;
+              margin: 20px 10px 10px 10px;
+            "
+          >
+            <img
+              class="preview-image"
+              style="max-height: 100px; max-width: 100px"
+              [src]="urlUpload + selectedStorage.image"
+              *ngIf="
+                selectedStorage.image != null && selectedStorage.image != ''
+              "
+            />
+          </div>
+          <div class="ui-grid-row">
+            <input
+              class="inputfile"
+              id="logo_file_{{ selectedStorage.image }}"
+              type="file"
+              name="file"
+              ngFileSelect
+              (uploadOutput)="onUploadOutputLogo($event, selectedStorage)"
+            />
+            <!-- [uploadInput]="uploadInputLogo" -->
+            <div class="ui-grid-col-6"></div>
+            <div class="ui-grid-col-3">
+              <!--                         <label for="logo_file_{{selectedStorage.image}}">
+                        <i class="material-icons delete" style="color:green; cursor:pointer; position:relative; top:-20px; left:35px">photo_camera</i>
+                        <img class="loading-icon" *ngIf="uploading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                        />
+                        </label> -->
+            </div>
+            <div class="ui-grid-col-3">
+              <!--                         <label>
+                    <i class="material-icons photo" (click)="selectedStorage.image = null" style="color:red; cursor:pointer; position:relative; top:-21px; left:40px">delete</i>
+                    </label> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="dashboard-dialog"
+    *ngIf="selectedBill"
+    header="Detalles del Factura"
+    [(visible)]="displayDialog"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-12">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+              <label for="bill_name">Descripción</label>
+            </div>
+            <div class="ui-grid-col-12">
+              <input
+                type="text"
+                pInputText
+                id="bill_name"
+                [(ngModel)]="selectedBill.bill_name"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-7">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+              <label for="name">PO</label>
+            </div>
+            <div class="ui-grid-col-12">
+              <input
+                type="text"
+                pInputText
+                id="po"
+                [(ngModel)]="selectedBill.PO"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="ui-grid-col-1">
+          <div class="ui-grid-row">&nbsp;</div>
+        </div>
+        <div class="ui-grid-col-4">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+              <label for="end_date">Fecha de vencimiento</label>
+            </div>
+            <div class="ui-grid-col-12">
+              <my-date-picker
+                name="mydate"
+                [options]="myDatePickerOptions"
+                [(ngModel)]="selectedBill.due_date_model"
+                required
+              ></my-date-picker>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+              <label for="team">Equipo</label>
+            </div>
+            <div class="ui-grid-col-12">
+              <p-dropdown
+                styleClass="dropdown-dialog edit"
+                (onChange)="changeTeam($event)"
+                styleClass="dashboard-dropdown new"
+                [options]="dataCombos.teams"
+                [(ngModel)]="selectedBill.id_team"
+                placeholder="Selecciona un equipo"
+              ></p-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="ui-grid-col-6">
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-12">
+              <label for="customer">Cliente</label>
+            </div>
+            <div class="ui-grid-col-12">
+              <p-dropdown
+                styleClass="dropdown-dialog edit"
+                styleClass="dashboard-dropdown new"
+                [options]="dataCombos.customers"
+                [(ngModel)]="selectedBill.id_customer"
+                placeholder="Selecciona un cliente"
+              ></p-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="displayDialog = false" class="cancel"> cancelar </a>
+        <a (click)="updateApi()"> Guardar </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="dashboard-dialog delete"
+    header="Abonar la factura"
+    [(visible)]="displayDialogAbono"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedBill">
+      <div class="ui-grid-row">
+        <span class="title">¿Esta seguro de abonar la Factura?</span>
+        <span class="info">{{ selectedBill.numbertext }}</span>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="displayDialogAbono = false" class="cancel"> cancelar </a>
+        <a (click)="abonar(selectedBill)"> Abonar </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="dashboard-dialog delete"
+    header="Eliminar Exportación"
+    [(visible)]="displayDialogDeleteExportation"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div
+      class="ui-grid ui-grid-responsive ui-fluid"
+      *ngIf="selectedExportation"
+    >
+      <div class="ui-grid-row">
+        <span class="title">¿Esta seguro de eliminar la Exportación?</span>
+        <span class="info">{{ selectedExportation.id }}</span>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="displayDialogDeleteExportation = false" class="cancel">
+          cancelar
+        </a>
+        <a (click)="deleteExp(selectedExportation)"> Eliminar </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="modal-minimal"
+    [(visible)]="showNewBill"
+    [closable]="false"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+    [contentStyle]="{ overflow: 'visible' }"
+  >
+    <div class="modal-header">
+      <a (click)="showNewBill = !showNewBill">
+        <svg
+          viewBox="0 0 24 24"
+          role="img"
+          aria-label="Close"
+          focusable="false"
+          style="
+            height: 16px;
+            width: 16px;
+            display: block;
+            fill: rgb(118, 118, 118);
+          "
+        >
+          <path
+            fill-rule="evenodd"
+            d="M23.25 24a.744.744 0 0 1-.53-.22L12 13.062 1.28 23.782a.75.75 0 0 1-1.06-1.06L10.94 12 .22 1.28A.75.75 0 1 1 1.28.22L12 10.94 22.72.22a.749.749 0 1 1 1.06 1.06L13.062 12l10.72 10.72a.749.749 0 0 1-.53 1.28"
+          ></path>
+        </svg>
+      </a>
+    </div>
+    <div class="modal">
+      <i
+        alt="clonar los datos"
+        title="clonar los datos"
+        class="icon material-icons"
+        >layers</i
+      >
+      <label for="name">Nueva factura</label>
+      <p>Selecciona el proyecto que deseas facturar</p>
+
+      <div class="sources" *ngIf="listProjects">
+        <div class="selector">
+          <p-dropdown
+            [options]="listProjects"
+            [(ngModel)]="selectedProject"
+            styleClass="dropdown-dialog edit"
+            filter="true"
+            styleClass="dashboard-dropdown new"
+            placeholder="Selecciona un proyecto"
+          >
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div class="button">
+        <a (click)="createBill()">
+          <label>Crear Factura</label>
+          <i class="material-icons">keyboard_tab</i>
+        </a>
+      </div>
+    </div>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="dashboard-dialog delete"
+    header="Eliminar"
+    [(visible)]="displayDialogDelete"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStorage">
+      <div class="ui-grid-row">
+        <span class="title">¿Esta seguro de eliminar la línea de almacén?</span>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="displayDialogDelete = false" class="cancel"> cancelar </a>
+        <a (click)="deleteApi(selectedStorage)"> Eliminar </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <p-dialog
+    styleClass="dashboard-dialog delete"
+    header="Dar salida a Existencias"
+    [(visible)]="showExitStorage"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedStorage">
+      <div class="ui-grid-row">
+        <span class="title"
+          >Indique las unidades y observaciones si lo desea</span
+        >
+        <span class="info">
+          Unidades:
+          <input pInputText id="units" [(ngModel)]="unidadessalida" />
+          Observaciones:
+          <input pInputText id="units" [(ngModel)]="observacionessalida" />
+        </span>
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="showExitStorage = false" class="cancel"> cancelar </a>
+        <a (click)="salida(selectedBill)"> Efectuar salida </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <div
+    class="modal fade"
+    id="dialogotramitarpedido"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="imgMaxLabel"
+    *ngIf="selectedStock"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imgMaxLabel">Pedido en Trámite</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body text-center"
+          *ngIf="selectedStorage != undefined"
+        >
+          <span *ngIf="selectedStock && selectedStock.btramite == 0"
+            >Va a indicar que se está tramitando el pedido, por lo que pasará a
+            ser no modificable. ¿Está de acuerdo?</span
+          >
+          <span *ngIf="selectedStock && selectedStock.btramite == 1"
+            >Va a quitar que el pedido está en trámite, por lo que volverá a ser
+            modificable. ¿Está de acuerdo?</span
+          >
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            *ngIf="selectedStock && selectedStock.btramite == 1"
+            class="btn btn-success"
+            (click)="tramitarpedidoapi()"
+            data-dismiss="modal"
+          >
+            Quitar Trámite Pedido
+          </button>
+          <button
+            type="button"
+            *ngIf="selectedStock && selectedStock.btramite == 0"
+            class="btn btn-success"
+            (click)="tramitarpedidoapi()"
+            data-dismiss="modal"
+          >
+            Tramitar Pedido
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="dialogoobservaciones"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="imgMaxLabel"
+    *ngIf="selectedStock"
+  >
+    <div class="modal-dialog" style="min-width: 1000px" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imgMaxLabel">
+            Observaciones del Pedido {{ selectedStock.campaign_name }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body text-center"
+          *ngIf="selectedStorage != undefined"
+        >
+          <div style="float: left; width: 50%">
+            Observaciones para el cliente
+            <textarea readonly rows="8" cols="55">{{
+              selectedStock.observ_cli
+            }}</textarea>
+          </div>
+          <div style="float: left; width: 50%">
+            Observaciones internas
+            <textarea readonly rows="8" cols="55">{{
+              selectedStock.observ_int
+            }}</textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="dialogosalida"
+    tabindex="-1"
+    role="dialog"
+    *ngIf="selectedStock"
+  >
+    <div class="modal-dialog modal-lg" id="myModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title; text-center" id="imgMaxLabel">Dar Salida</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body text-center"
+          id="myModalBody"
+          *ngIf="selectedStock != undefined"
+        >
+          <span
+            >Va a dar salida existencias del almacén. Confirme la ubicación de
+            las existencias. Dará salida a
+            {{ selectedStock.disponibles }} artículos</span
+          >
+          <br />
+          <br />
+          <div class="text-center">EXISTENCIAS DISPONIBLES</div>
+          <br />
+          <table class="table table-sm">
+            <tr>
+              <th>Imagen</th>
+              <th>Cód.</th>
+              <th>Artículo</th>
+              <th>Estado</th>
+              <th>Caducidad</th>
+              <th>Salida</th>
+              <th>Un.</th>
+              <th>Nave</th>
+              <th>Pas</th>
+              <th>Sec</th>
+              <th>Alt</th>
+            </tr>
+            <tr
+              *ngFor="
+                let itemsalida of salidasfiltradas;
+                let impar = even;
+                let i = index
+              "
+              [ngStyle]="{
+                'background-color': i % 2 === 0 ? 'white' : '#DDDDDD'
+              }"
+            >
+              <td
+                class="text-center"
+                style="cursor: pointer"
+                data-toggle="modal"
+                data-target="#imgMaxStck"
+                (click)="selectedStock = itemsalida"
+              >
+                <img
+                  style="max-height: 65px; max-width: 65px"
+                  *ngIf="itemsalida.image && itemsalida.image != null"
+                  [src]="urlUpload + itemsalida.image"
+                />
+              </td>
+              <td>{{ itemsalida.code }}</td>
+              <td>{{ itemsalida.articulo }}</td>
+              <!-- (keyup)="changevaluesalida($event)" -->
+              <td>{{ itemsalida.state }}</td>
+              <!-- (keyup)="changevaluesalida($event)" -->
+              <td>{{ itemsalida.caducidad }}</td>
+              <!-- (keyup)="changevaluesalida($event)" -->
+              <td>
+                <input
+                  class="text-center"
+                  [(ngModel)]="itemsalida.sacar"
+                  style="max-width: 70px"
+                />
+              </td>
+              <td>{{ itemsalida.total }}</td>
+              <td>{{ itemsalida.almacen }}</td>
+              <td>{{ itemsalida.pasillo }}</td>
+              <td>{{ itemsalida.seccion }}</td>
+              <td>{{ itemsalida.altura }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            [disabled]="nosacar"
+            class="btn btn-info"
+            (click)="tramitarsalidaapi()"
+            data-dismiss="modal"
+          >
+            Realizar Salidas
+          </button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="imgMax"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="imgMaxLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imgMaxLabel">
+            {{ selectedStorage?.articulo }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div
+          class="modal-body text-center"
+          *ngIf="selectedStorage != undefined"
+        >
+          <!--  -->
+          <img
+            style="max-height: 400px; max-width: 400px"
+            *ngIf="selectedStorage.image && selectedStorage.image != ''"
+            [src]="urlUpload + selectedStorage.image"
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="imgMaxStck"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="imgMaxLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imgMaxLabel">
+            {{ selectedStock?.description }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center" *ngIf="selectedStock != undefined">
+          <!--  -->
+          <img
+            style="max-height: 400px; max-width: 400px"
+            *ngIf="selectedStock.image && selectedStock.image != ''"
+            [src]="urlUpload + selectedStock.image"
+          />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog
+    styleClass="dashboard-dialog"
+    header="Imprimir Albarán"
+    [(visible)]="showDialogImprimirAlbaran"
+    [responsive]="true"
+    showEffect="ease"
+    [modal]="true"
+  >
+    <div class="ui-grid ui-grid-responsive ui-fluid">
+      <div class="ui-grid-row">
+        <span class="title"
+          >¿Desea imprimir las líneas de productos no almacenables?</span
+        >
+      </div>
+    </div>
+    <p-footer>
+      <div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix">
+        <a (click)="getAlbaran(true)" class="cancel"> Imprimir todo </a>
+        <a (click)="getAlbaran(false)"> Imprimir solo almacenables </a>
+      </div>
+    </p-footer>
+  </p-dialog>
+
+  <!-- 
 <p-dialog styleClass="dashboard-dialog" title="Generar Exportación" [(visible)]="" 
 >
     <div class="ui-grid ui-grid-responsive ui-fluid" >
@@ -1129,3 +2688,4 @@
 
     </p-footer>
 </p-dialog> -->
+</div>

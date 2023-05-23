@@ -129,13 +129,17 @@
           <i alt="exportar" title="exportar" class="material-icons">receipt</i>
           Imprimir Albarán
         </a>
-        <a class="pdf-button" (click)="exportPDF()">
+        <a *ngIf="roleUser != 9" class="pdf-button" (click)="exportPDF()">
           <i alt="exportar" title="exportar" class="material-icons"
             >description</i
           >
           Imprimir {{ infoCustomer.status }}
         </a>
-        <a class="big-button export" (click)="exportExcel()">
+        <a
+          *ngIf="roleUser != 9"
+          class="big-button export"
+          (click)="exportExcel()"
+        >
           <i alt="exportar" title="exportar" class="material-icons">get_app</i>
         </a>
 
@@ -200,7 +204,7 @@
       <div class="ui-grid-col-3 h1">Presupuesto</div>
       <div *ngIf="!showReservationLogic" class="ui-grid-col-2 h1">Costes</div>
       <div *ngIf="showReservationLogic" class="ui-grid-col-4 h1">
-        Fechas de Reservas
+        Fechas de Reservasss
       </div>
       <div *ngIf="!showReservationLogic" class="ui-grid-col-2"></div>
     </div>
@@ -223,8 +227,10 @@
           <!--           <div class="ui-grid-col-3 label">
             Unidades
           </div> -->
-          <div class="ui-grid-col-4 label">Precio Unitario</div>
-          <div class="ui-grid-col-4 label">Total</div>
+          <div *ngIf="roleUser != 9" class="ui-grid-col-4 label">
+            Precio Unitario
+          </div>
+          <div *ngIf="roleUser != 9" class="ui-grid-col-4 label">Total</div>
         </div>
       </div>
       <div *ngIf="showReservationLogic" class="ui-grid-col-4">
@@ -275,7 +281,7 @@
           <div class="ui-grid-row budget-lines">
             <div class="ui-grid-col-4 label"></div>
             <div class="ui-grid-col-4 label"></div>
-            <div class="ui-grid-col-4 label">
+            <div *ngIf="roleUser != 9" class="ui-grid-col-4 label">
               {{ line.budget.total | currency }}
             </div>
           </div>
@@ -390,7 +396,7 @@
                 (focus)="old=subconcept.budget.units;$event.target.className=''" (keydown)="resetClass($event);changeInput(subconcept, $event, 'unit_budget');"
               />
             </div> -->
-            <div class="ui-grid-col-4 label">
+            <div *ngIf="roleUser != 9" class="ui-grid-col-4 label">
               <input
                 [readonly]="subconcept.readonly || readonlytotal"
                 [disabled]="!isEditable"
@@ -407,7 +413,7 @@
                 "
               />
             </div>
-            <div class="ui-grid-col-4 label">
+            <div *ngIf="roleUser != 9" class="ui-grid-col-4 label">
               {{ subconcept.budget.total | currency }}
             </div>
           </div>
@@ -493,8 +499,8 @@
         <div class="ui-grid-row">
           <div class="ui-grid-col-3"></div>
           <div class="ui-grid-col-3"></div>
-          <div class="ui-grid-col-3 label">Total</div>
-          <div class="ui-grid-col-3 label">
+          <div *ngIf="roleUser != 9" class="ui-grid-col-3 label">Total</div>
+          <div *ngIf="roleUser != 9" class="ui-grid-col-3 label">
             {{ this.total.budget_total | currency }}
           </div>
         </div>
