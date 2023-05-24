@@ -87,10 +87,14 @@ import { AutofocusDirective } from "./directives/autofocus.directive";
 import { DemoComponent } from "./pages/demo/demo.component";
 import { CalendarModule } from "angular-calendar";
 import { CalendarioComponent } from "./pages/calendario/calendario.component";
+import { SalonarioEnviosComponent } from "./pages/salonario-envios/salonario-envios.component";
+import { ExportSalonarioEnviosComponent } from "./pages/export-salonario-envios/export-salonario-envios.component";
 
 @NgModule({
   declarations: [
     CalendarioComponent,
+    SalonarioEnviosComponent,
+    ExportSalonarioEnviosComponent,
     AppComponent,
     LoginComponent,
     RememberComponent,

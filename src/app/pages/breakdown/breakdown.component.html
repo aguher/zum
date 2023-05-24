@@ -17,6 +17,14 @@
         Volver al listado
       </a>
       <a
+        *ngIf="id_company == '416'"
+        class="big-button export"
+        routerLink="/salonario-envios/{{ id }}"
+      >
+        <i class="material-icons">inventory</i>
+        Salonario de envio
+      </a>
+      <a
         *ngIf="
           info.already_invoiced == '0' &&
           (role == 3 || role == 5) &&

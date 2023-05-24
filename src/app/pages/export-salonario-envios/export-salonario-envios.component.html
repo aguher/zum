@@ -1,0 +1,43 @@
+<div class="container">
+  <h3>Exportación de Salonario de envíos</h3>
+  <p>
+    Selecciona unas fechas de inicio y fin para exportar un resumen de envíos
+  </p>
+  <div class="container-form">
+    <form>
+      <div class="row mb-3">
+        <div class="col-3">
+          <label for="exampleInputEmail1" class="form-label"
+            >Fecha de inicio</label
+          >
+          <my-date-picker
+            name="mydate"
+            [options]="myDatePickerOptions"
+            [(ngModel)]="start_date_calendar"
+            (dateChanged)="onDateChanged($event, 'start_date')"
+          ></my-date-picker>
+        </div>
+        <div class="col-3">
+          <label for="exampleInputEmail1" class="form-label"
+            >Fecha de fin</label
+          >
+          <my-date-picker
+            name="mydate"
+            [options]="myDatePickerOptions"
+            [(ngModel)]="start_date_calendar"
+            (dateChanged)="onDateChanged($event, 'start_date')"
+          ></my-date-picker>
+        </div>
+        <div class="col"></div>
+      </div>
+
+      <div class="row">
+        <div class="col" style="display: flex; justify-content: end">
+          <button type="submit" class="btn btn-success">
+            Exportar a Excel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

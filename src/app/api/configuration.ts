@@ -20,6 +20,8 @@ export class Configuration {
   public createBillFromMultipleOrders: string = "createBillFromMultipleOrders";
   public getAllEventReservations: string = "getAllEventReservations";
 
+  public saveOrderSalonarioEnvio: string = "saveOrderSalonarioEnvio";
+  public getOrderSalonarioEnvio: string = "getOrderSalonarioEnvio";
   public getStadisticsBilling: string = "getStadisticsBilling";
   public getStadisticsCampaigns: string = "getStadisticsCampaigns";
   public getArticlesLocation: string = "getArticlesLocation";

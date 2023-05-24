@@ -40,6 +40,8 @@ import { ExpensesComponent } from "./pages/expenses/expenses.component";
 import { StorageComponent } from "./pages/storage/storage.component";
 import { DemoComponent } from "./pages/demo/demo.component";
 import { CalendarioComponent } from "./pages/calendario/calendario.component";
+import { SalonarioEnviosComponent } from "./pages/salonario-envios/salonario-envios.component";
+import { ExportSalonarioEnviosComponent } from "./pages/export-salonario-envios/export-salonario-envios.component";
 
 const appRoutes: Routes = [
   { path: "", component: ProjectsNewComponent, canActivate: [AuthGuard] },
@@ -158,6 +160,16 @@ const appRoutes: Routes = [
   {
     path: "conceptos-variables",
     component: VariableConceptComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "salonario-envios/:id_order",
+    component: SalonarioEnviosComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "exportar-salonario-envios",
+    component: ExportSalonarioEnviosComponent,
     canActivate: [AuthGuard],
   },
   {

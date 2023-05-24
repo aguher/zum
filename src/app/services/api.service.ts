@@ -50,6 +50,54 @@ export class ApiService {
         .map((response: Response) => response.json());
     }
   }
+
+  saveOrderSalonarioEnvio(idOrder, infoSalonario) {
+    let dataSelected = this._common.getIdCompanyYearSelected();
+
+    if (dataSelected) {
+      let token = localStorage.getItem("token");
+      let queryString = `&id_order=${idOrder}`;
+      queryString += `&date_shipment=${infoSalonario.date_shipment.date.year}-${infoSalonario.date_shipment.date.month}-${infoSalonario.date_shipment.date.day}`;
+      queryString += `&method_shipment=${infoSalonario.method_shipment}`;
+      queryString += `&contact_name=${infoSalonario.contact_name}`;
+      queryString += `&address=${infoSalonario.address}`;
+      queryString += `&postal_code=${infoSalonario.postal_code}`;
+      queryString += `&city=${infoSalonario.city}`;
+      queryString += `&phone_number=${infoSalonario.phone_number}`;
+      queryString += `&observations=${infoSalonario.observations}`;
+      queryString += `&packages_number=${parseInt(
+        infoSalonario.package_number
+      )}`;
+      queryString += `&date_return=${infoSalonario.date_return.date.year}-${infoSalonario.date_return.date.month}-${infoSalonario.date_return.date.day}`;
+      queryString += `&method_return=${infoSalonario.method_return}`;
+      queryString += `&employee=${infoSalonario.employee}`;
+      queryString += `&made_by=${infoSalonario.made_by}`;
+      queryString += `&incidents=${infoSalonario.incidents}`;
+      queryString += `&token=${token}`;
+      return this.http
+        .post(
+          this._config.Server + this._config.saveOrderSalonarioEnvio,
+          this.addToken(queryString),
+          this.jwt()
+        )
+        .map((response: Response) => response.json());
+    }
+  }
+  getOrderSalonarioEnvio(idOrder) {
+    let dataSelected = this._common.getIdCompanyYearSelected();
+
+    if (dataSelected) {
+      const queryString = idOrder !== null && `&id_order=${idOrder}`;
+      return this.http
+        .get(
+          this._config.Server +
+            this._config.getOrderSalonarioEnvio +
+            queryString
+        )
+        .map((response: Response) => response.json());
+    }
+  }
+
   getAllEventReservations(idArticle) {
     let dataSelected = this._common.getIdCompanyYearSelected();
 

@@ -175,6 +175,8 @@ export class AuthGuard implements CanActivate {
         return true;
       case "demo":
         return true;
+      case "exportar-salonario-envios":
+      case "salonario-envios":
       case "calendario":
         return true;
       case "":

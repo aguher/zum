@@ -371,6 +371,15 @@
           <i class="material-icons">build</i> Configuracion
         </a>
       </li>
+      <li *ngIf="idCompany == 416">
+        <a
+          (click)="closeMenu()"
+          routerLink="/exportar-salonario-envios"
+          routerLinkActive="active"
+        >
+          <i class="material-icons">inventory</i>Salonario de envíos
+        </a>
+      </li>
     </ul>
   </div>
   <div
