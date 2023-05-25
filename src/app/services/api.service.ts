@@ -51,6 +51,23 @@ export class ApiService {
     }
   }
 
+  getSalonariosBetweenDates(start, end) {
+    let dataSelected = this._common.getIdCompanyYearSelected();
+    if (dataSelected) {
+      let token = localStorage.getItem("token");
+
+      let queryString = `&start=${start}&end=${end}`;
+      queryString += `&token=${token}`;
+      return this.http
+        .get(
+          this._config.Server +
+            this._config.getSalonariosBetweenDates +
+            queryString
+        )
+        .map((response: Response) => response.json());
+    }
+  }
+
   saveOrderSalonarioEnvio(idOrder, infoSalonario) {
     let dataSelected = this._common.getIdCompanyYearSelected();
 

@@ -1,7 +1,13 @@
 <div class="container">
   <h3>Salonario de envíos</h3>
   <p>Añade la información de tu envío</p>
-  <div class="container-form">
+  <div *ngIf="loading" class="container-form">
+    <h2 class="title-loading">
+      <div class="loader"></div>
+      Cargando salonario de envío...
+    </h2>
+  </div>
+  <div *ngIf="!loading" class="container-form">
     <div class="row mb-3">
       <div class="col-3">
         <label for="exampleInputEmail1" class="form-label"
@@ -240,7 +246,7 @@
       <div class="col">
         <label for="incidents" class="form-label">Incidencias del envío</label>
         <textarea
-          *ngIf="infoSalonario && !!infoSalonario.incidents"
+          *ngIf="infoSalonario"
           class="form-control"
           placeholder="Escribe las incidencias del envío"
           id="incidents"

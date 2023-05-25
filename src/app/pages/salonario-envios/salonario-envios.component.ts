@@ -14,6 +14,7 @@ import { AuthenticationService } from "../../services/authentication.service";
 })
 export class SalonarioEnviosComponent implements OnInit {
   id;
+  loading = true;
   router;
   infoSalonario;
   infoOrder;
@@ -70,12 +71,13 @@ export class SalonarioEnviosComponent implements OnInit {
             ? response.salonario.observations
             : " ",
           package_number: response.salonario
-            ? response.salonario.package_number
+            ? response.salonario.packages_number
             : " ",
           employee: response.salonario ? response.salonario.employee : " ",
           made_by: response.salonario ? response.salonario.made_by : " ",
           incidents: response.salonario ? response.salonario.incidents : " ",
         };
+
         this.infoSalonario = {
           ...this.infoSalonario,
           date_shipment: {
@@ -93,7 +95,7 @@ export class SalonarioEnviosComponent implements OnInit {
             },
           },
         };
-        console.log(this.infoSalonario);
+        this.loading = false;
       }
     });
   }
