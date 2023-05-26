@@ -29,7 +29,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
   @Input() infoCustomer;
   @Input() noCheckDates;
   @Input() typeTable;
-
+  loading: boolean = false;
   showReservationLogic: boolean = false;
   old = null;
   originalSubconceptsStandard = [];
@@ -676,7 +676,7 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
     let parsedPrice = null;
     let parsedCode = null;
     let parsedDescription = null;
-
+    this.loading = true;
     //console.log((blurDescription && event.target), (event && event.target && field !== 'name'), (!event.target && field === 'name'));
     if (
       (blurDescription && event.target) ||
@@ -844,10 +844,12 @@ export class BudgetProjectComponent implements OnInit, OnDestroy {
                   //this.isModalOpen = true;
                 }
               }
+              this.loading = false;
             } else {
               this._notification.error("Error al guardar", response.msg, {
                 timeOut: 6000,
               });
+              this.loading = false;
             }
           });
       });

@@ -1,4 +1,10 @@
 <div class="budget-project">
+  <div *ngIf="loading" class="loading-full">
+    <h2 class="title-loading">
+      <div class="loader"></div>
+      Guardando
+    </h2>
+  </div>
   <div class="ui-grid ui-grid-responsive ui-fluid row-options">
     <div class="ui-grid-row">
       <div class="ui-grid-col-2">

@@ -82,7 +82,7 @@ jsPDF.API.textEx = function (
 })
 export class BillingBreakdownComponent implements OnInit, OnDestroy {
   @Input() selectAddr;
-
+  loading: boolean = false;
   idBill = null;
   infoBilling = null;
   addresses = null;
@@ -398,7 +398,7 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
           ? this._common.currencyFormatES(price[0].unit_price, false)
           : "0,00";
       }
-
+      this.loading = true;
       return new Promise((resolve) => {
         let parsed = null;
         if (field !== "name") {
@@ -421,6 +421,7 @@ export class BillingBreakdownComponent implements OnInit, OnDestroy {
               this.calculateTotalLine(subconcept, field, value);
               resolve(response.status);
             }
+            this.loading = false;
           });
       });
     } else {

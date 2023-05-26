@@ -1,6 +1,17 @@
 @import "~assets/variables.scss";
 @import "~assets/mixins.scss";
-
+.loading-full {
+    background: rgba(255,255,255,0.8);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .header, #header-cloned {
   font-family: 'Assistant';
   font-size: 13px;
