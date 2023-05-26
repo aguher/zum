@@ -6015,6 +6015,92 @@ class Api extends Rest {
 		$this->mostrarRespuesta(HandleErrors::sendError(2), 200);
 	}
 
+
+	private function saveOrderSalonarioEnvio() {
+		if ($_SERVER['REQUEST_METHOD'] != "POST") {
+			$this->mostrarRespuesta(HandleErrors::sendError(1), 400);
+		}
+
+		if(!$this->isValidSuperAdminToken($this->datosPeticion['token'])) {
+			return false;
+		}
+	
+		$id_order = $this->datosPeticion['id_order'];
+		$date_shipment= $this->datosPeticion['date_shipment'];
+		$method_shipment= $this->datosPeticion['method_shipment'];
+		$contact_name=  html_entity_decode($this->datosPeticion['contact_name']);
+		$address=  html_entity_decode($this->datosPeticion['address']);
+		$postal_code= $this->datosPeticion['postal_code'];
+		$city= $this->datosPeticion['city'];
+		$phone_number= $this->datosPeticion['phone_number'];
+		$observations=  html_entity_decode($this->datosPeticion['observations']);
+		$packages_number= $this->datosPeticion['packages_number'];
+		$date_return= $this->datosPeticion['date_return'];
+		$method_return= $this->datosPeticion['method_return'];
+		$employee=  html_entity_decode($this->datosPeticion['employee']);
+		$made_by=  html_entity_decode($this->datosPeticion['made_by']);
+		$incidents =  html_entity_decode($this->datosPeticion['incidents']);
+
+
+		$query = $this->_conn->prepare("SELECT * FROM salonario_envios where id_order='".$id_order."'");				
+		$query->execute();
+		$filasActualizadas = $query->rowCount();
+
+		if($filasActualizadas === 0) {
+			// no existe salonario, lo creamos
+			$query = $this->_conn->prepare("INSERT INTO `salonario_envios`(`id_order`,`date_shipment`,`method_shipment`,`contact_name`,`address`,`postal_code`, `city`,`phone_number`,`observations`,`packages_number`, `date_return`,`method_return`,`employee`,`made_by`,`incidents`) VALUES (
+				$id_order,'".$date_shipment."','".$method_shipment."','".$contact_name."','".$address."','".$postal_code."','".$city."','".$phone_number."','".$observations."','".$packages_number."','".$date_return."','".$method_return."','".$employee."','".$made_by."','".$incidents."')");
+			$query->execute();
+			$jsonResponse['status'] = 'ok';
+			$this->mostrarRespuesta($jsonResponse, 200);
+		} else {
+			$query = $this->_conn->prepare("UPDATE `salonario_envios` set  `method_return`='".$method_return."',`date_shipment`='".$date_shipment."',`method_shipment`='".$method_shipment."',`contact_name`='".$contact_name."',`address`='".$address."',`postal_code`='".$postal_code."',`city`='".$city."',`phone_number`='".$phone_number."',`observations`='".$observations."',`packages_number`='".$packages_number."',`date_return`='".$date_return."',`employee`='".$employee."',`made_by`='".$made_by."',`incidents`='".$incidents."' where id_order='".$id_order."'");
+			$query->execute();			
+			$jsonResponse['status'] = 'ok';
+			$this->mostrarRespuesta($jsonResponse, 200);
+		}
+
+	  
+	}
+
+	private function getSalonariosBetweenDates() {
+		if ($_SERVER['REQUEST_METHOD'] != "GET") {
+			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
+		}
+		$startDate = $this->datosPeticion['start'];
+		$endDate = $this->datosPeticion['end'];
+
+		$salonario = "SELECT tt_campaign.ped_code ,salonario_envios.* from salonario_envios INNER JOIN tt_campaign ON salonario_envios.id_order = tt_campaign.id    where date_shipment >='".$startDate."' and date_return <= '".$endDate."'";	
+		
+		$response = $this->operationApi($salonario, 'GET');
+		$jsonResponse['status'] = 'ok';
+		$jsonResponse['data'] = $response;
+		$this->mostrarRespuesta($jsonResponse, 200);
+	}
+
+	private function getOrderSalonarioEnvio() {
+		if ($_SERVER['REQUEST_METHOD'] != "GET") {
+			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
+		}
+		
+		$idOrder = $this->datosPeticion['id_order'];
+
+		$salonario = "SELECT * from salonario_envios where id_order ='".$idOrder."'";	
+		$querySalonario = $this->_conn->prepare($salonario);
+		$querySalonario->execute();		
+		$salonarioInfo = $querySalonario->fetch(PDO::FETCH_ASSOC);	
+		$order = "SELECT * from tt_campaign where id ='".$idOrder."'";
+		$query = $this->_conn->prepare($order);
+		$query->execute();	
+		$orderInfo = $query->fetch(PDO::FETCH_ASSOC);	
+			
+		$jsonResponse['status'] = 'ok';
+		$jsonResponse['salonario'] = $salonarioInfo;
+		$jsonResponse['order'] = $orderInfo;
+		
+		$this->mostrarRespuesta($jsonResponse, 200);
+	}
+
 	private function getAllEventReservations() {
 		if ($_SERVER['REQUEST_METHOD'] != "GET") {
 			$this->mostrarRespuesta($this->convertirJson($this->devolverError(1)), 405);
