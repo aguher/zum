@@ -1829,8 +1829,14 @@ class Api extends Rest {
 				$id_bill_origen = $this->datosPeticion['id_bill_origen'];
 				$id_company = $this->datosPeticion['id_company'];
 				$id_fiscal_year = $this->datosPeticion['id_fiscal_year'];
+				
+				$query = $this->_conn->prepare("select due_date as fecha from tt_billing where id_company='".$id_company."' and id='".$id_bill_origen."'");
+				$query->execute();
+				$filas = $query->fetch(PDO::FETCH_ASSOC);
+				
+				$actualYear = explode('-',$filas['fecha'])[0];
 
-				$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = YEAR(CURDATE()) and tax_base < 0 and numbertext like 'AB%' and id_fiscal_year='".$id_fiscal_year."'");
+				$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = ".$actualYear." and tax_base < 0 and numbertext like 'AB%' and id_fiscal_year='".$id_fiscal_year."'");
 
 				$filas = $query->execute();
 				$filasActualizadas = $query->rowCount();
@@ -1843,12 +1849,8 @@ class Api extends Rest {
 						$number = 1;
 				}
 
-/* 				$query = $this->_conn->prepare("insert into tt_billing(number, issue_date, description, id_team, id_customer, po, tax_base, taxes, total, id_company, id_fiscal_year, id_project, percent_tax) 
-							select '".$number."','".date("Y-m-d")."',description,id_team,id_customer, po, -tax_base,-taxes,-total,id_company,id_fiscal_year,id_project,percent_tax from tt_billing where id=".$id_bill_origen);
-				$query->execute(); */
-
 				$query = $this->_conn->prepare("insert into tt_billing (number, numbertext, issue_date, description, id_team, id_customer, po, tax_base, taxes, total, id_company, id_fiscal_year, id_project, percent_tax, id_rect) 
-								select ".$number.",'AB".date("Y")."/".$number."','".date("Y-m-d")."',description,id_team,id_customer, po, -tax_base,-taxes,-total,id_company,id_fiscal_year,id_project,percent_tax, id from tt_billing where id=".$id_bill_origen);
+								select ".$number.",'AB".$actualYear."/".$number."','".date("Y-m-d")."',description,id_team,id_customer, po, -tax_base,-taxes,-total,id_company,id_fiscal_year,id_project,percent_tax, id from tt_billing where id=".$id_bill_origen);
 				$query->execute();
 
 				$insertId = $this->_conn->lastInsertId();
@@ -1893,6 +1895,7 @@ class Api extends Rest {
 				$id_company = $this->datosPeticion['id_company'];
 				$id_fiscal_year = $this->datosPeticion['id_fiscal_year'];
 				$date_bill = $this->datosPeticion['date_bill'];
+				$actualYear = explode('-',$date_bill)[0];
 
 
 				$query = $this->_conn->prepare("update tt_campaign set id_status = 2 where id='".$id_project."' and id_fiscal_year='".$id_fiscal_year."' and id_status = 1 and id_company='".$id_company."'");
@@ -1905,7 +1908,7 @@ class Api extends Rest {
 				if($filasActualizadas === 1) {
 					$dataProject = $query->fetch(PDO::FETCH_ASSOC);
 
-					$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = YEAR(CURDATE()) and numbertext like 'FR%' and id_fiscal_year='".$id_fiscal_year."'");
+					$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = ".$actualYear." and numbertext like 'FR%' and id_fiscal_year='".$id_fiscal_year."'");
 
 					$filas = $query->execute();
 					$filasActualizadas = $query->rowCount();
@@ -1920,7 +1923,7 @@ class Api extends Rest {
 					//TAREA: CAMBIAR FECHA DE VENCIMIENTO AQUÍ, NO SÉ POR QUÉ NO FUNCIONÓ
 					//date_add($$date_bill, date_interval_create_from_date_string('60 days'))
 					$query = $this->_conn->prepare("insert into tt_billing(number, issue_date, due_date, description, id_team, id_customer, id_company, id_fiscal_year, id_project, numbertext) values(
-						'".$number."','".$date_bill."','".date('Y-m-d', strtotime($Date. ' + 60 days'))."','".$dataProject['campaign_name']."','".$dataProject['id_team']."', '".$dataProject['id_customer']."','".$id_company."','".$id_fiscal_year."','".$id_project."','FR".date("Y")."/".$number."')");
+						'".$number."','".$date_bill."','".date('Y-m-d', strtotime($Date. ' + 60 days'))."','".$dataProject['campaign_name']."','".$dataProject['id_team']."', '".$dataProject['id_customer']."','".$id_company."','".$id_fiscal_year."','".$id_project."','FR".$actualYear."/".$number."')");
 					$query->execute();
 					$filasActualizadas = $query->rowCount();
 					if ($filasActualizadas == 1) {
@@ -2597,43 +2600,119 @@ class Api extends Rest {
 				$end_date = $this->datosPeticion['end_date'];
 				
 
-				$strQuery = "select id,already_invoiced, campaign_code, ped_code, campaign_name, customer, id_customer, creation_date, end_date,
-				budget_income, budget_expenses, real_income, real_expenses, numfacturas,
-				desestimado, fechadesestimado, motivodesestimado, btramite, salidas, 
-				case when id_company = 412 or id_company = 385 then 						
-				case when real_income = budget_income and salidaspendientes = 0 then 5 when salidaspendientes = 0 and id_status = 2 then 4 when btramite = 1 or salidas <> 0 then 3 else id_status end else id_status end as id_status,
-				case when id_company = 412 or id_company = 385 then 
-				case when real_income = budget_income and salidaspendientes = 0 then 'Finalizado' when salidaspendientes = 0 and id_status = 2 then 'Procesado' when btramite = 1 or salidas <> 0 then 'En Proceso' else status end else status end as status,
+				$strQuery = "select 
+				id,
+				already_invoiced, 
+				campaign_code, 
+				ped_code, 
+				campaign_name, 
+				customer, 
+				id_customer, 
+				creation_date, 
+				end_date,
+				budget_income, 
+				budget_expenses, 
+				real_income, 
+				real_expenses, 
+				numfacturas,
+				desestimado, 
+				fechadesestimado, 
+				motivodesestimado, 
+				btramite, 
+				salidas, 
+				case 
+					when id_company = 412 or id_company = 385 then 						
+						case 
+							when real_income = budget_income and salidaspendientes = 0 then 5 
+							when salidaspendientes = 0 and id_status = 2 then 4 
+							when btramite = 1 or salidas <> 0 then 3 
+							else id_status 
+						end 
+					else id_status 
+				end as id_status,
+				case 
+					when id_company = 412 or id_company = 385 then 
+						case 
+							when real_income = budget_income and salidaspendientes = 0 then 'Finalizado' 
+							when salidaspendientes = 0 and id_status = 2 then 'Procesado' 
+							when btramite = 1 or salidas <> 0 then 'En Proceso' 
+							else status 
+						end 
+					else status 
+				end as status,
 				(select valuechar from tt_valuesbvsfields where idtable = t.id and freefieldsvscompanyid = 1) as project
-				from(select campaign.id_company, campaign.already_invoiced,campaign.id, campaign.campaign_code, campaign.ped_code, campaign.campaign_name, user.nickname as user, user.id as id_user, customer.customer_name as customer, customer.id as id_customer, team.team_name as team,
-								team.id as id_team, grupo.name as grupo, grupo.id as id_group, subgroup.name as subgroup, subgroup.id as id_subgroup, status.id as id_status, status.status, campaign.creation_date, campaign.end_date, campaign.security_level,
-								case when bdesestimado = 2 then 0 else (select sum(amount*unit_budget*price) as total from tt_subconcepts_project where id_project= campaign.id) end as budget_income,
-								case when bdesestimado = 2 then 0 else (select sum(amount*unit_budget*unit_real) as total from tt_subconcepts_project where id_project= campaign.id) end as budget_expenses,
-								(select case when sum(amount*unit_budget*price) is null then 0 else sum(amount*unit_budget*price) end as total from tt_subconcepts_billing, tt_billing where tt_billing.id=tt_subconcepts_billing.id_bill and tt_billing.id_project = campaign.id) as real_income,
-								(SELECT sum(amount) as total FROM `tt_budget_expenses` where id_campaign=campaign.id and type=1) as real_expenses,
-								(select count(*) from tt_billing where id_project = campaign.id) as numfacturas,
-								case when bdesestimado = -1 then 'No' when bdesestimado = 2 then 'Anulado' else 'Sí' end as desestimado, fechadesestimado, motivodesestimado,
-								campaign.btramite, 
-								(select count(*) from tt_subconcepts_project, tt_articles_movement where tt_subconcepts_project.id_project = campaign.id and tt_articles_movement.subconcept_project_id = tt_subconcepts_project.id) as salidas,
-								(select count(*) from tt_subconcepts_project, tt_articlesvslocation, tt_subconcepts_standards where tt_subconcepts_standards.bstockable = 1  and tt_subconcepts_standards.id = tt_articlesvslocation.article_id and tt_subconcepts_project.id_project = campaign.id and tt_articlesvslocation.subconcept_project_id = tt_subconcepts_project.id) as salidaspendientes 
-								FROM `tt_campaign` campaign
-													left join `tt_user` user
-													on campaign.id_user=user.id
-													inner join `tt_customer` customer
-													on campaign.id_customer=customer.id
-													left join `tt_team` team
-													on campaign.id_team=team.id
-													left join `tt_group` grupo
-													on campaign.id_group=grupo.id
-													  left join `tt_subgroup` subgroup
-													on campaign.id_subgroup=subgroup.id
-													inner join `tt_status` status
-													on campaign.id_status=status.id 
-													where campaign.id_company='".$id_company."' 
-													and campaign.visible = 1
-													and campaign.id_fiscal_year='".$id_fiscal_year."'
-													and campaign.creation_date >= '".$start_date."'
-													and campaign.creation_date <= '".$end_date."') as t";
+
+				from(
+					select 
+						campaign.id_company, 
+						campaign.already_invoiced,
+						campaign.id, 
+						campaign.campaign_code, 
+						campaign.ped_code, 
+						campaign.campaign_name, 
+						user.nickname as user, 
+						user.id as id_user, 
+						customer.customer_name as customer, 
+						customer.id as id_customer, 
+						team.team_name as team,
+						team.id as id_team, 
+						grupo.name as grupo, 
+						grupo.id as id_group, 
+						subgroup.name as subgroup, 
+						subgroup.id as id_subgroup, 
+						status.id as id_status, 
+						status.status, 
+						campaign.creation_date, 
+						campaign.end_date, 
+						campaign.security_level,
+
+						case 
+							when bdesestimado = 2 then 0 
+							else 
+								(select sum(amount*unit_budget*price) as total from tt_subconcepts_project where id_project= campaign.id) 
+						end as budget_income,
+						case 
+							when bdesestimado = 2 then 0 
+							else (select sum(amount*unit_budget*unit_real) as total from tt_subconcepts_project where id_project= campaign.id) 
+						end as budget_expenses,
+						(select 
+						case 
+							when sum(amount*unit_budget*price) is null then 0 
+							else sum(amount*unit_budget*price) 
+							end as total 
+						from tt_subconcepts_billing, tt_billing where tt_billing.id=tt_subconcepts_billing.id_bill and tt_billing.id_project = campaign.id) as real_income,
+
+						(SELECT sum(amount) as total FROM `tt_budget_expenses` where id_campaign=campaign.id and type=1) as real_expenses,
+						(select count(*) from tt_billing where id_project = campaign.id) as numfacturas,
+						case 
+							when bdesestimado = -1 then 'No' 
+							when bdesestimado = 2 then 'Anulado' 
+							else 'Sí' 
+						end as desestimado, 
+						fechadesestimado, 
+						motivodesestimado,
+						campaign.btramite, 
+						(select count(*) from tt_subconcepts_project, tt_articles_movement where tt_subconcepts_project.id_project = campaign.id and tt_articles_movement.subconcept_project_id = tt_subconcepts_project.id) as salidas,
+						(select count(*) from tt_subconcepts_project, tt_articlesvslocation, tt_subconcepts_standards where tt_subconcepts_standards.bstockable = 1  and tt_subconcepts_standards.id = tt_articlesvslocation.article_id and tt_subconcepts_project.id_project = campaign.id and tt_articlesvslocation.subconcept_project_id = tt_subconcepts_project.id) as salidaspendientes 
+						FROM `tt_campaign` campaign
+							left join `tt_user` user
+							on campaign.id_user=user.id
+							inner join `tt_customer` customer
+							on campaign.id_customer=customer.id
+							left join `tt_team` team
+							on campaign.id_team=team.id
+							left join `tt_group` grupo
+							on campaign.id_group=grupo.id
+							left join `tt_subgroup` subgroup
+							on campaign.id_subgroup=subgroup.id
+							inner join `tt_status` status
+							on campaign.id_status=status.id 
+							where campaign.id_company='".$id_company."' 
+							and campaign.visible = 1
+							and campaign.id_fiscal_year='".$id_fiscal_year."'
+							and campaign.creation_date >= '".$start_date."'
+							and campaign.creation_date <= '".$end_date."') as t";
+
 				// Depende del rol, selecciona unos proyectos u otros.
 				if($role == 6 || $role == 7 || $role == 8) {
 					$query = $this->_conn->prepare("select id_team from tt_user where id=".$id_user);
