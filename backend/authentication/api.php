@@ -1830,13 +1830,14 @@ class Api extends Rest {
 				$id_company = $this->datosPeticion['id_company'];
 				$id_fiscal_year = $this->datosPeticion['id_fiscal_year'];
 				
-				$query = $this->_conn->prepare("select due_date as fecha from tt_billing where id_company='".$id_company."' and id='".$id_bill_origen."'");
-				$query->execute();
-				$filas = $query->fetch(PDO::FETCH_ASSOC);
+				// $query = $this->_conn->prepare("select due_date as fecha from tt_billing where id_company='".$id_company."' and id='".$id_bill_origen."'");
+				// $query->execute();
+				// $filas = $query->fetch(PDO::FETCH_ASSOC);
 				
-				$actualYear = explode('-',$filas['fecha'])[0];
+				// $actualYear = explode('-',$filas['fecha'])[0];
 
-				$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = ".$actualYear." and tax_base < 0 and numbertext like 'AB%' and id_fiscal_year='".$id_fiscal_year."'");
+				$query = $this->_conn->prepare("select MAX(number) as number_bill from tt_billing where id_company='".$id_company."' and year(issue_date) = YEAR(CURDATE()) and tax_base < 0 and numbertext like 'AB%' and id_fiscal_year='".$id_fiscal_year."'");
+
 
 				$filas = $query->execute();
 				$filasActualizadas = $query->rowCount();
@@ -1850,7 +1851,7 @@ class Api extends Rest {
 				}
 
 				$query = $this->_conn->prepare("insert into tt_billing (number, numbertext, issue_date, description, id_team, id_customer, po, tax_base, taxes, total, id_company, id_fiscal_year, id_project, percent_tax, id_rect) 
-								select ".$number.",'AB".$actualYear."/".$number."','".date("Y-m-d")."',description,id_team,id_customer, po, -tax_base,-taxes,-total,id_company,id_fiscal_year,id_project,percent_tax, id from tt_billing where id=".$id_bill_origen);
+								select ".$number.",'AB".date("Y")."/".$number."','".date("Y-m-d")."',description,id_team,id_customer, po, -tax_base,-taxes,-total,id_company,id_fiscal_year,id_project,percent_tax, id from tt_billing where id=".$id_bill_origen);
 				$query->execute();
 
 				$insertId = $this->_conn->lastInsertId();
